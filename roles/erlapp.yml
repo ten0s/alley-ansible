@@ -1,17 +1,17 @@
 ---
-- name: "Register current version stat"
+- name: Register current version stat
   stat: path=/opt/{{name}}{{name_suffix}}-{{version}}
   register: curr_ver_reg
   changed_when: false
 
-- name: "Download archive"
+- name: Download archive
   get_url: url=http://sus.dev1team.net/sus/poweralley/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
            dest={{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
   environment:
     http_proxy: "{{http_proxy}}"
   when: not curr_ver_reg.stat.exists
 
-- name: "Unarchive"
+- name: Unarchive
   unarchive: src=/{{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
              dest=/opt/
              copy=false
@@ -21,40 +21,40 @@
 # DATA DIR
 #
 
-- name: "Define data_dir"
+- name: Define data_dir
   set_fact: data_dir="{{base_data_dir}}/{{name}}/{{data_dir_suffix}}"
   when: global_data_dir
 
-- name: "Register data dir stat"
+- name: Register data dir stat
   stat: path={{data_dir}}
   register: data_dir_reg
   changed_when: false
   when: global_data_dir
 
-- name: "Register ls of local data dir"
+- name: Register ls of local data dir
   command: ls /opt/{{name}}{{name_suffix}}-{{version}}/data/
   register: local_data_dir_reg
   changed_when: false
   when: global_data_dir
 
-- name: "Ensure data dir exists"
+- name: Ensure data dir exists
   file: path={{data_dir}}
         state=directory
   when: global_data_dir
 
-- name: "Copy local data dir contents"
+- name: Copy local data dir contents
   shell: cp -r /opt/{{name}}{{name_suffix}}-{{version}}/data/* {{data_dir}}
   when: (not curr_ver_reg.stat.exists) and
         global_data_dir and
         (not data_dir_reg.stat.exists) and
         (local_data_dir_reg.stdout != "")
 
-- name: "Remove local data dir"
+- name: Remove local data dir
   file: path=/opt/{{name}}{{name_suffix}}-{{version}}/data
         state=absent
   when: (not curr_ver_reg.stat.exists) and global_data_dir
 
-- name: "Create data dir link"
+- name: Create data dir link
   file: src={{data_dir}}
         dest=/opt/{{name}}{{name_suffix}}-{{version}}/data
         state=link
@@ -64,40 +64,40 @@
 # LOG DIR
 #
 
-- name: "Define log_dir"
+- name: Define log_dir
   set_fact: log_dir="{{base_log_dir}}/{{name}}"
   when: global_log_dir
 
-- name: "Register log dir stat"
+- name: Register log dir stat
   stat: path={{log_dir}}
   register: log_dir_reg
   changed_when: false
   when: global_log_dir
 
-- name: "Register ls of local log dir"
+- name: Register ls of local log dir
   command: ls /opt/{{name}}{{name_suffix}}-{{version}}/log/
   register: local_log_dir_reg
   changed_when: false
   when: global_log_dir
 
-- name: "Ensure log dir exists"
+- name: Ensure log dir exists
   file: path={{log_dir}}
         state=directory
   when: global_log_dir
 
-- name: "Move local log dir contents"
+- name: Move local log dir contents
   shell: cp -r /opt/{{name}}{{name_suffix}}-{{version}}/log/* {{log_dir}}
   when: (not curr_ver_reg.stat.exists) and
         global_log_dir and
         (not log_dir_reg.stat.exists) and
         (local_log_dir_reg.stdout != "")
 
-- name: "Remove local log dir"
+- name: Remove local log dir
   file: path=/opt/{{name}}{{name_suffix}}-{{version}}/log
         state=absent
   when: (not curr_ver_reg.stat.exists) and global_log_dir
 
-- name: "Create log dir link"
+- name: Create log dir link
   file: src={{log_dir}}
         dest=/opt/{{name}}{{name_suffix}}-{{version}}/log
         state=link
@@ -107,18 +107,18 @@
 #
 #
 
-- name: "Ensure correct rights"
+- name: Ensure correct rights
   file: path=/opt/{{name}}{{name_suffix}}-{{version}}
         owner={{run_user}}
         group={{run_user}}
         recurse=true
         follow=true
 
-- name: "Ensure link exists"
+- name: Ensure link exists
   file: src=/opt/{{name}}{{name_suffix}}-{{version}}
         dest=/opt/{{name}}
         state=link
 
-#- name: "Remove archive"
+#- name: Remove archive
 #  file: path=/{{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
 #        state=absent

@@ -4,6 +4,6 @@
       name: oneapi_srv
       version: "{{oneapi_version}}"
 
-- name: "Provision config"
+- name: Provision config
   template: src=sys.config.j2
             dest=/opt/oneapi_srv-{{oneapi_version}}/releases/1/sys.config

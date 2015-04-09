@@ -10,6 +10,6 @@
       name_suffix: _mini
       version: "{{funnel_version}}"
 
-- name: "Provision config"
+- name: Provision config
   template: src=sys.config.j2
             dest=/opt/funnel_mini-{{funnel_version}}/releases/1/sys.config
