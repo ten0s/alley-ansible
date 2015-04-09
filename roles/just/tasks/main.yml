@@ -1,4 +1,9 @@
 ---
+- name: Ensure deps are installed
+  yum: name={{item}} state=present
+  with_items:
+  - tokyocabinet
+
 - include: ../../erlapp.yml
   vars:
       name: just

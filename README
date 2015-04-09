@@ -45,14 +45,6 @@ test2 | success >> {
     "ping": "pong"
 }
 
-$ ansible test -i inventories/test -s -m yum -a "name=tokyocabinet state=present"
-test1 | success >> {
-    "changed": true,
-...
-test2 | success >> {
-    "changed": true,
-...
-
 $ ansible-playbook deploy.yml -i inventories/test
 OR
 $ ansible-playbook deploy.yml -i inventories/test --limit test1 --tags funnel,just
