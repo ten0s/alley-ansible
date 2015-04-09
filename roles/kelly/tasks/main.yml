@@ -5,6 +5,10 @@
       version: "{{kelly_version}}"
       global_data_dir: false
 
-- name: "Provision config"
+- name: Provision config
   template: src=sys.config.j2
             dest=/opt/kelly-{{kelly_version}}/releases/1/sys.config
+
+- name: Provision SNMP agents
+  template: src=agents.conf.j2
+            dest=/opt/kelly-{{kelly_version}}/snmp/conf/agents.conf

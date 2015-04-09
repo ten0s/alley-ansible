@@ -3,3 +3,7 @@ kelly_http_addr: '{0,0,0,0}'
 kelly_http_port: 8080
 kelly_mongodb: '{single, {"127.0.0.1", 27017}}'
 kelly_receipts_qos: 100
+kelly_snmp_agents: '
+{"funnel", "funnel", "private", [127,0,0,1], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just", "private", [127,0,0,1], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+'

@@ -2,7 +2,7 @@
 funnel_version: 2.6.1
 soap_version: 2.7.0
 mm_version: 2.7.0
-kelly_version: 2.7.0
+kelly_version: 2.7.2
 just_version: 2.7.0
 smppsink_version: 1.2.0
 
@@ -14,4 +14,10 @@ rabbitmq_port: 5672
 rabbitmq_username: alley
 rabbitmq_password: alley
 
-kelly_mongodb: '{replica_set, {<<"alley">>, [{localhost, 40001}, {localhost, 40002}, {localhost, 40003}]}}'
+kelly_mongodb: '{replica_set, {<<"alley">>, [{localhost, 40001},{localhost, 40002},{localhost, 40003}]}}'
+kelly_snmp_agents: '
+{"funnel", "funnel1", "private", [127,0,0,1], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"funnel", "funnel2", "private", [1,2,3,4], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just1", "private", [127,0,0,1], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just2", "private", [1,2,3,4], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+'
