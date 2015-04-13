@@ -1,5 +1,5 @@
 ---
-funnel_version: 2.6.1
+funnel_version: 2.7.0
 soap_version: 2.7.2
 mm_version: 2.7.1
 oneapi_version: 2.7.0
