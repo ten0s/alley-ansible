@@ -12,7 +12,7 @@
               line='178.124.154.132 sus.dev1team.net'
 
 - name: Ensure PMM-Base repo is enabled
-  copy: src=files/pmm-base.repo
+  copy: src=pmm-base.repo
         dest=/etc/yum.repos.d/pmm-base.repo
         mode=644
 
