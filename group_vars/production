@@ -2,7 +2,7 @@
 funnel_version: 2.8.1
 soap_version: 2.7.2
 mm_version: 2.7.1
-kelly_version: 2.8.2
+kelly_version: 2.8.3
 just_version: 2.7.0
 
 base_data_dir: /mnt/data
