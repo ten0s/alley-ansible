@@ -1,0 +1,48 @@
+---
+- name: Install Supervisor's deps
+  yum: name={{item}} state=latest
+  with_items:
+  - python-setuptools
+
+- name: Install Supervisor
+  easy_install: name="supervisor=={{supervisor_version}}"
+
+- name: Create Supervisor's config dir
+  file: path={{item.path}} state=directory
+        owner={{item.owner}} group={{item.group}}
+  with_items:
+  - {path: /etc/supervisor.d,
+     owner: root,
+     group: root}
+  - {path: /opt/bin,
+     owner: root,
+     group: root}
+  - {path: /var/log/pmm,
+     owner: bms,
+     group: bms}
+  notify: Restart Supervisor
+
+- name: Copy configuration
+  copy: src={{item.src}}
+        dest={{item.dest}}
+        mode={{item.mode}}
+  with_items:
+  - {src: etc/supervisord.conf,
+     dest: /etc/supervisord.conf,
+     mode: 644}
+  - {src: etc/supervisor.d/poweralleyui.conf,
+     dest: /etc/supervisor.d/poweralleyui.conf,
+     mode: 644}
+  - {src: etc/init.d/supervisord,
+     dest: /etc/init.d/supervisord,
+     mode: 755}
+  - {src: opt/bin/poweralleyui.sh,
+     dest: /opt/bin/poweralleyui.sh,
+     mode: 755}
+  notify: Restart Supervisor
+
+- name: Enable Supervisor service
+  service: name=supervisord
+           enabled=true
+           state=started
+  notify: Restart Supervisor

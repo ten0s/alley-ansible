@@ -6,6 +6,11 @@ rabbitmq_port: 5672
 rabbitmq_username: guest
 rabbitmq_password: guest
 
+mysql_server: 127.0.0.1
+mysql_database: poweralley
+mysql_username: pmm
+mysql_password: PASSWORD
+
 rpc_timeout: 5000
 
 #

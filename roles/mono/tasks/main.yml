@@ -1,0 +1,11 @@
+---
+- name: Install Mono
+  yum: name={{item}} state=present
+  with_items:
+  - libgdiplus
+  - libgdiplus-devel
+  - pmm-mono-3.2.8-rel_VisualBasicPatch_20141022.x86_64
+
+- name: Add Mono env to /etc/profile
+  lineinfile: dest=/etc/profile
+              line='source /opt/mono-3.2.8/env.rc'

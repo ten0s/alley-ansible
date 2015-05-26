@@ -1,0 +1,40 @@
+---
+- name: Install MySQL playbook's deps
+  yum: name={{item}} state=latest
+  with_items:
+  - MySQL-python
+
+- name: Install MySQL
+  yum: name=mysql-server-{{mysql_version}}
+       state=present
+
+- name: Copy MySQL configuration
+  copy: src=my.cnf
+        dest=/etc/my.cnf
+  notify: Restart MySQL
+
+- name: Enable MySQL service
+  service: name=mysqld
+           enabled=true
+           state=started
+
+- name: Create DB
+  mysql_db: name={{mysql_database}}
+            state=present
+  notify: Restart MySQL
+
+- name: Setup DB priviledges
+  mysql_user: name={{mysql_username}}
+              host={{item}}
+              password={{mysql_password}}
+              priv=*.*:ALL,GRANT
+              state=present
+  mysql_user: name={{mysql_username}}
+              host={{item}}
+              password={{mysql_password}}
+              priv=*.*:ALL,GRANT
+              state=present
+  with_items:
+  - localhost
+  - '%'
+  notify: Restart MySQL

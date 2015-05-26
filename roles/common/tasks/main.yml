@@ -1,21 +1,48 @@
 ---
-- name: Ensure ansible's deps are installed
+- name: Install Ansible's deps
   yum: name={{item}} state=present
   with_items:
   - libselinux-python
 
-- name: Ensure user exists
+- name: Import EPEL GPG key
+  rpm_key: key=http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6
+           state=present
+
+- name: Install EPEL repo
+  yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+       state=present
+
+- name: Import RPMForge GPG key
+  rpm_key: key=http://apt.sw.be/RPM-GPG-KEY.dag.txt
+           state=present
+
+- name: Install RPMForge repo
+  yum: name=http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+       state=present
+
+- name: Add user
   user: name={{run_user}}
 
-- name: Ensure sus.dev1team.net in /etc/hosts
+- name: Add sus.dev1team.net to /etc/hosts
   lineinfile: dest=/etc/hosts
               line='178.124.154.132 sus.dev1team.net'
 
-- name: Ensure PMM-Base repo is enabled
+- name: Install PMM-Base repo
   copy: src=pmm-base.repo
         dest=/etc/yum.repos.d/pmm-base.repo
         mode=644
 
-- name: Ensure EPEL is installed
-  yum: name=epel-release
-       state=present
+- name: Add PMM-Base repo list
+  copy: src=pmm-base.list
+        dest=/etc/yum.repos.d/pmm-base.list
+
+- name: Install utils
+  yum: name={{item}} state=present
+  with_items:
+  - curl
+  - emacs
+  - htop
+  - jq
+  - screen
+  - tar
+  - wget

@@ -1,8 +1,7 @@
 ---
-- name: Deploy PowerAlley backend services
+- name: Deploy PowerAlley services
   hosts: all
   sudo: true
-
   roles:
   - {role: common,     tags: ["common"]}
   - {role: funnel,     tags: ["funnel"],   when: funnel_version is defined}
@@ -12,3 +11,4 @@
   - {role: kelly,      tags: ["kelly"],    when: kelly_version is defined}
   - {role: just,       tags: ["just"],     when: just_version is defined}
   - {role: smppsink,   tags: ["smppsink"], when: smppsink_version is defined}
+  - {role: poweralleyui, tags: ["poweralleyui"], when: poweralleyui_version is defined}

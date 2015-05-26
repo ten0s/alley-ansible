@@ -1,0 +1,13 @@
+[pmm-bankaudi-rel]
+name=PMM release repository for BankAudi
+enabled=1
+gpgcheck=0
+#baseurl=http://sus.dev1team.net/rawshaun-sus/bankaudi/rel/
+mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-rel.list
+
+[pmm-bankaudi-dev]
+name=PMM release repository for BankAudi
+enabled=1
+gpgcheck=0
+#baseurl=http://sus.dev1team.net/rawshaun-sus/bankaudi/dev/
+mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-dev.list
