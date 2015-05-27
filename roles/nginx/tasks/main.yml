@@ -8,13 +8,21 @@
            enabled=true
            state=started
 
-- name: Copy Nginx configuration
+- name: Determine IP address
+  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_interface]['ipv4']['address']}}
+
+- name: Copy Nginx's configuration (1/2)
   copy: src={{item.src}} dest={{item.dest}}
   with_items:
   - {src: nginx.conf,
      dest: /etc/nginx/nginx.conf}
-  - {src: server.conf,
-     dest: /etc/nginx/conf.d/server.conf}
   - {src: fastcgi_params,
      dest: /etc/nginx/fastcgi_params}
+  notify: Restart Nginx
+
+- name: Copy Nginx's configuration (2/2)
+  template: src={{item.src}} dest={{item.dest}}
+  with_items:
+  - {src: server.conf.j2,
+     dest: /etc/nginx/conf.d/server.conf}
   notify: Restart Nginx

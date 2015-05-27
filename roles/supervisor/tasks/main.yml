@@ -1,6 +1,6 @@
 ---
 - name: Install Supervisor's deps
-  yum: name={{item}} state=latest
+  yum: name={{item}} state=present
   with_items:
   - python-setuptools
 
@@ -22,7 +22,10 @@
      group: bms}
   notify: Restart Supervisor
 
-- name: Copy configuration
+- name: Determine IP address
+  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_interface]['ipv4']['address']}}
+
+- name: Copy Supervisor's configuration (1/2)
   copy: src={{item.src}}
         dest={{item.dest}}
         mode={{item.mode}}
@@ -36,7 +39,14 @@
   - {src: etc/init.d/supervisord,
      dest: /etc/init.d/supervisord,
      mode: 755}
-  - {src: opt/bin/poweralleyui.sh,
+  notify: Restart Supervisor
+
+- name: Copy Supervisor's configuration (1/2)
+  template: src={{item.src}}
+            dest={{item.dest}}
+            mode={{item.mode}}
+  with_items:
+  - {src: poweralleyui.sh.j2,
      dest: /opt/bin/poweralleyui.sh,
      mode: 755}
   notify: Restart Supervisor
