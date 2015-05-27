@@ -1,0 +1,28 @@
+# http://docs.mongodb.org/manual/tutorial/install-mongodb-on-red-hat/
+
+- name: Install MongoDB repo
+  copy: src=mongodb-org-2.6.repo
+        dest=/etc/yum.repos.d/
+        mode=644
+
+- name: Install MongoDB
+  yum: name={{item}} state=present
+  with_items:
+  - mongodb-org-{{mongodb_version}}
+
+- name: Ensure MongoDB db path exists
+  file: path={{mongodb_dbpath}}
+        state=directory
+        owner={{mongodb_user}}
+        group={{mongodb_user}}
+        recurse=true
+
+- name: Copy MongoDB's configuration
+  template: src=mongod.conf.j2
+            dest=/etc/mongod.conf
+  notify: Restart MongoDB
+
+- name: Enable MongoDB service
+  service: name=mongod
+           enabled=true
+           state=started

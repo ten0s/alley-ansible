@@ -1,0 +1,8 @@
+---
+- name: Provision PowerAlley backend env
+  hosts: all
+  sudo: true
+  roles:
+  - {role: common,   tags: ["common"]}
+  - {role: mongodb,  tags: ["mongodb"], when: mongodb_version is defined}
+  - {role: smppsink, tags: ["smppsink"], when: smppsink_version is defined}
