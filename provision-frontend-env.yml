@@ -4,6 +4,7 @@
   sudo: true
   roles:
   - {role: common,     tags: ["common"]}
+  - {role: mono,       tags: ["mono"],       when: poweralleyui_version is defined}
   - {role: mysql,      tags: ["mysql"],      when: mysql_version is defined}
   - {role: nginx,      tags: ["nginx"],      when: nginx_version is defined}
   - {role: supervisor, tags: ["supervisor"], when: supervisor_version is defined}
