@@ -29,3 +29,34 @@ sudo reboot
 192.168.100.203       arbiter arbiter.dev1team.net
 
 setup replica set
+
+#
+# Replica upgrade procedure
+#
+
+!!!
+! Important
+! Always backup all of your data before upgrading MongoDB.
+!!!
+
+arbiter
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i inventories/replica --limit arbiter --tags mongodb
+wait for arbiter
+
+node2 (secondary)
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i inventories/replica --limit node2 --tags mongodb
+wait for secondary
+
+node1 (master)
+rs.stepDown(300)
+wait for a new master
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i inventories/replica --limit node1 --tags mongodb
+wait for secondary
+
+node{1,2}, arbiter
+sudo emacs /etc/rc.local
+sudo rm /opt/bin/start-mongo-rs
+sudo rm -rf /opt/mongodb*
