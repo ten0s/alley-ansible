@@ -9,7 +9,7 @@ smppsink_smpp_port: 8002
 poweralleyui_version: 1.4.1.43
 poweralleyui_interface: ansible_eth1
 
-mongodb_version: 2.6.5
+mongodb_version: 2.6.10
 rabbitmq_version: 3.4.1
 
 mysql_version: 5.1.73
