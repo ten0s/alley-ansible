@@ -1,9 +1,2 @@
-[test1]
-test1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
-
-[test2]
-test2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2302 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
-
-[test:children]
-test1
-test2
+[test]
+test ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
