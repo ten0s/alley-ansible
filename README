@@ -1,3 +1,5 @@
+$ cd vagrant/test
+
 $ vagrant up
 
 $ vagrant ssh-config
@@ -11,6 +13,8 @@ Host test
   IdentityFile ~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
   IdentitiesOnly yes
   LogLevel FATAL
+
+$ cd ../..
 
 $ cat inventories/test
 [test]
