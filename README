@@ -27,4 +27,5 @@ test | success >> {
 }
 
 $ ansible-playbook provision-dev-env.yml -i inventories/test
-$ ansible-playbook deploy.yml -i inventories/test --tags funnel,just
+
+$ ansible-playbook deploy.yml -i inventories/test --tags funnel,kelly,just
