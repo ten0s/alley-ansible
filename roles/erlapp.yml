@@ -12,7 +12,7 @@
   when: not curr_ver_reg.stat.exists
 
 - name: Unarchive
-  unarchive: src=/{{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
+  unarchive: src={{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
              dest=/opt/
              copy=false
   when: not curr_ver_reg.stat.exists
@@ -120,5 +120,5 @@
         state=link
 
 #- name: Remove archive
-#  file: path=/{{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
+#  file: path={{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
 #        state=absent

@@ -17,7 +17,7 @@
         group={{mongodb_user}}
         recurse=true
 
-- name: Copy MongoDB's configuration
+- name: Copy MongoDB's config
   template: src=mongod.conf.j2
             dest=/etc/mongod.conf
   notify: Restart MongoDB

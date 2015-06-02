@@ -11,7 +11,7 @@
 - name: Determine IP address
   set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_interface]['ipv4']['address']}}
 
-- name: Copy Nginx's configuration (1/2)
+- name: Copy Nginx's config (1/2)
   copy: src={{item.src}} dest={{item.dest}}
   with_items:
   - {src: nginx.conf,
@@ -20,7 +20,7 @@
      dest: /etc/nginx/fastcgi_params}
   notify: Restart Nginx
 
-- name: Copy Nginx's configuration (2/2)
+- name: Copy Nginx's config (2/2)
   template: src={{item.src}} dest={{item.dest}}
   with_items:
   - {src: server.conf.j2,
