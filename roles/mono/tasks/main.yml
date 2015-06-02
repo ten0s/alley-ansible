@@ -1,4 +1,13 @@
 ---
+- name: Install PMM-Base repo
+  copy: src=pmm-base.repo
+        dest=/etc/yum.repos.d/pmm-base.repo
+        mode=644
+
+- name: Add PMM-Base repo list
+  copy: src=pmm-base.list
+        dest=/etc/yum.repos.d/pmm-base.list
+
 - name: Install Mono
   yum: name={{item}} state=present
   with_items:

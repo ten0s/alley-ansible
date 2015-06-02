@@ -36,21 +36,6 @@
   copy: src=pmm-base.list
         dest=/etc/yum.repos.d/pmm-base.list
 
-- name: Install PMM-BankAudi repo
-  copy: src=pmm-bankaudi.repo
-        dest=/etc/yum.repos.d/pmm-bankaudi.repo
-        mode=644
-
-- name: Add PMM-BankAudi Rel repo list
-  copy: src=pmm-bankaudi-rel.list
-        dest=/etc/yum.repos.d/pmm-bankaudi-rel.list
-        mode=644
-
-- name: Add PMM-BankAudi Dev repo list
-  copy: src=pmm-bankaudi-dev.list
-        dest=/etc/yum.repos.d/pmm-bankaudi-dev.list
-        mode=644
-
 - name: Install utils
   yum: name={{item}} state=present
   with_items:
@@ -58,6 +43,7 @@
   - emacs
   - htop
   - jq
+  - nc
   - screen
   - tar
   - wget
