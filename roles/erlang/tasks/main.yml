@@ -1,0 +1,14 @@
+- name: Import Erlang Solutions GPG key
+  rpm_key: key=http://packages.erlang-solutions.com/rpm/erlang_solutions.asc
+           state=present
+
+- name: Install Erlang Solution repo
+  copy: src=erlang_solutions.repo
+        dest=/etc/yum.repos.d/
+        owner=root
+        group=root
+        mode=644
+
+- name: Install Erlang
+  yum: name=esl-erlang-{{erlang_version}}
+       state=present

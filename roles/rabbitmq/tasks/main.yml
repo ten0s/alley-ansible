@@ -1,0 +1,127 @@
+- name: Register current version stat
+  stat: path=/opt/rabbitmq_server-{{rabbitmq_version}}
+  register: rmq_ver_reg
+  changed_when: false
+
+- name: Download archive
+  get_url: url=http://www.rabbitmq.com/releases/rabbitmq-server/v{{rabbitmq_version}}/rabbitmq-server-generic-unix-{{rabbitmq_version}}.tar.gz
+           dest={{download_dir}}/rabbitmq-server-generic-unix-{{rabbitmq_version}}.tar.gz
+  when: not rmq_ver_reg.stat.exists
+
+- name: Unarchive
+  unarchive: src={{download_dir}}/rabbitmq-server-generic-unix-{{rabbitmq_version}}.tar.gz
+             dest=/opt/
+             copy=false
+  when: not rmq_ver_reg.stat.exists
+
+#
+# DATA DIR
+#
+
+- name: Define data_dir
+  set_fact: rmq_global_data_dir="{{base_data_dir}}/rabbitmq"
+            rmq_local_data_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/data"
+
+- name: Ensure data dir exists
+  file: path={{rmq_global_data_dir}}
+        state=directory
+
+- name: Create data dir link
+  file: src={{rmq_global_data_dir}}
+        dest={{rmq_local_data_dir}}
+        state=link
+
+#
+# LOG DIR
+#
+
+- name: Define log_dir
+  set_fact: rmq_global_log_dir="{{base_log_dir}}/rabbitmq"
+            rmq_local_log_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/log"
+
+- name: Ensure log dir exists
+  file: path={{rmq_global_log_dir}}
+        state=directory
+
+- name: Create log dir link
+  file: src={{rmq_global_log_dir}}
+        dest={{rmq_local_log_dir}}
+        state=link
+
+#
+#
+#
+
+- name: Ensure correct rights
+  file: path=/opt/rabbitmq_server-{{rabbitmq_version}}
+        owner={{run_user}}
+        group={{run_user}}
+        recurse=true
+        follow=true
+
+- name: Ensure link exists
+  file: src=/opt/rabbitmq_server-{{rabbitmq_version}}
+        dest=/opt/rabbitmq
+        state=link
+
+- name: Add path to /etc/profile
+  lineinfile: dest=/etc/profile
+              line='export PATH=$PATH:/opt/rabbitmq/sbin'
+
+#- name: Remove archive
+#  file: path={{download_dir}}/rabbitmq-server-generic-unix-{{rabbitmq_version}}.tar.gz
+#        state=absent
+
+#
+# Provision config and and enable plugins
+#
+
+- name: Copy config
+  copy: src=rabbitmq-env.conf
+        dest=/opt/rabbitmq_server-{{rabbitmq_version}}/etc/rabbitmq/
+
+- name: Enable Management plugin
+  rabbitmq_plugin: names=rabbitmq_management
+                   state=enabled
+  environment:
+    PATH: "{{ansible_env.PATH}}:/opt/rabbitmq/sbin"
+
+- name: Copy Management CLI
+  copy: src=rabbitmqadmin-{{rabbitmq_version}}
+        dest=/opt/rabbitmq_server-{{rabbitmq_version}}/sbin/
+        mode=755
+
+- name: Start RabbitMQ
+  command: rabbitmq-server -detached
+  register: rmq_res
+  changed_when: (rmq_res.rc == 0) or (rmq_res.stdout.find('already running') == -1)
+  failed_when: (rmq_res.rc == 1) and (rmq_res.stdout.find('already running') == -1)
+  environment:
+    PATH: "{{ansible_env.PATH}}:/opt/rabbitmq/sbin"
+  become_user: "{{run_user}}"
+
+- name: Wait for RabbitMQ
+  wait_for: port={{rabbitmq_port}}
+            delay=5
+            timeout=60
+
+- name: Add RabbitMQ user
+  rabbitmq_user: user={{rabbitmq_username}}
+                 password={{rabbitmq_password}}
+                 node=rabbit@localhost
+                 vhost=/
+                 configure_priv=.*
+                 read_priv=.*
+                 write_priv=.*
+                 tags=administrator
+                 state=present
+  environment:
+    PATH: "{{ansible_env.PATH}}:/opt/rabbitmq/sbin"
+  become_user: "{{run_user}}"
+
+- name: Stop RabbitMQ
+  command: rabbitmqctl stop
+  environment:
+    PATH: "{{ansible_env.PATH}}:/opt/rabbitmq/sbin"
+  become_user: "{{run_user}}"
+  when: not rmq_ver_reg.stat.exists

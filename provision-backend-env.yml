@@ -4,5 +4,8 @@
   sudo: true
   roles:
   - {role: common,   tags: ["common"]}
-  - {role: mongodb,  tags: ["mongodb"], when: mongodb_version is defined}
+  - {role: erlang,   tags: ["erlang"],   when: erlang_version is defined}
+  - {role: rabbitmq, tags: ["rabbitmq"], when: rabbitmq_version is defined}
+  - {role: mongodb,  tags: ["mongodb"],  when: mongodb_version is defined}
+  - {role: smppsim,  tags: ["smppsim"],  when: smppsim_version is defined}
   - {role: smppsink, tags: ["smppsink"], when: smppsink_version is defined}
