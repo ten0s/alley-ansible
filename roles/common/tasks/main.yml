@@ -47,3 +47,12 @@
   - screen
   - tar
   - wget
+
+- name: Setup limits
+  lineinfile: dest=/etc/security/limits.conf
+              insertbefore='# End of file'
+              line='{{item}}'
+              state=present
+  with_items:
+  - '* hard nofile 64000'
+  - '* hard nproc  64000'
