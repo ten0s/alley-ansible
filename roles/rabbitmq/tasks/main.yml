@@ -102,7 +102,6 @@
 
 - name: Wait for RabbitMQ
   wait_for: port={{rabbitmq_port}}
-            delay=5
             timeout=60
 
 - name: Add RabbitMQ user
