@@ -5,7 +5,6 @@
   tasks:
   - name: Set hostname
     hostname: name=backend-dev
-    tags: ["common"]
 
   - name: Copy start dev env script
     copy: src=files/start-dev-env
@@ -17,6 +16,7 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
+- {include: provision-common-env.yml}
 - {include: provision-backend-env.yml}
 - {include: provision-frontend-env.yml}
 - {include: deploy.yml, tags: ['ui']}

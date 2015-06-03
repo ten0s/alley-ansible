@@ -3,7 +3,6 @@
   hosts: all
   sudo: true
   roles:
-  - {role: common,       tags: ["common"]}
   - {role: funnel,       tags: ["funnel"], when: funnel_version is defined}
   - {role: soap_srv,     tags: ["soap"],   when: soap_version is defined}
   - {role: mm_srv,       tags: ["mm"],     when: mm_version is defined}
