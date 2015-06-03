@@ -14,12 +14,6 @@ mysql_password: PASSWORD
 rpc_timeout: 5000
 
 #
-# mongodb defaults
-#
-mongodb_dbpath: /mnt/db/data
-mongodb_user: mongod
-
-#
 # erlapp defaults
 #
 data_dir_suffix: ''
