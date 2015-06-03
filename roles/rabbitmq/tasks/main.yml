@@ -19,7 +19,7 @@
 #
 
 - name: Define data_dir
-  set_fact: rmq_global_data_dir="{{base_data_dir}}/rabbitmq"
+  set_fact: rmq_global_data_dir="/var/lib/rabbitmq"
             rmq_local_data_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/data"
 
 - name: Ensure data dir exists
@@ -36,7 +36,7 @@
 #
 
 - name: Define log_dir
-  set_fact: rmq_global_log_dir="{{base_log_dir}}/rabbitmq"
+  set_fact: rmq_global_log_dir="/var/log/rabbitmq"
             rmq_local_log_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/log"
 
 - name: Ensure log dir exists
