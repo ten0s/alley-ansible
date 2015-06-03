@@ -1,0 +1,21 @@
+---
+- name: Provision PowerAlley frontend dev env
+  hosts: all
+  sudo: true
+  tasks:
+  - name: Set hostname
+    hostname: name=frontend-dev
+    tags: ["common"]
+
+  - name: Copy start dev env script
+    copy: src=files/start-dev-env
+          dest=/opt/bin/
+          mode=755
+
+  - name: Setup autostart
+    lineinfile: dest=/etc/rc.local
+                line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
+    tags: ["autostart"]
+
+- {include: provision-backend-env.yml}
+- {include: deploy.yml, tags: ['funnel','soap','mm','kelly','just']}

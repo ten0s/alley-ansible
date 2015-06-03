@@ -1,0 +1,25 @@
+---
+funnel_version: 2.8.1
+soap_version: 2.9.0
+mm_version: 2.9.0
+oneapi_version: 2.9.0
+kelly_version: 2.9.0-beta
+just_version: 2.7.0
+
+smppsim_version: 2.6.8
+
+smppsink_version: 1.3.0
+smppsink_smpp_port: 8002
+
+mongodb_version: 2.6.10
+
+erlang_version: R16B03-6
+rabbitmq_version: 3.3.4
+
+mysql_version: 5.1.73
+mysql_password: PASSWORD
+
+nginx_version: 1.0.15
+supervisor_version: 3.1.2
+
+rpc_timeout: 30000
