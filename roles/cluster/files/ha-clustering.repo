@@ -1,0 +1,7 @@
+[ha-clustering]
+name=Stable High Availability/Clustering packages (CentOS_CentOS-6)
+baseurl=http://download.opensuse.org/repositories/network:/ha-clustering:/Stable/CentOS_CentOS-6/
+enabled=0
+gpgcheck=1
+gpgkey=http://download.opensuse.org/repositories/network:/ha-clustering:/Stable/CentOS_CentOS-6/repodata/repomd.xml.key
+sslverify=1

@@ -1,0 +1,272 @@
+<% if node["cluster"]["number"] == "1" || node["cluster"]["role"] == "front" %>
+<% node["hosts"]["node"]["front"].keys.each do |front_host| %>
+node <%= front_host %> \
+	attributes standby="on"
+<% end %><% end %>
+<% if node["cluster"]["number"] == "1" || node["cluster"]["role"] == "back" %>
+<% node["hosts"]["node"]["back"].keys.each do |back_host| %>
+node <%= back_host %> \
+	attributes standby="on"
+<% end %><% end %>
+
+<% if node["cluster"]["number"] == "1" || node["cluster"]["role"] == "front" %>
+<% node["hosts"]["virtual"]["front"].keys.each do |front_v_ip| %>
+primitive <%= front_v_ip %> ocf:heartbeat:IPaddr2 \
+	params ip="<%= node["hosts"]["virtual"]["front"][front_v_ip] %>" cidr_netmask="32" \
+	meta target-role="Stopped"
+<% end %>
+
+primitive lsyncd ocf:heartbeat:lsyncd \
+	params cmdline_options="-log scarce" \
+	op monitor interval="30s"
+clone lsyncd-cl lsyncd \
+	meta clone-node-max="1" clone-max="2" target-role="Started"
+
+<% ["CDRManager", "DeferredMessagesChecker", "DeliveryReceipt", "IncomingSm", "JustStatePoller", "MessageRegister", "MMSResponse", "SMSResponse", "TaskCloser", "Tube"].each do |mono_serv| %>
+primitive svc-<%= mono_serv.downcase %> ocf:ph:mono_serv \
+	params working_dir="/srv/PMM/<%= node["platform_name"] %>/Services/<%= mono_serv %>" service_assembly="/srv/PMM/<%= node["platform_name"] %>/Services/<%= mono_serv %>/MMWL.Services.<%= mono_serv %>.exe" \
+	op monitor interval="15s" \
+	meta target-role="Stopped"
+<% end %>
+
+<% ["1", "2"].each do |num| %>
+primitive svc-fbmm-<%= num %> ocf:ph:xsp \
+	params www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/fbmm" http_port="8040" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/fbmm" app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/fbmm.xsp2config" http_ping_url="http://localhost:8040/fbmm/Diagnostic/DiagnosticPage.aspx" http_ping_expected="200 OK" \
+	op monitor interval="5s" timeout="60" \
+	op stop interval="0" timeout="60s" \
+	meta target-role="Stopped"
+
+primitive svc-wa-<%= num %> ocf:ph:xsp \
+	params www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/nginx-static" app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/webapp.xsp2config" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/webapp" http_port="8080" time_to_terminate="30" http_ping_url="http://localhost:8080/bms/Diagnostic/DiagnosticPage.aspx" ulimit_memory="4096" \
+	op monitor interval="15" \
+	meta target-role="Stopped"
+
+primitive svc-webmm-<%= num %> ocf:ph:xsp \
+	params app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/webmm.xsp2config" http_port="8090" ulimit_memory="2048" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/webmm" www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/nginx-static" http_ping_url="http://localhost:8090/webmm/Diagnostic/DiagnosticPage.aspx" \
+	op monitor interval="5s" timeout="120s" \
+	op stop interval="0" timeout="60" \
+	meta target-role="Stopped"
+<% end %>
+
+primitive svc-in-sim ocf:ph:xsp \
+	params www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/nginx-static" http_port="7070" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/in-sim" app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/in-sim.xsp2conf" http_ping_url="http://localhost:7070/in-sim/AmountChargingService.asmx?wsdl" \
+	op monitor interval="5s" timeout="60" \
+	op stop interval="0" timeout="60s" \
+	meta target-role="Stopped"
+primitive svc-sus ocf:ph:xsp \
+	params www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/nginx-static" app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/sus.xsp2config" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/sus" http_port="8030" time_to_terminate="10" ulimit_memory="1024" \
+	op monitor interval="15" \
+	meta target-role="Stopped"
+primitive svc-wq ocf:ph:xsp \
+	params www_root="/srv/PMM/<%= node["platform_name"] %>/WebApps/nginx-static" app_config="/srv/PMM/<%= node["platform_name"] %>/WebApps/wq.xsp2config" working_dir="/srv/PMM/<%= node["platform_name"] %>/WebApps/wq" http_port="8081" time_to_terminate="30" http_ping_url="http://localhost:8081/wq/Login.aspx" ulimit_memory="1024" \
+	op monitor interval="15s" \
+	meta target-role="Stopped"
+
+primitive svc-memcached ocf:ph:daemon \
+	params status_args="status" start_args="start" stop_args="stop" ctl="/etc/init.d/memcached" \
+	op monitor interval="15" \
+	meta target-role="Stopped"
+
+colocation coloc-memcached-svc-by-ip inf: svc-memcached ip-memcached
+colocation coloc-wq-svc-by-ip inf: svc-wq ip-webquery
+order ord-memcached-after-ip inf: ip-memcached:start svc-memcached:start
+order ord-svc-fbmm-1-after-wa-1 inf: svc-wa-1:start svc-fbmm-1:start
+order ord-svc-fbmm-2-after-wa-2 inf: svc-wa-2:start svc-fbmm-2:start
+order ord-svc-webmm-1-after-wa-1 inf: svc-wa-1:start svc-webmm-1:start
+order ord-svc-webmm-2-after-wa-2 inf: svc-wa-2:start svc-webmm-2:start
+order ord-wq-svc-after-ip inf: ip-webquery:start svc-wq:start
+<% end %>
+
+
+
+
+<% if node["cluster"]["number"] == "1" || node["cluster"]["role"] == "back" %>
+
+<% node["hosts"]["virtual"]["back"].keys.each do |back_v_ip| %>
+<% if back_v_ip == "ip-j3" %>
+primitive ip-just ocf:heartbeat:IPaddr2 \
+<%else%>
+primitive <%= back_v_ip %> ocf:heartbeat:IPaddr2 \
+<%end%>
+	params ip="<%= node["hosts"]["virtual"]["back"][back_v_ip] %>" cidr_netmask="32" \
+	meta target-role="Stopped"
+<% end %>
+
+
+<% ["funnel", "just", "rabbit"].each do |erl_app| %>
+primitive drbd-<%= erl_app %> ocf:linbit:drbd \
+	params drbd_resource="<%= erl_app %>" \
+	op start interval="0" timeout="240" \
+	op stop interval="0" timeout="100"
+primitive fs-<%= erl_app %> ocf:heartbeat:Filesystem \
+	params device="<%= node["drbd"][erl_app]["dev"] %>" directory="<%= node["drbd"][erl_app]["path"] %>" fstype="<%= node["drbd"]["fs_type"] %>" fast_stop="no" \
+	op stop interval="0" timeout="60" \
+	op start interval="0" timeout="60" \
+	meta target-role="Stopped"
+<% case erl_app %>
+<% when "funnel", "just" %>
+primitive svc-<%= erl_app %> ocf:pmm:rebarred \
+	params workingDir="/opt/<%= erl_app %>" ctl="/opt/<%= erl_app %>/bin/<%= erl_app %>" uname="bms" \
+	op monitor interval="30" \
+	meta target-role="Stopped"
+<% when "rabbit" %>
+primitive svc-rabbit ocf:rabbitmq:rabbitmq-server \
+	params mnesia_base="<%= node["drbd"][erl_app]["path"] %>/data" log_base="<%= node["drbd"][erl_app]["path"] %>/logs" server="/usr/sbin/rabbitmq-server" ctl="/usr/sbin/rabbitmqctl" \
+	op monitor interval="15" \
+	op start interval="0" timeout="600" \
+	op stop interval="0" timeout="180" \
+	meta target-role="Stopped"
+<%end%>
+ms ms-<%= erl_app %> drbd-<%= erl_app %> \
+	meta master-max="1" master-node-max="1" clone-max="2" clone-node-max="1" notify="true" target-role="Stopped"
+
+colocation col-<%= erl_app %>-fs-by-drbd inf: fs-<%= erl_app %> ms-<%= erl_app %>:Master
+colocation col-<%= erl_app %>-fs-by-ip inf: fs-<%= erl_app %> ip-<%= erl_app %>
+colocation col-<%= erl_app %>-svc-by-fs inf: svc-<%= erl_app %> fs-<%= erl_app %>
+colocation col-<%= erl_app %>-svc-by-ip inf: svc-<%= erl_app %> ip-<%= erl_app %>
+
+order ord-<%= erl_app %>-fs-after-drbd inf: ms-<%= erl_app %>:promote fs-<%= erl_app %>:start
+order ord-<%= erl_app %>-svc-after-fs inf: fs-<%= erl_app %>:start svc-<%= erl_app %>:start
+order ord-<%= erl_app %>-svc-after-ip inf: ip-<%= erl_app %>:start svc-<%= erl_app %>:start
+<% case erl_app %>
+<% when "funnel", "just" %>
+order ord-<%= erl_app %>-svc-after-rab inf: svc-rabbit:start svc-<%= erl_app %>:start
+<%end%>
+
+<%end%>
+
+<% ["1", "2"].each do |num| %>
+primitive svc-ha-e<%= num %> ocf:russki:ha-proxy \
+	params binpath="/usr/sbin/haproxy" conffile="/etc/haproxy/haproxy.cfg" \
+	op monitor interval="5" \
+	meta target-role="Stopped"
+<%end%>
+
+<% num_mongo = 1 %>
+<% while num_mongo <= node["hosts"]["mongo_db"].size %>
+primitive svc-mongo-<%= num_mongo %> ocf:pmm:mongo \
+	params data_dir="<%= node["mongodb"]["work_dir"] %>/bms/" journal_ci="0" rs_oplog_size="8192" \
+	op monitor interval="10" timeout="15" \
+	op start interval="0" timeout="300" \
+	op stop interval="0" timeout="600" \
+	meta target-role="Stopped"
+<% num_mongo = num_mongo + 1 %>
+<%end%>
+primitive svc-mongo-arb ocf:pmm:mongo \
+	params data_dir="<%= node["mongodb"]["arb_dir"] %>/" journal_ci="0" rs_arbiter_only="true" rs_ip_rsc="ip-mongo" rs_member_names="<% node["hosts"]["mongo_db"].each do |mongo_node| %>'<%= mongo_node %>', <%end%>'arbiter'" rs_oplog_size="8192" \
+	op monitor interval="15" timeout="30" \
+	op start interval="0" timeout="300" \
+	op stop interval="0" timeout="600" \
+	meta target-role="Stopped"
+
+primitive svc-rbs ocf:pmm:rebarred \
+	params workingDir="/opt/rbs_indexer" ctl="/opt/rbs_indexer/bin/rbs_indexer" uname="bms" \
+	op monitor interval="30" \
+	meta target-role="Stopped"
+
+<% if node["hosts"]["percona_db"].size % 2 == 0 %>
+primitive svc-garbd ocf:heartbeat:anything \
+	params user="root" logfile="/var/log/bms-garbd.stdout.log" errlogfile="/var/log/bms-garbd.stderr.log" pidfile="/var/run/bms-garbd.pid" workdir="/tmp" binfile="/opt/pmm-heartbeat/sbin/mysql-cluster-arbitr.sh" \
+	op monitor interval="5" \
+	meta target-role="Stopped"
+<%end%>
+
+colocation col-mongo-arb-by-ip inf: svc-mongo-arb ip-mongo-arbiter
+order ord-mongo-arb-after-ip inf: ip-mongo-arbiter:start svc-mongo-arb:start
+order ord-rbs-after-mon-master inf: ip-mongo:start svc-rbs:start
+order ord-rbs-after-rab inf: svc-rabbit:start svc-rbs:start
+<%end%>
+
+
+
+
+
+
+<% if node["cluster"]["role"] == "front" %>
+<% if node["cluster"]["number"] == "1" %>
+<% node["hosts"]["app"].each do |app_node| %>
+<% if app_node.include?("1") %>
+location loc-svc-fbmm-1-on-<%= app_node %> svc-fbmm-1 inf: <%= app_node %>
+location loc-svc-wa-1-on-<%= app_node %> svc-wa-1 inf: <%= app_node %>
+location loc-svc-webmm-1-on-<%= app_node %> svc-webmm-1 inf: <%= app_node %>
+<%end%>
+<% if app_node.include?("2") %>
+location loc-svc-fbmm-2-on-<%= app_node %> svc-fbmm-2 inf: <%= app_node %>
+location loc-svc-wa-2-on-<%= app_node %> svc-wa-2 inf: <%= app_node %>
+location loc-svc-webmm-2-on-<%= app_node %> svc-webmm-2 inf: <%= app_node %>
+<%end%>
+<% ["CDRManager", "DeferredMessagesChecker", "DeliveryReceipt", "IncomingSm", "JustStatePoller", "MessageRegister", "MMSResponse", "SMSResponse", "TaskCloser", "Tube"].each do |mono_serv| %>
+location loc-svc-<%= mono_serv.downcase %>-on-<%= app_node %> svc-<%= mono_serv.downcase %> 1000: <%= app_node %>
+<%end%>
+location loc-lsyncd-cl-on-<%= app_node %> lsyncd-cl 1000: <%= app_node %>
+<% node["hosts"]["virtual"]["front"].keys.each do |front_v_ip| %>
+location loc-<%= front_v_ip %>-on-<%= app_node %> <%= front_v_ip %> 1000: <%= app_node %>
+<%end%>
+location loc-svc-in-sim-on-<%= app_node %> svc-in-sim 1000: <%= app_node %>
+location loc-svc-sus-on-<%= app_node %> svc-sus 1000: <%= app_node %>
+location loc-svc-wq-on-<%= app_node %> svc-wq 1000: <%= app_node %>
+location loc-svc-memcached-on-<%= app_node %> svc-memcached 1000: <%= app_node %>
+<%end%>
+<% else %>
+<% node["hosts"]["app"].each do |app_node| %>
+<% if app_node.include?("1") %>
+location loc-svc-fbmm-2-on-<%= app_node %> svc-fbmm-2 -inf: <%= app_node %>
+location loc-svc-wa-2-on-<%= app_node %> svc-wa-2 -inf: <%= app_node %>
+location loc-svc-webmm-2-on-<%= app_node %> svc-webmm-2 -inf: <%= app_node %>
+<%end%>
+<% if app_node.include?("2") %>
+location loc-svc-fbmm-1-on-<%= app_node %> svc-fbmm-1 -inf: <%= app_node %>
+location loc-svc-wa-1-on-<%= app_node %> svc-wa-1 -inf: <%= app_node %>
+location loc-svc-webmm-1-on-<%= app_node %> svc-webmm-1 -inf: <%= app_node %>
+<%end%>
+<%end%>
+<%end%>
+<%end%>
+
+<% if node["cluster"]["role"] == "back" %>
+<% node["hosts"]["eng"].each do |eng_node| %>
+<% ["ip-funnel", "ip-just", "ip-rabbit", "ip-mongo-arbiter", "ip-sql"].each do |eng_v_ip| %>
+location loc-<%= eng_v_ip %>-on-<%= eng_node %> <%= eng_v_ip %> 1000: <%= eng_node %>
+<%end%>
+<% ["funnel", "just", "rabbit"].each do |erl_app| %>
+location loc-ms-<%= erl_app %>-on-<%= eng_node %> ms-<%= erl_app %> 1000: <%= eng_node %>
+location loc-fs-<%= erl_app %>-on-<%= eng_node %> fs-<%= erl_app %> 1000: <%= eng_node %>
+location loc-svc-<%= erl_app %>-on-<%= eng_node %> svc-<%= erl_app %> 1000: <%= eng_node %>
+<%end%>
+<% if eng_node.include?("1") %>
+location svc-ha-on-<%= eng_node %> svc-ha-e1 inf: <%= eng_node %>
+<%end%>
+<% if eng_node.include?("2") %>
+location svc-ha-on-<%= eng_node %> svc-ha-e2 inf: <%= eng_node %>
+<%end%>
+location garbd-on-<%= eng_node %> svc-garbd 1000: <%= eng_node %>
+location svc-mongo-arb-on-<%= eng_node %> svc-mongo-arb 1000: <%= eng_node %>
+location svc-rbs-on-<%= eng_node %> svc-rbs 1000: <%= eng_node %>
+<%end%>
+
+<% node["hosts"]["mongo_db"].each do |mongo_node| %>
+location ip-mongo-on-<%= mongo_node %> ip-mongo 1000: <%= mongo_node %>
+<% num_mongo = 1 %>
+<% while num_mongo <= node["hosts"]["mongo_db"].size %>
+<% if mongo_node.include?("#{num_mongo}") %>
+location svc-mongo-<%= num_mongo %>-on-<%= mongo_node %> svc-mongo-<%= num_mongo %>  inf: <%= mongo_node %>
+<%end%>
+<% num_mongo = num_mongo + 1 %>
+<%end%>
+<%end%>
+<%end%>
+
+
+
+property $id="cib-bootstrap-options" \
+	cluster-infrastructure="cman" \
+	stonith-enabled="false" \
+	no-quorum-policy="ignore" \
+	pe-error-series-max="128" \
+	pe-input-series-max="128" \
+	pe-warn-series-max="128" \
+<% if node["cluster"]["number"] == "2" && node["cluster"]["role"] == "front" %>
+	symmetric-cluster="true"
+<% else %>
+	symmetric-cluster="false"
+<%end%>

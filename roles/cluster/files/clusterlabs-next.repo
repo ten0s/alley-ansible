@@ -1,0 +1,7 @@
+[clusterlabs-next]
+name=High Availability/Clustering server technologies (rhel-6-next)
+baseurl=http://www.clusterlabs.org/rpm-next/rhel-6
+enabled=1
+gpgcheck=0
+metadata_expire=45m
+sslverify=1

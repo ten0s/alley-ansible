@@ -1,0 +1,190 @@
+#!/bin/bash
+#
+
+######################################################################
+# Initialization:
+
+: ${OCF_FUNCTIONS_DIR=${OCF_ROOT}/resource.d/heartbeat}
+. ${OCF_FUNCTIONS_DIR}/.ocf-shellfuncs
+LC_ALL="C"
+LANG="C"
+
+# Defaults
+OCF_RESKEY_nic_default="eth0"
+OCF_RESKEY_pid_default="${HA_RSCTMP}/Mongo-${OCF_RESOURCE_INSTANCE}.pid"
+
+[ "$HOME" = '' ] && export HOME=${OCF_ROOT}
+
+: ${OCF_RESKEY_nic=${OCF_RESKEY_nic_default}}
+: ${OCF_RESKEY_pid=${OCF_RESKEY_pid_default}}
+
+#######################################################################
+# Configuration:
+
+#######################################################################
+
+meta_data() {
+    cat <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resource-agent SYSTEM "ra-api-1.dtd">
+<resource-agent name="daemon" version="0.1">
+  <version>1.0</version>
+  <longdesc lang="en">Engine RA [long desc]</longdesc>
+  <shortdesc lang="en">Engine RA</shortdesc>
+  <parameters>
+        <parameter name="uname" required="1" />
+        <parameter name="ctl" required="1" />
+        <parameter name="workingDir" required="0" />
+        <parameter name="envScript" required="0" />
+  </parameters>
+  <actions>
+    <action name="start" timeout="15"/>
+    <action name="stop" timeout="15"/>
+        <action name="monitor" timeout="5" interval="10" depth="0"/>
+        <action name="status" timeout="5"/>
+  </actions>
+</resource-agent>
+EOF
+}
+
+#######################################################################
+
+ra_usage() {
+        cat <<END
+usage: $0 {start|stop}
+END
+}
+
+ra_start() {
+        ra_status
+        if [ $? = $OCF_SUCCESS ]; then
+                ocf_log info 'attempting to start an already started resource'
+                return $OCF_SUCCESS
+        fi
+
+        if [ -f "${OCF_RESKEY_envScript}" ] ; then
+                . $OCF_RESKEY_envScript
+        fi
+        ocf_log info "testing $OCF_RESKEY_ctl x-attribute"
+        test -x $OCF_RESKEY_ctl || return $OCF_ERR_INSTALLED
+
+
+        if [ "$OCF_RESKEY_workingDir" = '' ]; then
+                OCF_RESKEY_workingDir=$(dirname $OCF_RESKEY_executable)
+        fi
+        ocf_log info "changing directory to $OCF_RESKEY_workingDir"
+        cd $OCF_RESKEY_workingDir || return $OCF_ERR_GENERIC
+        ocf_log info "Setting open-fds limit to 10240"
+        ulimit -n 10240 -c unlimited
+        ocf_log info "starting up $OCF_RESKEY_ctl"
+        su -c "$OCF_RESKEY_ctl start" - $OCF_RESKEY_uname
+        ocf_log info "about to ping $OCF_RESKEY_ctl"
+        sleep 3;
+        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+        ocf_log info "ra_start: $OCF_RESKEY_ctl ping -> '$PONG'"
+
+        return $OCF_SUCCESS
+}
+
+ra_stop() {
+        ocf_log info "Issuing <stop>"
+
+        # determine erlang node's pid by its cookie stored in vm.args
+        # only works for /opt/SVC/etc/vm.args paths
+        #CRITERION=$(cat $(dirname $(dirname $OCF_RESKEY_ctl) )/etc/vm.args| grep setcookie | awk '{print $2}')
+        # now works for /opt/SVC/{etc,release/1}/vm.args and many more
+        CRITERION=$(cat $(find $(dirname $(dirname $OCF_RESKEY_ctl))/ -iname vm.args | head -1) | grep setcookie | awk '{print $2}')
+        BEAM_PID=$(ps ax | grep beam | grep $CRITERION | awk '{print $1}')
+
+        su $OCF_RESKEY_uname -c "$OCF_RESKEY_ctl stop"
+
+        for (( i=0; i < 10; i++ )); do
+                ocf_log info "Waiting till beam[$BEAM_PID] stops [$i]"
+                sleep 1
+                kill -0 $BEAM_PID 2> /dev/null
+                if [ $? != 0 ]; then
+                        ocf_log info "Resource stopped gracefully"
+                        return $OCF_SUCCESS
+                fi
+        done
+        ocf_log warn "Resource did not stop gracefully. Killing beam.smp[$BEAM_PID] process with cookie '${CRITERION}' brutally"
+        # should generate both erlang and core dumps
+        kill -USR1 $BEAM_PID
+        while kill -0 $BEAM_PID; do
+                ocf_log warn "Waiting for $CRITERION/$BEAM_PID"
+                sleep 1
+        done
+        ocf_log warn "beam killed successfully"
+        return $OCF_SUCCESS
+}
+
+ra_monitor() {
+        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+	ocf_log info "ra_monitor: $OCF_RESKEY_ctl ping -> '$PONG'"
+        [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
+}
+
+ra_status() {
+        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+	ocf_log info "ra_status: $OCF_RESKEY_ctl ping -> '$PONG'"
+        [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
+}
+
+case $1 in
+  meta-data)
+        meta_data
+        exit $OCF_SUCCESS
+        ;;
+  status)
+        ra_status
+        STATUS=$?
+        exit $STATUS
+        ;;
+  monitor)
+        ra_monitor
+        STATUS=$?
+        exit $STATUS
+        ;;
+  demote)
+        ra_stop
+        echo "$0 $@" >> /tmp/ra-notify.log
+        exit $?
+        ;;
+  promote)
+        ra_start
+        echo "$0 $@" >> /tmp/ra-notify.log
+        exit $?
+        ;;
+  notify)
+        echo "$0 $@" >> /tmp/ra-notify.log
+        exit $OCF_SUCCESS
+        ;;
+  validate-all)
+        exit $OCF_SUCCESS
+        ;;
+  usage|help)
+        ra_usage
+        exit $OCF_SUCCESS
+        ;;
+esac
+
+# Everything except usage and meta-data must pass the validate test
+# AoEtarget_validate || exit $?
+
+case $__OCF_ACTION in
+    start)
+                ra_start
+        ;;
+    stop)
+                ra_stop
+        ;;
+    *)
+                ra_usage
+                exit $OCF_ERR_UNIMPLEMENTED
+        ;;
+esac
+
+rc=$?
+ocf_log debug "${OCF_RESOURCE_INSTANCE} $__OCF_ACTION : $rc"
+exit $rc
+

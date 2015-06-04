@@ -1,0 +1,68 @@
+---
+- name: Install clusterlabs-next repo
+  copy: src=clusterlabs-next.repo
+        dest=/etc/yum.repos.d/clusterlabs-next.repo
+        mode=644
+
+- name: Install ha-clustering.repo
+  copy: src=ha-clustering.repo
+        dest=/etc/yum.repos.d/ha-clustering.repo
+        mode=644
+
+- name: Install Cluster packages
+  yum: name={{item}} state=present
+  with_items:
+  - cman-3.0.12.1
+  - ccs-0.16.2
+
+- name: Install CRM packages
+  yum: name={{item}} state=present enablerepo=ha-clustering # why disabled?
+  with_items:
+  - pacemaker-1.1.12 # prod 1.1.10
+  - crmsh-2.1
+  - resource-agents-3.9.6 # prod 3.9.5
+
+- name: Disable CMAN & Pacemaker services
+  service: name={{item}}
+           enabled=false
+           state=stopped
+  with_items:
+  - cman
+  - pacemaker
+
+- name: Copy configs (1/2)
+  copy: src={{item.src}}
+        dest={{item.dest}}
+  with_items:
+  - {src: "corosync.conf", dest: "/etc/corosync/corosync.conf"}
+  - {src: "cluster.conf", dest: "/etc/cluster/cluster.conf"}
+
+- name: Copy configs (2/2)
+  copy: src={{item.src}}
+        dest={{item.dest}}
+  with_items:
+  - {src: "pcmk", dest: "/etc/corosync/service.d/pcmk"}
+  - {src: "cman", dest: "/etc/sysconfig/cman"}
+
+- name: Ensure log dir exists
+  file: path="/var/log/cluster"
+        owner=root
+        group=root
+        mode=755
+        state=directory
+
+- name: Copy script
+  copy: src=corosync_failcount_clear
+        dest=/usr/local/sbin/corosync_failcount_clear
+        owner=root
+        group=root
+        mode=755
+
+# rc.local
+# node1:sleep 5 &&  su root -l -c 'bash -c "/etc/init.d/cman start && /etc/init.d/pacemaker start"'
+# node2:sleep 15 && su root -l -c 'bash -c "/etc/init.d/cman start && /etc/init.d/pacemaker start"'
+# arbiter:          su root -l -c 'bash -c "/etc/init.d/cman start && /etc/init.d/pacemaker start"'
+# arbiter2:         su root -l -c 'bash -c "/etc/init.d/cman start && /etc/init.d/pacemaker start"'
+
+# ???
+#template "/etc/corosync/cluster_init_config.cib"

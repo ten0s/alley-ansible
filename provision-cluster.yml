@@ -1,0 +1,6 @@
+---
+- name: Provision Cluster
+  hosts: all
+  sudo: true
+  roles:
+  - {role: cluster, tags: ["cluster"]}

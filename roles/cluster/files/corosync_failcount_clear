@@ -1,0 +1,17 @@
+#!/bin/bash
+NODE=`crm_node -l`
+
+for RES in $(crm_mon -f1 |grep fail-count |awk '{ print $1}' |awk '{print (substr($1,0,length($1)-1))}') ; do
+        for i in $NODE ; do
+                FAIL_VALUE=$(crm resource failcount $RES show $i |cut -d' ' -f4 |cut -d= -f2)
+                if [[ $FAIL_VALUE == INFINITY ]]; then
+                        echo "cleanup $RES on $i"
+                        crm resource cleanup $RES $i
+                else
+                        if [[ $FAIL_VALUE != 0 ]]; then
+                                echo "clear fail-count $RES on $i"
+                                crm resource failcount $RES delete $i
+                        fi
+                fi
+        done
+done
