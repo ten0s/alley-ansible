@@ -1,9 +1,4 @@
 ---
-- name: Install clusterlabs-next repo
-  copy: src=clusterlabs-next.repo
-        dest=/etc/yum.repos.d/clusterlabs-next.repo
-        mode=644
-
 - name: Install ha-clustering.repo
   copy: src=ha-clustering.repo
         dest=/etc/yum.repos.d/ha-clustering.repo
