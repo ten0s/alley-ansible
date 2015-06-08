@@ -4,17 +4,23 @@
         dest=/etc/yum.repos.d/ha-clustering.repo
         mode=644
 
-- name: Install Cluster packages
+- name: Install packages (1/2)
   yum: name={{item}} state=present
   with_items:
-  - cman-3.0.12.1
   - ccs-0.16.2
+  - cman-3.0.12.1
+  - pcs-0.9.123
 
-- name: Install CRM packages
-  yum: name={{item}} state=present enablerepo=ha-clustering # why disabled?
+- name: Install packages (2/2)
+  #
+  # ha-clustering is disabled by default because
+  # it may (and usually will) conflict with base
+  #
+  yum: name={{item}} state=present enablerepo=ha-clustering
   with_items:
-  - pacemaker-1.1.12 # prod 1.1.10
   - crmsh-2.1
+  # i'm very sceptical about setup pacemaker from this repository
+  - pacemaker-1.1.12 # pacemaker/corosync /1.1.12/1.4.7 # prod 1.1.10/1.4.5
   - resource-agents-3.9.6 # prod 3.9.5
 
 - name: Disable CMAN & Pacemaker services
@@ -25,18 +31,12 @@
   - cman
   - pacemaker
 
-- name: Copy configs (1/2)
+- name: Copy configs
   copy: src={{item.src}}
         dest={{item.dest}}
+        backup=true
   with_items:
-  - {src: "corosync.conf", dest: "/etc/corosync/corosync.conf"}
   - {src: "cluster.conf", dest: "/etc/cluster/cluster.conf"}
-
-- name: Copy configs (2/2)
-  copy: src={{item.src}}
-        dest={{item.dest}}
-  with_items:
-  - {src: "pcmk", dest: "/etc/corosync/service.d/pcmk"}
   - {src: "cman", dest: "/etc/sysconfig/cman"}
 
 - name: Ensure log dir exists
