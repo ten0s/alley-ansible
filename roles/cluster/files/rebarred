@@ -28,25 +28,25 @@ rebarred_meta_data() {
     <parameter name="uname" required="1">
       <longdesc lang="en">User name the resource agent should run the resource under</longdesc>
       <shortdesc lang="en">User name</shortdesc>
-      <content type="string"/>
+      <content type="string" default=""/>
     </parameter>
 
     <parameter name="ctl" required="1">
       <longdesc lang="en">Path to resource script</longdesc>
       <shortdesc lang="en">Path to resource script</shortdesc>
-      <content type="string"/>
+      <content type="string" default=""/>
     </parameter>
 
     <parameter name="workingDir" required="1">
       <longdesc lang="en">Working directory for the resource script</longdesc>
       <shortdesc lang="en">Working directory for the resource script</shortdesc>
-      <content type="string"/>
+      <content type="string" default=""/>
     </parameter>
 
     <parameter name="envScript" required="0">
       <longdesc lang="en">Environment script to run before start</longdesc>
       <shortdesc lang="en">Environment script</shortdesc>
-      <content type="string"/>
+      <content type="string" default=""/>
     </parameter>
   </parameters>
 
@@ -64,7 +64,7 @@ EOF
 
 rebarred_usage() {
     cat <<END
-usage: $0 {start|stop|status}
+usage: $0 {start|stop|status|monitor|meta-data|usage}
 END
 }
 
@@ -166,16 +166,13 @@ case $1 in
         ;;
     demote)
         rebarred_stop
-        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $?
         ;;
     promote)
         rebarred_start
-        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $?
         ;;
     notify)
-        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $OCF_SUCCESS
         ;;
     validate-all)
