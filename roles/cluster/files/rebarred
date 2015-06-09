@@ -9,39 +9,52 @@
 LC_ALL="C"
 LANG="C"
 
-# Defaults
-OCF_RESKEY_nic_default="eth0"
-OCF_RESKEY_pid_default="${HA_RSCTMP}/Mongo-${OCF_RESOURCE_INSTANCE}.pid"
-
 [ "$HOME" = '' ] && export HOME=${OCF_ROOT}
-
-: ${OCF_RESKEY_nic=${OCF_RESKEY_nic_default}}
-: ${OCF_RESKEY_pid=${OCF_RESKEY_pid_default}}
 
 #######################################################################
 # Configuration:
 
 #######################################################################
 
-meta_data() {
+rebarred_meta_data() {
     cat <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE resource-agent SYSTEM "ra-api-1.dtd">
-<resource-agent name="daemon" version="0.1">
-  <version>1.0</version>
-  <longdesc lang="en">Engine RA [long desc]</longdesc>
-  <shortdesc lang="en">Engine RA</shortdesc>
+<resource-agent name="rebarred" version="0.2">
+  <version>0.2</version>
+  <longdesc lang="en">Resource agent for rebar generated erlang release</longdesc>
+  <shortdesc lang="en">Resource agent for rebar generated erlang release</shortdesc>
   <parameters>
-        <parameter name="uname" required="1" />
-        <parameter name="ctl" required="1" />
-        <parameter name="workingDir" required="0" />
-        <parameter name="envScript" required="0" />
+    <parameter name="uname" required="1">
+      <longdesc lang="en">User name the resource agent should run the resource under</longdesc>
+      <shortdesc lang="en">User name</shortdesc>
+      <content type="string"/>
+    </parameter>
+
+    <parameter name="ctl" required="1">
+      <longdesc lang="en">Path to resource script</longdesc>
+      <shortdesc lang="en">Path to resource script</shortdesc>
+      <content type="string"/>
+    </parameter>
+
+    <parameter name="workingDir" required="1">
+      <longdesc lang="en">Working directory for the resource script</longdesc>
+      <shortdesc lang="en">Working directory for the resource script</shortdesc>
+      <content type="string"/>
+    </parameter>
+
+    <parameter name="envScript" required="0">
+      <longdesc lang="en">Environment script to run before start</longdesc>
+      <shortdesc lang="en">Environment script</shortdesc>
+      <content type="string"/>
+    </parameter>
   </parameters>
+
   <actions>
-    <action name="start" timeout="15"/>
-    <action name="stop" timeout="15"/>
-        <action name="monitor" timeout="5" interval="10" depth="0"/>
-        <action name="status" timeout="5"/>
+    <action name="start" timeout="30"/>
+    <action name="stop" timeout="60"/>
+    <action name="monitor" timeout="30" interval="30" depth="0"/>
+    <action name="status" timeout="30"/>
   </actions>
 </resource-agent>
 EOF
@@ -49,142 +62,144 @@ EOF
 
 #######################################################################
 
-ra_usage() {
-        cat <<END
-usage: $0 {start|stop}
+rebarred_usage() {
+    cat <<END
+usage: $0 {start|stop|status}
 END
 }
 
-ra_start() {
-        ra_status
-        if [ $? = $OCF_SUCCESS ]; then
-                ocf_log info 'attempting to start an already started resource'
-                return $OCF_SUCCESS
-        fi
-
-        if [ -f "${OCF_RESKEY_envScript}" ] ; then
-                . $OCF_RESKEY_envScript
-        fi
-        ocf_log info "testing $OCF_RESKEY_ctl x-attribute"
-        test -x $OCF_RESKEY_ctl || return $OCF_ERR_INSTALLED
-
-
-        if [ "$OCF_RESKEY_workingDir" = '' ]; then
-                OCF_RESKEY_workingDir=$(dirname $OCF_RESKEY_executable)
-        fi
-        ocf_log info "changing directory to $OCF_RESKEY_workingDir"
-        cd $OCF_RESKEY_workingDir || return $OCF_ERR_GENERIC
-        ocf_log info "Setting open-fds limit to 10240"
-        ulimit -n 10240 -c unlimited
-        ocf_log info "starting up $OCF_RESKEY_ctl"
-        su -c "$OCF_RESKEY_ctl start" - $OCF_RESKEY_uname
-        ocf_log info "about to ping $OCF_RESKEY_ctl"
-        sleep 3;
-        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
-        ocf_log info "ra_start: $OCF_RESKEY_ctl ping -> '$PONG'"
-
+rebarred_start() {
+    rebarred_status
+    if [ $? = $OCF_SUCCESS ]; then
+        ocf_log info 'rebarred_start: Attempting to start an already started resource'
         return $OCF_SUCCESS
+    fi
+
+    if [ -f "${OCF_RESKEY_envScript}" ]; then
+        . $OCF_RESKEY_envScript
+    fi
+
+    ocf_log info "rebarred_start: Testing $OCF_RESKEY_ctl x-attribute"
+    test -x $OCF_RESKEY_ctl || return $OCF_ERR_INSTALLED
+
+    # TODO: not sure it's really needed, but let stick with it for a while
+    ocf_log info "rebarred_start: Changing directory to $OCF_RESKEY_workingDir"
+    cd $OCF_RESKEY_workingDir || return $OCF_ERR_GENERIC
+
+    # TODO: better to use parameters and don't hardcode
+    ocf_log info "rebarred_start: Setting open-fds limit to 10240"
+    ulimit -n 10240 -c unlimited
+
+    ocf_log info "rebarred_start: Starting up $OCF_RESKEY_ctl"
+    su -c "$OCF_RESKEY_ctl start" - $OCF_RESKEY_uname
+    sleep 3;
+
+    ocf_log info "rebarred_start: About to ping $OCF_RESKEY_ctl"
+    PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+    ocf_log info "rebarred_start: $OCF_RESKEY_ctl ping -> '$PONG'"
+
+    return $OCF_SUCCESS
 }
 
-ra_stop() {
-        ocf_log info "Issuing <stop>"
+rebarred_stop() {
+    ocf_log info "rebarred_stop: Issuing STOP"
 
-        # determine erlang node's pid by its cookie stored in vm.args
-        # only works for /opt/SVC/etc/vm.args paths
-        #CRITERION=$(cat $(dirname $(dirname $OCF_RESKEY_ctl) )/etc/vm.args| grep setcookie | awk '{print $2}')
-        # now works for /opt/SVC/{etc,release/1}/vm.args and many more
-        CRITERION=$(cat $(find $(dirname $(dirname $OCF_RESKEY_ctl))/ -iname vm.args | head -1) | grep setcookie | awk '{print $2}')
-        BEAM_PID=$(ps ax | grep beam | grep $CRITERION | awk '{print $1}')
+    # determine erlang node's pid by its cookie stored in vm.args
+    # only works for /opt/SVC/etc/vm.args paths
+    #CRITERION=$(cat $(dirname $(dirname $OCF_RESKEY_ctl) )/etc/vm.args| grep setcookie | awk '{print $2}')
+    # now works for /opt/SVC/{etc,release/1}/vm.args and many more
+    CRITERION=$(cat $(find $(dirname $(dirname $OCF_RESKEY_ctl))/ -iname vm.args | head -1) | grep setcookie | awk '{print $2}')
+    BEAM_PID=$(ps ax | grep beam | grep $CRITERION | awk '{print $1}')
 
-        su $OCF_RESKEY_uname -c "$OCF_RESKEY_ctl stop"
+    su $OCF_RESKEY_uname -c "$OCF_RESKEY_ctl stop"
 
-        for (( i=0; i < 10; i++ )); do
-                ocf_log info "Waiting till beam[$BEAM_PID] stops [$i]"
-                sleep 1
-                kill -0 $BEAM_PID 2> /dev/null
-                if [ $? != 0 ]; then
-                        ocf_log info "Resource stopped gracefully"
-                        return $OCF_SUCCESS
-                fi
-        done
-        ocf_log warn "Resource did not stop gracefully. Killing beam.smp[$BEAM_PID] process with cookie '${CRITERION}' brutally"
-        # should generate both erlang and core dumps
-        kill -USR1 $BEAM_PID
-        while kill -0 $BEAM_PID; do
-                ocf_log warn "Waiting for $CRITERION/$BEAM_PID"
-                sleep 1
-        done
-        ocf_log warn "beam killed successfully"
-        return $OCF_SUCCESS
+    for (( i=0; i < 10; i++ )); do
+        ocf_log info "rebarred_stop: Waiting till beam[$BEAM_PID] stops [$i]"
+        sleep 1
+        kill -0 $BEAM_PID 2> /dev/null
+        if [ $? != 0 ]; then
+            ocf_log info "rebarred_stop: Resource stopped gracefully"
+            return $OCF_SUCCESS
+        fi
+    done
+
+    ocf_log warn "rebarred_stop: Resource did not stop gracefully"
+    ocf_log_warn "rebarred_stop: Killing beam.smp[$BEAM_PID] process with cookie '${CRITERION}' brutally"
+
+    # TODO: add killSignal parameter
+    # should generate both erlang and core dumps
+    kill -USR1 $BEAM_PID
+    while kill -0 $BEAM_PID; do
+        ocf_log warn "rebarred_stop: Waiting for $CRITERION/$BEAM_PID"
+        sleep 1
+    done
+    ocf_log warn "rebarred_stop: beam.smp[$BEAM_PID] killed successfully"
+    return $OCF_SUCCESS
 }
 
-ra_monitor() {
-        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
-	ocf_log info "ra_monitor: $OCF_RESKEY_ctl ping -> '$PONG'"
-        [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
+rebarred_monitor() {
+    PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+	ocf_log info "rebarred_monitor: $OCF_RESKEY_ctl ping -> '$PONG'"
+    [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
 }
 
-ra_status() {
-        PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
-	ocf_log info "ra_status: $OCF_RESKEY_ctl ping -> '$PONG'"
-        [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
+rebarred_status() {
+    PONG=$(su -c "$OCF_RESKEY_ctl ping" - $OCF_RESKEY_uname)
+	ocf_log info "rebarred_status: $OCF_RESKEY_ctl ping -> '$PONG'"
+    [ "$PONG" == 'pong' ] && return $OCF_SUCCESS || return $OCF_NOT_RUNNING
 }
 
 case $1 in
-  meta-data)
-        meta_data
+    meta-data)
+        rebarred_meta_data
         exit $OCF_SUCCESS
         ;;
-  status)
-        ra_status
+    status)
+        rebarred_status
         STATUS=$?
         exit $STATUS
         ;;
-  monitor)
-        ra_monitor
+    monitor)
+        rebarred_monitor
         STATUS=$?
         exit $STATUS
         ;;
-  demote)
-        ra_stop
-        echo "$0 $@" >> /tmp/ra-notify.log
+    demote)
+        rebarred_stop
+        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $?
         ;;
-  promote)
-        ra_start
-        echo "$0 $@" >> /tmp/ra-notify.log
+    promote)
+        rebarred_start
+        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $?
         ;;
-  notify)
-        echo "$0 $@" >> /tmp/ra-notify.log
+    notify)
+        echo "$0 $@" >> /tmp/rebarred-notify.log
         exit $OCF_SUCCESS
         ;;
-  validate-all)
+    validate-all)
         exit $OCF_SUCCESS
         ;;
-  usage|help)
-        ra_usage
+    usage|help)
+        rebarred_usage
         exit $OCF_SUCCESS
         ;;
 esac
 
-# Everything except usage and meta-data must pass the validate test
-# AoEtarget_validate || exit $?
-
 case $__OCF_ACTION in
     start)
-                ra_start
+        rebarred_start
         ;;
     stop)
-                ra_stop
+        rebarred_stop
         ;;
     *)
-                ra_usage
-                exit $OCF_ERR_UNIMPLEMENTED
+        rebarred_usage
+        exit $OCF_ERR_UNIMPLEMENTED
         ;;
 esac
 
 rc=$?
 ocf_log debug "${OCF_RESOURCE_INSTANCE} $__OCF_ACTION : $rc"
 exit $rc
-
