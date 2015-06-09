@@ -20,6 +20,17 @@
   yum: name=http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
        state=present
 
+- name: Install NTP
+  yum: name={{item}} state=present
+  with_items:
+  - ntp
+  - ntpdate
+
+- name: Enable and start NTP service
+  service: name=ntpd
+           enabled=true
+           state=started
+
 - name: Add user
   user: name={{run_user}}
 
