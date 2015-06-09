@@ -10,7 +10,7 @@
 #     startup quorum is needed by many other applications, so we may as
 #     well wait here.  If CMAN_QUORUM_TIMEOUT is zero, quorum will
 #     be ignored.
-#CMAN_QUORUM_TIMEOUT=45
+CMAN_QUORUM_TIMEOUT=0
 
 # CMAN_SHUTDOWN_TIMEOUT -- amount of time to wait for cman to become a
 #     cluster member before calling cman_tool leave during shutdown.
@@ -59,7 +59,7 @@
 #     to join the fence domain (equivalent to "yes").
 #     When setting FENCE_JOIN to "no", it is important to also set
 #     DLM_CONTROLD_OPTS="-f0" (at least) for correct operation.
-#     Please note that clusters without fencing are not 
+#     Please note that clusters without fencing are not
 #     supported by Red Hat except for MRG installations.
 #FENCE_JOIN="yes"
 
@@ -102,4 +102,3 @@
 # terse (default) - show only required activity
 # full            - show everything
 #INITLOGLEVEL=terse
-CMAN_QUORUM_TIMEOUT=0
