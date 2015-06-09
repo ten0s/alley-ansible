@@ -1,0 +1,6 @@
+ansible-playbook ../../provision-common-env.yml -i ansible/replica
+ansible-playbook ../../provision-backend-env.yml -i ansible/replica --tags mongodb
+ansible-playbook ../../provision-backend-env.yml -i ansible/replica --tags erlang,rabbitmq,smppsim
+ansible-playbook ../../deploy.yml -i ansible/replica --tags funnel,kelly,just
+
+ansible-playbook ../../provision-cluster.yml -i ansible/replica
