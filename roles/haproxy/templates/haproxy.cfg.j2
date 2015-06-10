@@ -1,0 +1,80 @@
+#---------------------------------------------------------------------
+# See the full configuration options online.
+#
+#   http://haproxy.1wt.eu/download/1.4/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+defaults
+    mode                    tcp
+    balance                 leastconn
+    log                     global
+    option                  tcplog
+    option                  dontlognull
+    option                  redispatch
+    retries                 3
+    timeout queue           30m
+    timeout connect         10s
+    timeout client          30m
+    timeout server          30m
+    timeout check           5s
+    maxconn                 3000
+
+{% if ansible_hostname in groups['nodes'] %}
+
+listen rabbitmq :35672
+    server rabbitmq_node1 node1:5672 check
+    server rabbitmq_node2 node2:5672 check
+
+listen smppsim :18001
+    server smppsim_node1 node1:8001 check
+    server smppsim_node2 node2:8001 check
+
+{% elif ansible_hostname in groups['arbiters'] %}
+
+listen funnel :2775
+    server funnel_node1 node1:2775 check
+    server funnel_node2 node2:2775 check
+
+listen kelly :8080
+    server kelly_node1 node1:8080 check
+    server kelly_node2 node2:8080 check
+
+listen mm :8083
+    server mm_node1 node1:8083 check
+    server mm_node2 node2:8083 check
+
+listen soap :8088
+    server soap_node1 node1:8088 check
+    server soap_node2 node2:8088 check
+
+{% endif %}
