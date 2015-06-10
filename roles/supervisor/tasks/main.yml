@@ -23,7 +23,7 @@
   notify: Restart Supervisor
 
 - name: Determine IP address
-  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_interface]['ipv4']['address']}}
+  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
 
 - name: Copy Supervisor's config (1/2)
   copy: src={{item.src}}
