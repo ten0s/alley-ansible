@@ -108,12 +108,14 @@
   register: rmq_res
   changed_when: (rmq_res.rc == 0) or (rmq_res.stdout.find('already running') == -1)
   failed_when: (rmq_res.rc == 1) and (rmq_res.stdout.find('already running') == -1)
-  when: not rmq_ver_reg.stat.exists
+
+- name: Define RabbitMQ is already running
+  set_fact: rmq_already_running={{rmq_res.stdout.find('already running') != -1}}
 
 - name: Wait for RabbitMQ
   wait_for: port={{rabbitmq_port}}
             timeout=60
-  when: not rmq_ver_reg.stat.exists
+  when: not rmq_already_running
 
 - name: Add RabbitMQ user
   rabbitmq_user: user={{rabbitmq_username}}
@@ -125,8 +127,7 @@
                  write_priv=.*
                  tags=administrator
                  state=present
-  when: not rmq_ver_reg.stat.exists
 
 - name: Stop RabbitMQ
   command: rabbitmqctl stop
-  when: not rmq_ver_reg.stat.exists
+  when: not rmq_already_running
