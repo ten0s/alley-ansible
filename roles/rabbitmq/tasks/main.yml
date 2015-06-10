@@ -113,7 +113,7 @@
   set_fact: rmq_already_running={{rmq_res.stdout.find('already running') != -1}}
 
 - name: Wait for RabbitMQ
-  wait_for: port={{rabbitmq_port}}
+  wait_for: port={{rabbitmq_default_port}}
             timeout=60
   when: not rmq_already_running
 
