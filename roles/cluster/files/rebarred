@@ -53,8 +53,8 @@ rebarred_meta_data() {
   <actions>
     <action name="start" timeout="30"/>
     <action name="stop" timeout="60"/>
-    <action name="monitor" timeout="30" interval="30" depth="0"/>
-    <action name="status" timeout="30"/>
+    <action name="monitor" timeout="20" interval="30" depth="0"/>
+    <action name="status" timeout="20"/>
   </actions>
 </resource-agent>
 EOF
