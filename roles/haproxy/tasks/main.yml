@@ -8,7 +8,7 @@
             dest=/etc/haproxy/haproxy.cfg
   notify: Restart HAProxy
 
-- name: Enable HAProxy service
+- name: Disable and don't start HAProxy service
   service: name=haproxy
-           enabled=true
-           state=started
+           enabled=false
+           state=stopped

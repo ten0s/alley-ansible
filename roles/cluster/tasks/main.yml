@@ -36,12 +36,13 @@
 
 - name: Copy resource agents
   copy: src={{item.src}}
-        dest={{item.dest}}
+        dest="/usr/lib/ocf/resource.d/{{item.dest}}"
         backup=true
         mode=755
   with_items:
-  - {src: "rebarred", dest: "/usr/lib/ocf/resource.d/pmm/"}
-  - {src: "rabbitmq-server", dest: "/usr/lib/ocf/resource.d/rabbitmq/"}
+  - {src: "rebarred", dest: "pmm/"}
+  - {src: "rabbitmq-server", dest: "rabbitmq/"}
+  - {src: "ha-proxy", dest: "russki/"}
   tags: ['agents']
 
 #- name: Copy script
