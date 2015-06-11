@@ -3,4 +3,4 @@
   hosts: all
   sudo: true
   roles:
-  - {role: cluster, tags: ["cluster"]}
+  - {role: cluster, tags: ["cluster"], when: "{{'cluster' in group_names}}"}
