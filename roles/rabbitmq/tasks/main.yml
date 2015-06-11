@@ -49,14 +49,6 @@
         state=link
 
 #
-# PID DIR
-#
-
-- name: Ensure pid dir exists
-  file: path="/var/run/rabbitmq"
-        state=directory
-
-#
 #
 #
 
