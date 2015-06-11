@@ -1,0 +1,19 @@
+vagrant up
+
+ansible all -i ansible/hosts -m ping
+
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.201 node1 node1.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.202 node2 node2.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.203 arbiter arbiter.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.204 arbiter2 arbiter2.dev1team.net" >> /etc/hosts'
+
+ansible-playbook ../../provision-common-env.yml -i ansible/hosts
+
+ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags mongodb
+setup replica
+
+ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags erlang,rabbitmq,haproxy,smppsim
+ansible-playbook ../../deploy.yml -i ansible/hosts --tags funnel,kelly,just
+
+ansible-playbook ../../provision-hosts.yml -i ansible/hosts
+crm configure load replace /etc/cluster/cluster_init_conf.cib

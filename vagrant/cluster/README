@@ -29,10 +29,10 @@ sudo reboot
 192.168.100.203       arbiter arbiter.dev1team.net
 192.168.100.204       arbiter2 arbiter2.dev1team.net
 
-ansible all -i ansible/replica -s -m shell -a 'echo "192.168.100.201 node1 node1.dev1team.net" >> /etc/hosts'
-ansible all -i ansible/replica -s -m shell -a 'echo "192.168.100.202 node2 node2.dev1team.net" >> /etc/hosts'
-ansible all -i ansible/replica -s -m shell -a 'echo "192.168.100.203 arbiter arbiter.dev1team.net" >> /etc/hosts'
-ansible all -i ansible/replica -s -m shell -a 'echo "192.168.100.204 arbiter2 arbiter2.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.201 node1 node1.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.202 node2 node2.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.203 arbiter arbiter.dev1team.net" >> /etc/hosts'
+ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.204 arbiter2 arbiter2.dev1team.net" >> /etc/hosts'
 
 setup replica set
 
@@ -47,19 +47,19 @@ setup replica set
 
 arbiter
 sudo killall mongod
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit arbiter --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit arbiter --tags mongodb
 wait for arbiter
 
 node2 (secondary)
 sudo killall mongod
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit node2 --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node2 --tags mongodb
 wait for secondary
 
 node1 (master)
 rs.stepDown(300)
 wait for a new master
 sudo killall mongod
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit node1 --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node1 --tags mongodb
 wait for secondary
 
 node{1,2}, arbiter
@@ -80,17 +80,17 @@ sudo rm -rf /opt/mongodb*
 
 arbiter
 sudo service mongod stop
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit arbiter --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit arbiter --tags mongodb
 wait for arbiter
 
 node1 (secondary)
 sudo service mongod stop
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit node2 --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node2 --tags mongodb
 wait for secondary
 
 node2 (master)
 rs.stepDown(300)
 wait for a new master
 sudo service mongod stop
-ansible-playbook provision-backend-env.yml -i ansible/replica --limit node1 --tags mongodb
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node1 --tags mongodb
 wait for secondary
