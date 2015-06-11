@@ -35,18 +35,23 @@ primitive svc-kelly ocf:pmm:rebarred \
 location svc-rabbitmq-on-node1 svc-rabbitmq 1000: node1
 location svc-rabbitmq-on-node2 svc-rabbitmq 1000: node2
 location svc-rabbitmq-on-arbiter svc-rabbitmq -INFINITY: arbiter
+location svc-rabbitmq-on-arbiter2 svc-rabbitmq -INFINITY: arbiter2
 location smppsim-on-node1 smppsim 1000: node1
 location smppsim-on-node2 smppsim 1000: node2
 location smppsim-on-arbiter smppsim -INFINITY: arbiter
+location smppsim-on-arbiter2 smppsim -INFINITY: arbiter2
 location svc-funnel-on-node1 svc-funnel 1000: node1
 location svc-funnel-on-node2 svc-funnel 1000: node2
 location svc-funnel-on-arbiter svc-funnel -INFINITY: arbiter
+location svc-funnel-on-arbiter2 svc-funnel -INFINITY: arbiter2
 location svc-just-on-node1 svc-just 1000: node1
 location svc-just-on-node2 svc-just 1000: node2
 location svc-just-on-arbiter svc-just -INFINITY: arbiter
+location svc-just-on-arbiter2 svc-just -INFINITY: arbiter2
 location svc-kelly-on-node1 svc-kelly 1000: node1
 location svc-kelly-on-node2 svc-kelly 1000: node2
 location svc-kelly-on-arbiter svc-kelly -INFINITY: arbiter
+location svc-kelly-on-arbiter2 svc-kelly -INFINITY: arbiter2
 order ord-svc-funnel-after-svc-rabbitmq inf: svc-rabbitmq:start svc-funnel:start
 order ord-svc-kelly-after-svc-rabbitmq inf: svc-rabbitmq:start svc-kelly:start
 property cib-bootstrap-options: \
