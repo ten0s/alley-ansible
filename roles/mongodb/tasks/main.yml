@@ -10,14 +10,14 @@
   with_items:
   - mongodb-org-{{mongodb_version}}
 
-- name: Ensure MongoDB db path exists
+- name: Create db dir
   file: path={{mongodb_dbpath}}
         state=directory
         owner={{mongodb_user}}
         group={{mongodb_user}}
         recurse=true
 
-- name: Copy MongoDB's config
+- name: Provision config
   template: src=mongod.conf.j2
             dest=/etc/mongod.conf
   notify: Restart MongoDB

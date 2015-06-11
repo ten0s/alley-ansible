@@ -19,12 +19,12 @@
        state=present
   notify: Restart Supervisor
 
-- name: Provision Web.config
+- name: Provision config
   template: src=Web.config.j2
             dest=/opt/poweralleyui-{{poweralleyui_version}}/Web.config
   notify: Restart Supervisor
 
-- name: Ensure correct rights
+- name: Correct rights
   file: path=/opt/poweralleyui-{{poweralleyui_version}}
         owner={{run_user}}
         group={{run_user}}
@@ -32,7 +32,7 @@
         follow=true
   notify: Restart Supervisor
 
-- name: Ensure link exists
+- name: Create link
   file: src=/opt/poweralleyui-{{poweralleyui_version}}
         dest=/opt/poweralleyui
         state=link

@@ -3,24 +3,14 @@
   yum: name=pmm-smppsim-{{smppsim_version}}
        state=present
 
-- name: Copy SMPPSim configs
+- name: Provision config
   copy: src={{item}}
         dest=/opt/smppsim-{{smppsim_version}}/conf/
   with_items:
   - smppsim.props
   - logging.properties
 
-#- name: Ensure correct rights
-#  file: path=/opt/smppsim-{{smppsim_version}}
-#        owner={{run_user}}
-#        group={{run_user}}
-#        recurse=true
-#        follow=true
-
-- name: Ensure link exists
+- name: Create link
   file: src=/opt/smppsim-{{smppsim_version}}
         dest=/opt/smppsim
         state=link
-
-#- name: Start SMPPSim
-#  shell: nohup ./startsmppsim.sh & chdir=/opt/smppsim/

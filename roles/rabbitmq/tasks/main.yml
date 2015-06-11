@@ -22,7 +22,7 @@
   set_fact: rmq_global_data_dir="/var/lib/rabbitmq"
             rmq_local_data_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/data"
 
-- name: Ensure data dir exists
+- name: Create data dir
   file: path={{rmq_global_data_dir}}
         state=directory
 
@@ -39,7 +39,7 @@
   set_fact: rmq_global_log_dir="/var/log/rabbitmq"
             rmq_local_log_dir="/opt/rabbitmq_server-{{rabbitmq_version}}/log"
 
-- name: Ensure log dir exists
+- name: Create log dir
   file: path={{rmq_global_log_dir}}
         state=directory
 
@@ -52,12 +52,12 @@
 #
 #
 
-- name: Ensure correct rights
+- name: Correct rights
   file: path=/opt/rabbitmq_server-{{rabbitmq_version}}
         recurse=true
         follow=true
 
-- name: Ensure link exists
+- name: Create link
   file: src=/opt/rabbitmq_server-{{rabbitmq_version}}
         dest=/opt/rabbitmq
         state=link
@@ -87,7 +87,7 @@
 # Provision config and and enable plugins
 #
 
-- name: Copy config
+- name: Provision config
   copy: src=rabbitmq-env.conf
         dest=/opt/rabbitmq_server-{{rabbitmq_version}}/etc/rabbitmq/
 

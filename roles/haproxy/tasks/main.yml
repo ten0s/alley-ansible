@@ -3,7 +3,7 @@
   yum: name=haproxy-{{haproxy_version}}
        state=present
 
-- name: Copy HAProxy's configuration
+- name: Provision config
   template: src=haproxy.cfg.j2
             dest=/etc/haproxy/haproxy.cfg
   notify: Restart HAProxy

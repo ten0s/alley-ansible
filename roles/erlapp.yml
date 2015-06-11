@@ -37,7 +37,7 @@
   changed_when: false
   when: global_data_dir
 
-- name: Ensure data dir exists
+- name: Create data dir
   file: path={{data_dir}}
         state=directory
   when: global_data_dir
@@ -80,7 +80,7 @@
   changed_when: false
   when: global_log_dir
 
-- name: Ensure log dir exists
+- name: Create log dir
   file: path={{log_dir}}
         state=directory
   when: global_log_dir
@@ -107,14 +107,14 @@
 #
 #
 
-- name: Ensure correct rights
+- name: Correct rights
   file: path=/opt/{{name}}{{name_suffix}}-{{version}}
         owner={{run_user}}
         group={{run_user}}
         recurse=true
         follow=true
 
-- name: Ensure link exists
+- name: Create link
   file: src=/opt/{{name}}{{name_suffix}}-{{version}}
         dest=/opt/{{name}}
         state=link

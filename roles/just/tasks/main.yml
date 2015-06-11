@@ -1,5 +1,5 @@
 ---
-- name: Ensure deps are installed
+- name: Install deps
   yum: name={{item}} state=present
   with_items:
   - tokyocabinet
