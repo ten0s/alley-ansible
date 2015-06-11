@@ -20,6 +20,18 @@ primitive svc-funnel ocf:pmm:rebarred \
 	op stop timeout=60 interval=0 \
 	op monitor interval=30 \
 	meta target-role=Started is-managed=true
+primitive svc-soap_srv ocf:pmm:rebarred \
+	params workingDir="/opt/soap_srv" ctl="/opt/soap_srv/bin/soap_srv" uname=bms \
+	op start timeout=60 interval=0 \
+	op stop timeout=60 interval=0 \
+	op monitor interval=30 \
+	meta target-role=Started is-managed=true
+primitive svc-mm_srv ocf:pmm:rebarred \
+	params workingDir="/opt/mm_srv" ctl="/opt/mm_srv/bin/mm_srv" uname=bms \
+	op start timeout=60 interval=0 \
+	op stop timeout=60 interval=0 \
+	op monitor interval=30 \
+	meta target-role=Started is-managed=true
 primitive svc-just ocf:pmm:rebarred \
 	params workingDir="/opt/just" ctl="/opt/just/bin/just" uname=bms \
 	op start timeout=60 interval=0 \
@@ -48,6 +60,14 @@ location svc-funnel-on-node1 svc-funnel 1000: node1
 location svc-funnel-on-node2 svc-funnel 1000: node2
 location svc-funnel-on-arbiter svc-funnel -INFINITY: arbiter
 location svc-funnel-on-arbiter2 svc-funnel -INFINITY: arbiter2
+location svc-soap_srv-on-node1 svc-soap_srv 1000: node1
+location svc-soap_srv-on-node2 svc-soap_srv 1000: node2
+location svc-soap_srv-on-arbiter svc-soap_srv -INFINITY: arbiter
+location svc-soap_srv-on-arbiter2 svc-soap_srv -INFINITY: arbiter2
+location svc-mm_srv-on-node1 svc-mm_srv 1000: node1
+location svc-mm_srv-on-node2 svc-mm_srv 1000: node2
+location svc-mm_srv-on-arbiter svc-mm_srv -INFINITY: arbiter
+location svc-mm_srv-on-arbiter2 svc-mm_srv -INFINITY: arbiter2
 location svc-just-on-node1 svc-just 1000: node1
 location svc-just-on-node2 svc-just 1000: node2
 location svc-just-on-arbiter svc-just -INFINITY: arbiter
@@ -61,6 +81,8 @@ location proxy-cl-on-node2 proxy-cl 1000: node2
 location proxy-cl-on-arbiter proxy-cl 1000: arbiter
 location proxy-cl-on-arbiter2 proxy-cl 1000: arbiter2
 order ord-svc-funnel-after-svc-rabbitmq inf: svc-rabbitmq:start svc-funnel:start
+order ord-svc-soap_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-soap_srv:start
+order ord-svc-mm_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-mm_srv:start
 order ord-svc-kelly-after-svc-rabbitmq inf: svc-rabbitmq:start svc-kelly:start
 property cib-bootstrap-options: \
 	dc-version=1.1.11-97629de \

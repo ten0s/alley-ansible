@@ -13,7 +13,7 @@ ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags mongodb
 setup replica
 
 ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags erlang,rabbitmq,haproxy,smppsim
-ansible-playbook ../../deploy.yml -i ansible/hosts --tags funnel,kelly,just
+ansible-playbook ../../deploy.yml -i ansible/hosts --tags funnel,soap,mm,kelly,just
 
 ansible-playbook ../../provision-hosts.yml -i ansible/hosts
 crm configure load replace /etc/cluster/cluster_init_conf.cib
