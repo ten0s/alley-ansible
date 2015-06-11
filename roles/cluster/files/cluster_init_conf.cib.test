@@ -9,7 +9,7 @@ primitive smppsim anything \
 	op monitor interval=30 \
 	meta target-role=Started is-managed=true
 primitive svc-rabbitmq ocf:rabbitmq:rabbitmq-server \
-	params mnesia_base="/opt/rabbitmq/data" log_base="/opt/rabbitmq/log" \
+	params mnesia_base="/opt/rabbitmq/data/mnesia" log_base="/opt/rabbitmq/log" \
 	op start timeout=600 interval=0 \
 	op stop timeout=180 interval=0 \
 	op monitor interval=30 \
