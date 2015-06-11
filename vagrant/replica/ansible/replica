@@ -9,3 +9,8 @@ node2
 
 [arbiters]
 arbiter
+
+[cluster]
+node1
+node2
+arbiter

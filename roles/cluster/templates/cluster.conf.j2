@@ -1,0 +1,22 @@
+<cluster config_version="1" name="power_alley">
+  <fence_daemon/>
+  <clusternodes>
+{% for host in groups['cluster'] %}
+    <clusternode name="{{host}}" nodeid="{{loop.index}}">
+      <fence>
+        <method name="pcmk-redirect">
+          <device name="pcmk" port="{{host}}"/>
+        </method>
+      </fence>
+    </clusternode>
+{% endfor %}
+  </clusternodes>
+  <cman transport="udpu"/>
+  <fencedevices>
+    <fencedevice agent="fence_pcmk" name="pcmk"/>
+  </fencedevices>
+  <rm>
+    <failoverdomains/>
+    <resources/>
+  </rm>
+</cluster>

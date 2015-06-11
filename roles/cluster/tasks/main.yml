@@ -19,14 +19,19 @@
   - pssh-2.3.1
   - resource-agents-3.9.6 # prod 3.9.5
 
-- name: Copy configs
+- name: Copy configs (1/2)
+  template: src=cluster.conf.j2
+        dest=/etc/cluster/cluster.conf
+        backup=true
+  tags: ['configs']
+
+- name: Copy configs (2/2)
   copy: src={{item.src}}
         dest={{item.dest}}
         backup=true
   with_items:
   - {src: "cman", dest: "/etc/sysconfig/cman"}
-  - {src: "cluster.conf.test", dest: "/etc/cluster/cluster.conf"}
-  - {src: "cluster_init_conf.cib.test", dest: "/etc/cluster/cluster_init_conf.cib"}
+  - {src: "cluster_init_conf.cib", dest: "/etc/cluster/cluster_init_conf.cib"}
   tags: ['configs']
 
 - name: Copy resource agents
