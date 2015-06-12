@@ -20,6 +20,11 @@
   - "{{download_dir}}/drbd-bash-completion-8.4.4-4.el6.x86_64.rpm"
   - "{{download_dir}}/drbd-km-2.6.32_504.16.2.el6.x86_64-8.4.4-4.el6.x86_64.rpm"
 
+- name: Disable and don't start DRBD service
+  service: name=drbd
+           enabled=false
+           state=stopped
+
 - name: Provision config (1/2)
   copy: src={{item.src}}
         dest={{item.dest}}
