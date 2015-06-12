@@ -6,6 +6,16 @@ node node1 \
 	attributes standby=off
 node node2 \
 	attributes standby=off
+primitive drbd-funnel ocf:linbit:drbd \
+	params drbd_resource=funnel \
+	op start interval=0 timeout=240 \
+	op stop interval=0 timeout=100
+primitive fs-funnel Filesystem \
+	params device="/dev/drbd0" directory="/mnt/data/funnel" fstype=ext4 fast_stop=no \
+	op monitor interval=15 timeout=40 \
+	op stop interval=0 timeout=60 \
+	op start interval=0 timeout=60 \
+	meta target-role=Started
 primitive smppsim anything \
 	params binfile="/usr/bin/java" cmdline_options="-Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=conf/logging.properties -jar smppsim.jar conf/smppsim.props" logfile="/var/log/smppsim.log" workdir="/opt/smppsim/" \
 	op monitor interval=30 \
@@ -50,6 +60,8 @@ primitive proxy ocf:russki:ha-proxy \
 	op monitor interval=20
 clone proxy-cl proxy \
 	meta clone-node-max=1 clone-max=4 target-role=Started
+ms ms-funnel drbd-funnel \
+	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
 location svc-rabbitmq-on-node1 svc-rabbitmq 1000: node1
 location svc-rabbitmq-on-node2 svc-rabbitmq 1000: node2
 location svc-rabbitmq-on-arbiter svc-rabbitmq -INFINITY: arbiter
@@ -82,10 +94,18 @@ location proxy-cl-on-node1 proxy-cl 1000: node1
 location proxy-cl-on-node2 proxy-cl 1000: node2
 location proxy-cl-on-arbiter proxy-cl 1000: arbiter
 location proxy-cl-on-arbiter2 proxy-cl 1000: arbiter2
+location fs-funnel-on-node1 fs-funnel 1000: node1
+location fs-funnel-on-node2 fs-funnel 1000: node2
+location ms-funnel-on-node1 ms-funnel 1000: node1
+location ms-funnel-on-node2 ms-funnel 1000: node2
+colocation col-fs-funnel-by-drbd inf: fs-funnel ms-funnel:Master
+colocation col-svc-funnel-by-fs-funnel inf: svc-funnel fs-funnel
 order ord-svc-funnel-after-svc-rabbitmq inf: svc-rabbitmq:start svc-funnel:start
 order ord-svc-soap_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-soap_srv:start
 order ord-svc-mm_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-mm_srv:start
 order ord-svc-kelly-after-svc-rabbitmq inf: svc-rabbitmq:start svc-kelly:start
+order ord-fs-funnel-after-drbd inf: ms-funnel:promote fs-funnel:start
+order ord-svc-funnel-after-fs-funnel inf: fs-funnel:start svc-funnel:start
 property cib-bootstrap-options: \
 	dc-version=1.1.11-97629de \
 	cluster-infrastructure=cman \

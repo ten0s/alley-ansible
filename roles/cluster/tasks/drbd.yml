@@ -1,0 +1,44 @@
+---
+- name: Download RPMs
+  get_url: url=http://sus.dev1team.net/sus/poweralley/drbd/{{item}}
+           dest={{download_dir}}/{{item}}
+  with_items:
+  - drbd-utils-8.4.4-4.el6.x86_64.rpm
+  - drbd-udev-8.4.4-4.el6.x86_64.rpm
+  - drbd-pacemaker-8.4.4-4.el6.x86_64.rpm
+  - drbd-bash-completion-8.4.4-4.el6.x86_64.rpm
+  - drbd-km-2.6.32_504.16.2.el6.x86_64-8.4.4-4.el6.x86_64.rpm
+
+- name: Install RPMs
+  yum: name={{item}}
+       state=present
+  with_items:
+  # don't move {{download_dir}} up. it doesn't due to https://github.com/ansible/ansible-modules-core/issues/843
+  - "{{download_dir}}/drbd-utils-8.4.4-4.el6.x86_64.rpm"
+  - "{{download_dir}}/drbd-udev-8.4.4-4.el6.x86_64.rpm"
+  - "{{download_dir}}/drbd-pacemaker-8.4.4-4.el6.x86_64.rpm"
+  - "{{download_dir}}/drbd-bash-completion-8.4.4-4.el6.x86_64.rpm"
+  - "{{download_dir}}/drbd-km-2.6.32_504.16.2.el6.x86_64-8.4.4-4.el6.x86_64.rpm"
+
+- name: Provision config (1/2)
+  copy: src={{item.src}}
+        dest={{item.dest}}
+        backup=true
+  with_items:
+  - {src: "drbd.conf", dest: "/etc/drbd.conf"}
+  - {src: "global_common.conf", dest: "/etc/drbd.d/global_common.conf"}
+  tags: ['configs']
+
+- name: Provision config (2/2)
+  template: src={{item.src}}
+        dest={{item.dest}}
+        backup=true
+  with_items:
+  - {src: "funnel.res.j2", dest: "/etc/drbd.d/funnel.res"}
+  tags: ['configs']
+
+- name: Setup auto start script
+  lineinfile: dest=/etc/rc.local
+              line="losetup /dev/loop0 /mnt/funnel.img"
+              backup=true
+  tags: ['configs']

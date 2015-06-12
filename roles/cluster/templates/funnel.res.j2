@@ -1,0 +1,11 @@
+resource funnel {
+  device    /dev/drbd0;
+  disk      /dev/loop0;
+  meta-disk internal;
+  on node1 {
+    address {{hostvars['node1']['ansible_eth1']['ipv4']['address']}}:7789;
+  }
+  on node2 {
+    address {{hostvars['node2']['ansible_eth1']['ipv4']['address']}}:7789;
+  }
+}

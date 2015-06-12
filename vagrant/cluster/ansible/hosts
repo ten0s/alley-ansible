@@ -16,3 +16,7 @@ arbiter2
 node1
 node2
 arbiter
+
+[drbd]
+node1
+node2

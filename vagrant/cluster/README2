@@ -15,3 +15,67 @@ setup mongodb replica
 crm configure load replace /etc/cluster/cluster_init_conf.cib
 
 every thing should be up and running
+
+DRBD setup
+http://drbd.linbit.com/users-guide-8.4/
+
+[ALL]
+mkdir -p /mnt/data/{funnel,just,rabbitmq,kelly,soap_srv,mm_srv}
+
+[ALL]
+сначала создаём файл нужного размера например с помощью dd
+dd if=/dev/zero of=/mnt/funnel.img bs=1M count=3K
+dd if=/dev/zero of=/mnt/just.img bs=1M count=3K
+dd if=/dev/zero of=/mnt/rabbitmq.img bs=1M count=3K
+dd if=/dev/zero of=/mnt/kelly.img bs=1M count=3K
+dd if=/dev/zero of=/mnt/mm_srv.img bs=1M count=3K
+dd if=/dev/zero of=/mnt/soap_srv.img bs=1M count=3K
+
+[ALL]
+инициализируем этот файл как блочное устройство
+losetup /dev/loop0 /mnt/funnel.img
+losetup /dev/loop1 /mnt/just.img
+losetup /dev/loop2 /mnt/rabbitmq.img
+losetup /dev/loop3 /mnt/kelly.img
+losetup /dev/loop4 /mnt/mm_srv.img
+losetup /dev/loop5 /mnt/soap_srv.img
+
+[ALL] once only
+drbdadm create-md funnel
+drbdadm create-md just
+drbdadm create-md rabbitmq
+drbdadm create-md kelly
+drbdadm create-md mm_srv
+drbdadm create-md soap_srv
+
+[ALL]
+drbdadm up funnel
+
+[ONE]
+cat /proc/drbd
+!!! The Inconsistent/Inconsistent disk state is expected at this point.
+
+[ONE]
+drbdadm primary --force funnel
+
+[PRIMARY]
+mkfs -t ext4 /dev/drbd0
+mkfs -t ext4 /dev/drbd1
+mkfs -t ext4 /dev/drbd2
+mkfs -t ext4 /dev/drbd3
+mkfs -t ext4 /dev/drbd4
+mkfs -t ext4 /dev/drbd5
+
+[PRIMARY]
+mount -t ext4 /dev/drbd0 /mnt/data/funnel
+mount -t ext4 /dev/drbd1 /mnt/data/just
+mount -t ext4 /dev/drbd2 /mnt/data/rabbitmq
+mount -t ext4 /dev/drbd3 /mnt/data/kelly
+mount -t ext4 /dev/drbd4 /mnt/data/mm_srv
+mount -t ext4 /dev/drbd5 /mnt/data/soap_srv
+
+[PRIMARY]:
+umount /mnt/data/funnel
+
+FYI освободить loop устройство:
+losetup -d /dev/loop0
