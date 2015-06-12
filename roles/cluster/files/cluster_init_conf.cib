@@ -1,5 +1,7 @@
 node arbiter \
 	attributes standby=off
+node arbiter2 \
+	attributes standby=off
 node node1 \
 	attributes standby=off
 node node2 \

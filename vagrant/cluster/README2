@@ -8,12 +8,10 @@ ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.203 arbiter arbit
 ansible all -i ansible/hosts -s -m shell -a 'echo "192.168.100.204 arbiter2 arbiter2.dev1team.net" >> /etc/hosts'
 
 ansible-playbook ../../provision-common-env.yml -i ansible/hosts
-
-ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags mongodb
-setup replica
-
-ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags erlang,rabbitmq,haproxy,smppsim
+ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags erlang,rabbitmq,mongodb,haproxy,smppsim
 ansible-playbook ../../deploy.yml -i ansible/hosts --tags funnel,soap,mm,kelly,just
 
-ansible-playbook ../../provision-hosts.yml -i ansible/hosts
+setup mongodb replica
 crm configure load replace /etc/cluster/cluster_init_conf.cib
+
+every thing should be up and running
