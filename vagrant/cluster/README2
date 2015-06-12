@@ -19,10 +19,10 @@ every thing should be up and running
 DRBD setup
 http://drbd.linbit.com/users-guide-8.4/
 
-[ALL]
+[ALL] once
 mkdir -p /mnt/data/{funnel,just,rabbitmq,kelly,soap_srv,mm_srv}
 
-[ALL]
+[ALL] once
 сначала создаём файл нужного размера например с помощью dd
 dd if=/dev/zero of=/mnt/funnel.img bs=1M count=3K
 dd if=/dev/zero of=/mnt/just.img bs=1M count=3K
@@ -31,7 +31,7 @@ dd if=/dev/zero of=/mnt/kelly.img bs=1M count=3K
 dd if=/dev/zero of=/mnt/mm_srv.img bs=1M count=3K
 dd if=/dev/zero of=/mnt/soap_srv.img bs=1M count=3K
 
-[ALL]
+[ALL] startup
 инициализируем этот файл как блочное устройство
 losetup /dev/loop0 /mnt/funnel.img
 losetup /dev/loop1 /mnt/just.img
@@ -40,16 +40,21 @@ losetup /dev/loop3 /mnt/kelly.img
 losetup /dev/loop4 /mnt/mm_srv.img
 losetup /dev/loop5 /mnt/soap_srv.img
 
-[ALL] once only
+[ALL] once
 drbdadm create-md funnel
 drbdadm create-md just
-drbdadm create-md rabbitmq
+drbdadm create-md rabbit
 drbdadm create-md kelly
 drbdadm create-md mm_srv
 drbdadm create-md soap_srv
 
 [ALL]
 drbdadm up funnel
+drbdadm up just
+drbdadm up rabbit
+drbdadm up kelly
+drbdadm up mm_srv
+drbdadm up soap_srv
 
 [ONE]
 cat /proc/drbd
@@ -57,6 +62,11 @@ cat /proc/drbd
 
 [ONE]
 drbdadm primary --force funnel
+drbdadm primary --force just
+drbdadm primary --force rabbit
+drbdadm primary --force kelly
+drbdadm primary --force mm_srv
+drbdadm primary --force soap_srv
 
 [PRIMARY]
 mkfs -t ext4 /dev/drbd0

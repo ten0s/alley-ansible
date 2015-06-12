@@ -1,0 +1,11 @@
+resource just {
+  device    /dev/drbd1;
+  disk      /dev/loop1;
+  meta-disk internal;
+  on node1 {
+    address {{hostvars['node1']['ansible_eth1']['ipv4']['address']}}:7790;
+  }
+  on node2 {
+    address {{hostvars['node2']['ansible_eth1']['ipv4']['address']}}:7790;
+  }
+}
