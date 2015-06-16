@@ -9,6 +9,8 @@ ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.
 
 ansible all -i ansible/hosts -s -m shell -a 'reboot'
 
+Wait for all hosts...
+
 ansible-playbook ../../provision-common-env.yml -i ansible/hosts
 
 include README.drbd
@@ -26,13 +28,41 @@ ansible all -i ansible/hosts -s -m service -a 'name=pacemaker state=started'
 
 crm configure load replace /etc/cluster/cluster_init_conf.cib
 
-Everything should be up and running!
+Everything should be UP and RUNNING!
 
 ansible arbiter -i ansible/hosts -s -m copy -a 'src=http_conf.sh dest=/root mode=755'
 ansible arbiter -i ansible/hosts -s -a '/root/http_conf.sh'
 
 smppload -Harbiter -s375296660001 -d375296543210 -D
 INFO:  Connected to arbiter:2775
+INFO:  Bound to Funnel
+INFO:  Stats:
+INFO:     Send success:     1
+INFO:     Send fail:        0
+INFO:     Delivery success: 1
+INFO:     Delivery fail:    0
+INFO:     Incomings:        0
+INFO:     Errors:           0
+INFO:     Avg Rps:          0 mps
+INFO:  Unbound
+
+smppload -Harbiter2 -s375296660001 -d375296543210 -D
+INFO:  Connected to arbiter2:2775
+INFO:  Bound to Funnel
+INFO:  Stats:
+INFO:     Send success:     1
+INFO:     Send fail:        0
+INFO:     Delivery success: 1
+INFO:     Delivery fail:    0
+INFO:     Incomings:        0
+INFO:     Errors:           0
+INFO:     Avg Rps:          0 mps
+INFO:  Unbound
+
+crm resource migrate svc-just node2
+
+smppload -Harbiter -s375296660001 -d375296543210 -D
+INFO:  Connected to arbiter2:2775
 INFO:  Bound to Funnel
 INFO:  Stats:
 INFO:     Send success:     1

@@ -62,10 +62,8 @@ drbdadm primary --force kelly
 drbdadm primary --force mm_srv
 drbdadm primary --force soap_srv
 
-Wait for PRIMARY and SYNC...
-
-[ONE]
-drbd-overview
+[ONE] Wait for PRIMARY and SYNC...
+watch drbd-overview
   0:funnel/0    Connected Primary/Secondary UpToDate/UpToDate C r-----
   1:just/0      Connected Primary/Secondary UpToDate/UpToDate C r-----
   2:rabbit/0    Connected Primary/Secondary UpToDate/UpToDate C r-----
