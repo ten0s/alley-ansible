@@ -1,3 +1,2 @@
 ---
 - {include: "cluster.yml", tags: ['cluster'], when: "{{'cluster' in group_names}}"}
-- {include: "drbd.yml",    tags: ['drbd'],    when: "{{'drbd' in group_names}}"}

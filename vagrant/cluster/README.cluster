@@ -1,0 +1,45 @@
+vagrant up
+
+ansible all -i ansible/hosts -m ping
+
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.201 node1 node1.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.202 node2 node2.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.203 arbiter arbiter.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.204 arbiter2 arbiter2.dev1team.net"'
+
+ansible all -i ansible/hosts -s -m shell -a 'reboot'
+
+ansible-playbook ../../provision-common-env.yml -i ansible/hosts
+
+include README.drbd
+
+ansible-playbook ../../provision-backend-env.yml -i ansible/hosts --tags erlang,rabbitmq,mongodb,haproxy,smppsim
+
+ansible-playbook ../../deploy.yml -i ansible/hosts --tags funnel,soap,mm,kelly,just --extra-vars 'base_data_dir=/mnt/data data_dir_suffix=data'
+
+ansible-playbook ../../provision-cluster.yml -i ansible/hosts --tags cluster
+ansible all -i ansible/hosts -s -m service -a 'name=haproxy state=stopped'
+
+setup mongodb replica (paste replset.js into some mongodb's shell)
+
+ansible all -i ansible/hosts -s -m service -a 'name=pacemaker state=started'
+
+crm configure load replace /etc/cluster/cluster_init_conf.cib
+
+Everything should be up and running!
+
+ansible arbiter -i ansible/hosts -s -m copy -a 'src=http_conf.sh dest=/root mode=755'
+ansible arbiter -i ansible/hosts -s -a '/root/http_conf.sh'
+
+smppload -Harbiter -s375296660001 -d375296543210 -D
+INFO:  Connected to arbiter:2775
+INFO:  Bound to Funnel
+INFO:  Stats:
+INFO:     Send success:     1
+INFO:     Send fail:        0
+INFO:     Delivery success: 1
+INFO:     Delivery fail:    0
+INFO:     Incomings:        0
+INFO:     Errors:           0
+INFO:     Avg Rps:          0 mps
+INFO:  Unbound

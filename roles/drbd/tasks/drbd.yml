@@ -36,8 +36,8 @@
 
 - name: Provision config (2/2)
   template: src={{item.src}}
-        dest={{item.dest}}
-        backup=true
+            dest={{item.dest}}
+            backup=true
   with_items:
   - {src: "funnel.res.j2",   dest: "/etc/drbd.d/funnel.res"}
   - {src: "just.res.j2",     dest: "/etc/drbd.d/just.res"}

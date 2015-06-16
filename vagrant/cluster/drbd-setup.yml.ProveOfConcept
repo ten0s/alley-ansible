@@ -1,0 +1,99 @@
+---
+- name: Provision DRBD
+  hosts: drbd
+  sudo: true
+  tasks:
+  - name: Create mount dirs
+    file: path=/mnt/data/{{item}}
+          state=directory
+    with_items:
+    - funnel
+    - just
+    - rabbitmq
+    - kelly
+    - soap_srv
+    - mm_srv
+
+  - name: Create fs image files
+    command: dd if=/dev/zero of=/mnt/{{item}}.img bs=1M count=3K
+    args:
+      creates: /mnt/{{item}}.img
+    with_items:
+    - funnel
+    - just
+    - rabbitmq
+    - kelly
+    - mm_srv
+    - soap_srv
+
+  - name: Create loopback devices
+    command: losetup /dev/{{item.dev}} /mnt/{{item.name}}.img
+    register: loop_reg
+    changed_when: (loop_reg.rc == 0) or (loop_reg.stderr.find('device is busy') == -1)
+    failed_when: (loop_reg.rc != 0) and (loop_reg.stderr.find('device is busy') == -1)
+    with_items:
+    - {dev: loop0, name: funnel}
+    - {dev: loop1, name: just}
+    - {dev: loop2, name: rabbitmq}
+    - {dev: loop3, name: kelly}
+    - {dev: loop4, name: mm_srv}
+    - {dev: loop5, name: soap_srv}
+    tags: ['loop']
+
+  - name: Create drbd metadata
+    command: drbdadm create-md {{item}}
+    with_items:
+    - funnel
+    - just
+    - rabbit
+    - kelly
+    - mm_srv
+    - soap_srv
+    tags: ['meta']
+
+  - name: Up drbd
+    command: drbdadm up {{item}}
+    register: up_reg
+    changed_when: (up_reg.rc == 0) or (up_reg.stderr.find('is configured') == -1)
+    failed_when: (up_reg.rc != 0) and (up_reg.stderr.find('is configured') == -1)
+    with_items:
+    - funnel
+    - just
+    - rabbit
+    - kelly
+    - mm_srv
+    - soap_srv
+    tags: ['up']
+
+  - name: Force primary
+    command: drbdadm primary --force {{item}}
+    run_once: true
+    with_items:
+    - funnel
+    - just
+    - rabbit
+    - kelly
+    - mm_srv
+    - soap_srv
+
+  - name: Format (PRIMARY)
+    command: mkfs -t ext4 /dev/{{item}}
+    run_once: true
+    with_items:
+    - drbd0
+    - drbd1
+    - drbd2
+    - drbd3
+    - drbd4
+    - drbd5
+
+  - name: Mount (PRIMARY)
+    command: mount -t ext4 /dev/{{item.dev}} /mnt/data/{{item.name}}
+    run_once: true
+    with_items:
+    - {dev: drbd0, name: funnel}
+    - {dev: drbd1, name: just}
+    - {dev: drbd2, name: rabbitmq}
+    - {dev: drbd3, name: kelly}
+    - {dev: drbd4, name: mm_srv}
+    - {dev: drbd5, name: soap_srv}

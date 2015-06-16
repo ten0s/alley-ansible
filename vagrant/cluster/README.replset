@@ -1,0 +1,96 @@
+git clone -b a_la_production git@github.com:PowerMeMobile/alley-setup.git alley-setup-node1
+git clone -b a_la_production git@github.com:PowerMeMobile/alley-setup.git alley-setup-node2
+git clone -b a_la_production git@github.com:PowerMeMobile/alley-setup.git alley-setup-arbiter
+
+vagrant up node1
+vagrant ssh node1
+cd /vagrant/alley-setup-node1
+sudo setup/setup-env centos6
+sudo reboot
+
+vagrant up node2
+vagrant ssh node2
+cd /vagrant/alley-setup-node2
+sudo setup/setup-env centos6
+sudo reboot
+
+vagrant up arbiter
+vagrant ssh arbiter
+cd /vagrant/alley-setup-arbiter
+sudo setup/phase-make-dirs
+sudo setup/phase-add-users-redhat
+sudo setup/phase-setup-mongodb
+sudo setup/phase-setup-autostart-mongo-rs
+sudo reboot
+
+/etc/hosts
+192.168.100.201       node1 node1.dev1team.net
+192.168.100.202       node2 node2.dev1team.net
+192.168.100.203       arbiter arbiter.dev1team.net
+192.168.100.204       arbiter2 arbiter2.dev1team.net
+
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.201 node1 node1.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.202 node2 node2.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.203 arbiter arbiter.dev1team.net"'
+ansible all -i ansible/hosts -s -m lineinfile -a 'dest=/etc/hosts line="192.168.100.204 arbiter2 arbiter2.dev1team.net"'
+
+setup replica set
+
+#
+# Replica: use mongo from official repo
+#
+
+!!!
+! Important
+! Always backup all of your data before upgrading MongoDB.
+!!!
+
+arbiter
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit arbiter --tags mongodb
+wait for arbiter
+
+node2 (secondary)
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node2 --tags mongodb
+wait for secondary
+
+node1 (master)
+rs.stepDown(300)
+wait for a new master
+sudo killall mongod
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node1 --tags mongodb
+wait for secondary
+
+node{1,2}, arbiter
+sudo emacs /etc/rc.local
+sudo emacs /etc/profile
+sudo rm /opt/bin/start-mongo-rs
+sudo rm -rf /opt/mongodb*
+. /etc/profile
+
+#
+# Replica: upgrade mongo
+#
+
+!!!
+! Important
+! Always backup all of your data before upgrading MongoDB.
+!!!
+
+arbiter
+sudo service mongod stop
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit arbiter --tags mongodb
+wait for arbiter
+
+node1 (secondary)
+sudo service mongod stop
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node2 --tags mongodb
+wait for secondary
+
+node2 (master)
+rs.stepDown(300)
+wait for a new master
+sudo service mongod stop
+ansible-playbook provision-backend-env.yml -i ansible/hosts --limit node1 --tags mongodb
+wait for secondary
