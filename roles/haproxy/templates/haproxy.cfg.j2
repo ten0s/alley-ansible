@@ -59,6 +59,10 @@ listen smppsim :18001
     server smppsim_node1 node1:8001 check
     server smppsim_node2 node2:8001 check
 
+listen kelly :18080
+    server kelly_node1 node1:8080 check
+    server kelly_node2 node2:8080 check
+
 {% elif ansible_hostname in groups['arbiters'] %}
 
 listen funnel :2775

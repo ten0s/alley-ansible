@@ -20,3 +20,6 @@ arbiter
 [drbd]
 node1
 node2
+
+[ui]
+node2

@@ -28,7 +28,7 @@ ansible all -i ansible/hosts -s -m service -a 'name=pacemaker state=started'
 
 crm configure load replace /etc/cluster/cluster_init_conf.cib
 
-Everything should be UP and RUNNING!
+Backend should be UP and RUNNING!
 
 ansible arbiter -i ansible/hosts -s -m copy -a 'src=http_conf.sh dest=/root mode=755'
 ansible arbiter -i ansible/hosts -s -a '/root/http_conf.sh'
@@ -46,30 +46,7 @@ INFO:     Errors:           0
 INFO:     Avg Rps:          0 mps
 INFO:  Unbound
 
-smppload -Harbiter2 -s375296660001 -d375296543210 -D
-INFO:  Connected to arbiter2:2775
-INFO:  Bound to Funnel
-INFO:  Stats:
-INFO:     Send success:     1
-INFO:     Send fail:        0
-INFO:     Delivery success: 1
-INFO:     Delivery fail:    0
-INFO:     Incomings:        0
-INFO:     Errors:           0
-INFO:     Avg Rps:          0 mps
-INFO:  Unbound
+ansible-playbook ../../provision-frontend-env.yml -i ansible/hosts
+ansible-playbook ../../deploy.yml -i ansible/hosts --tags ui
 
-crm resource migrate svc-just node2
-
-smppload -Harbiter -s375296660001 -d375296543210 -D
-INFO:  Connected to arbiter2:2775
-INFO:  Bound to Funnel
-INFO:  Stats:
-INFO:     Send success:     1
-INFO:     Send fail:        0
-INFO:     Delivery success: 1
-INFO:     Delivery fail:    0
-INFO:     Incomings:        0
-INFO:     Errors:           0
-INFO:     Avg Rps:          0 mps
-INFO:  Unbound
+Frontend on node2 should be UP and RUNNING!
