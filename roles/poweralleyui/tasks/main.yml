@@ -18,6 +18,8 @@
   yum: name=pmm-bms-poweralleyui-bankaudi-{{poweralleyui_version}}
        state=present
        update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-bankaudi-rel,pmm-bankaudi-dev"
   notify: Restart Supervisor
 
 - name: Provision config
