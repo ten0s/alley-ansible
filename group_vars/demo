@@ -9,7 +9,7 @@ kelly_receipts_qos: 1000
 
 just_version: 2.7.0
 
-poweralleyui_version: 1.4.1.43
+poweralleyui_version: 1.4.2.54
 poweralleyui_nic: ansible_eth1
 
 smppsim_version: 2.6.8
