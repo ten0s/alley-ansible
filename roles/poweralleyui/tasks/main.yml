@@ -17,6 +17,7 @@
 - name: Install PowerAlleyUI
   yum: name=pmm-bms-poweralleyui-bankaudi-{{poweralleyui_version}}
        state=present
+       update_cache=true
   notify: Restart Supervisor
 
 - name: Provision config
