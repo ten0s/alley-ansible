@@ -1,8 +1,3 @@
 ---
-- name: Restart Nginx
-  service: name=nginx state=restarted
-  when: nginx_version is defined
-
 - name: Restart Supervisor
   service: name=supervisord state=restarted
-  notify: Restart Nginx
