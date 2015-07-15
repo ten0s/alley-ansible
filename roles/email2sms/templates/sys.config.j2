@@ -1,0 +1,77 @@
+[
+{email2sms, [
+    {smtp_addr, {{email_smtp_addr}}},
+    {smtp_port, {{email_smtp_port}}},
+    {smtp_protocol, tcp},
+    {smtp_greeting, <<"Email-2-SMS Gateway">>},
+    {smtp_local_domains, [<<"sms.provider.com">>, <<"mail.com">>]},
+    {smtp_max_session_count, 50},
+    {smtp_max_msg_size, 1048576}, %% bytes | undefined
+    %% Violation of https://tools.ietf.org/html/rfc5321#section-4.5.3.1.8 (if < 100)
+    {smtp_max_recipient_count, 100},
+    {smtp_recipient_fields, [<<"to">>, <<"cc">>, <<"bcc">>]},
+
+    {smtp_postmaster, <<"postmaster@sms.provider.com">>},
+    {smtp_client_opts, [
+        %% For more options see https://github.com/Vagabond/gen_smtp#client-example
+        {relay, <<"10.10.0.11">>}
+        %% {relay, <<"smtp.googlemail.com">>},
+        %% {port, 465},
+        %% {ssl, true},
+        %% {username, <<"username">>},
+        %% {password, <<"password">>}
+    ]},
+
+    {auth_schemes, [from_address, subject, to_address]}, % order matters
+    {invalid_recipient_policy, notify_invalid}, % ignore_invalid | reject_message | notify_invalid
+    {max_msg_parts, 10},
+    {inbound_rps_per_user, 0.1} %% 1 msg in 10 secs
+]},
+{alley_services, [
+    {just_gateway_queue_fmt,      <<"pmm.alley.just.gateway.%id%">>},
+    {incoming_sms_queue,          <<"pmm.alley.email2sms.incoming.sms">>},
+    {kelly_sms_request_queue,     <<"pmm.alley.kelly.request.sms">>},
+    {kelly_sms_request_deferred_queue, <<"pmm.alley.kelly.request.sms.deferred">>},
+    {kelly_api_queue,             <<"pmm.alley.kelly.api">>},
+    {kelly_auth_queue,            <<"pmm.alley.kelly.auth">>},
+    {kelly_events_exchange,       <<"pmm.alley.kelly.events">>},
+    {kelly_events_listener_queue, <<"pmm.alley.kelly.events.listener.email">>},
+    {kelly_events_handler,        alley_services_events_handler},
+    {smtp_log_level, debug}, % none | debug
+    {smtp_log_size, 10000000},
+    {pdu_log_level, none}, % none | debug
+    {pdu_log_size, 10000000},
+    {country_code, <<"961">>},
+    {strip_leading_zero, false},
+    {bulk_threshold, 100},
+    {kelly_api_rpc_timeout, {{rpc_timeout}}},
+    {kelly_auth_rpc_timeout, {{rpc_timeout}}}
+]},
+{rmql, [
+    {amqp_props, [
+        {host, "{{rabbitmq_host}}"},
+        {port, {{rabbitmq_port}}},
+        {username, <<"{{rabbitmq_username}}">>},
+        {password, <<"{{rabbitmq_password}}">>},
+        {vhost, <<"/">>},
+        {qos, 100}
+    ]},
+    {survive, true}
+]},
+{lager, [
+    {handlers, [
+        {lager_console_backend, info},
+        {lager_file_backend, [
+            {"log/debug.log", debug, 10485760, "$D0", 5},
+            {"log/error.log", error, 10485760, "$D0", 5},
+            {"log/info.log", info, 10485760, "$D0", 5}
+        ]}
+    ]},
+    {crash_log, "log/crash.log"},
+    {crash_log_msg_size, 65536},
+    {crash_log_size, 10485760},
+    {crash_log_date, "$D0"},
+    {crash_log_count, 5},
+    {error_logger_redirect, true}
+]}
+].

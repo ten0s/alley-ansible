@@ -86,6 +86,19 @@ if [[ -x /opt/mm_srv/bin/mm_srv ]]; then
     fi
 fi
 
+if [[ -x /opt/email2sms/bin/email2sms ]]; then
+    echo -e "\nStarting Email2SMS..."
+    /opt/email2sms/bin/email2sms start
+    sleep 10
+    E=`/opt/email2sms/bin/email2sms ping`
+    if [[ $E != 'pong' ]]; then
+        echo $E
+        echo "FAILED"
+    else
+        echo "SUCCESS"
+    fi
+fi
+
 if [[ -x /opt/kelly/bin/kelly ]]; then
     echo -e "\nStarting Kelly..."
     /opt/kelly/bin/kelly start

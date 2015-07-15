@@ -1,0 +1,9 @@
+---
+- include: ../../erlapp.yml
+  vars:
+      name: email2sms
+      version: "{{email_version}}"
+
+- name: Provision config
+  template: src=sys.config.j2
+            dest=/opt/email2sms-{{email_version}}/releases/1/sys.config
