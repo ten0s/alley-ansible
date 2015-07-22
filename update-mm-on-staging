@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ansible all -i inventories/staging -m ping && ansible-playbook deploy.yml -i inventories/staging --tags mm && ansible all -i inventories/staging -s -U bms -m shell -a '/opt/mm_srv/bin/mm_srv stop; /opt/mm_srv/bin/mm_srv start'
