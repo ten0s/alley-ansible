@@ -4,7 +4,7 @@ soap_version: 2.9.0
 mm_version: 2.10.0
 oneapi_version: 2.10.0
 email_version: 2.10.2
-kelly_version: 2.10.0-alpha
+kelly_version: 2.10.0-alpha.1
 just_version: 2.7.0
 
 poweralleyui_version: 0.0.0.95
