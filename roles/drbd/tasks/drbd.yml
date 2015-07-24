@@ -2,6 +2,8 @@
 - name: Download RPMs
   get_url: url=http://sus.dev1team.net/sus/poweralley/drbd/{{item}}
            dest={{download_dir}}/{{item}}
+           url_username='USERNAME'
+           url_password='PASSWORD'
   with_items:
   - drbd-utils-8.4.4-4.el6.x86_64.rpm
   - drbd-udev-8.4.4-4.el6.x86_64.rpm
