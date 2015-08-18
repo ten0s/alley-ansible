@@ -23,8 +23,8 @@
   notify: Restart Supervisor
 
 - name: Provision config
-  template: src=Web.config.j2
-            dest=/opt/poweralleyui/Web.config
+  template: src=ConnectionStrings.j2
+            dest=/opt/poweralleyui/Configs/ConnectionStrings.config
   notify: Restart Supervisor
 
 - name: Correct rights
