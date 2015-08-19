@@ -33,3 +33,5 @@ $ ansible-playbook deploy.yml -i inventories/test --tags funnel,kelly,just
 $ ansible all -i inventories/artem -m ping
 $ ansible-playbook deploy.yml -i inventories/artem --tags kelly
 $ ansible all -i inventories/artem -s -U bms -m shell -a '/opt/kelly/bin/kelly stop; /opt/kelly/bin/kelly start'
+OR SIMPLY
+$ ./deploy kelly artem
