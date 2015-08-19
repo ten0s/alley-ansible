@@ -3,11 +3,12 @@
   hosts: all
   sudo: true
   roles:
-  - {role: funnel,       tags: ["funnel"], when: funnel_version is defined}
-  - {role: soap_srv,     tags: ["soap"],   when: soap_version is defined}
-  - {role: mm_srv,       tags: ["mm"],     when: mm_version is defined}
-  - {role: oneapi_srv,   tags: ["oneapi"], when: oneapi_version is defined}
-  - {role: email2sms,    tags: ["email"],  when: email_version is defined}
-  - {role: kelly,        tags: ["kelly"],  when: kelly_version is defined}
-  - {role: just,         tags: ["just"],   when: just_version is defined}
-  - {role: poweralleyui, tags: ["ui"],     when: poweralleyui_version is defined}
+  - {role: funnel,       tags: ["funnel"],   when: funnel_version is defined}
+  - {role: soap_srv,     tags: ["soap"],     when: soap_version is defined}
+  - {role: mm_srv,       tags: ["mm"],       when: mm_version is defined}
+  - {role: oneapi_srv,   tags: ["oneapi"],   when: oneapi_version is defined}
+  - {role: email2sms,    tags: ["email"],    when: email_version is defined}
+  - {role: kelly,        tags: ["kelly"],    when: kelly_version is defined}
+  - {role: just,         tags: ["just"],     when: just_version is defined}
+  - {role: smppsink,     tags: ["smppsink"], when: smppsink_version is defined}
+  - {role: poweralleyui, tags: ["ui"],       when: poweralleyui_version is defined}

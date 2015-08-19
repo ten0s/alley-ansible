@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ansible all -i inventories/staging -m ping && ansible-playbook deploy.yml -i inventories/staging --tags kelly && ansible all -i inventories/staging -s -U bms -m shell -a '/opt/kelly/bin/kelly stop; /opt/kelly/bin/kelly start'

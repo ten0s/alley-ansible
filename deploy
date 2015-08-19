@@ -1,0 +1,53 @@
+#!/bin/bash
+
+declare -A services
+services=(
+    [funnel]=funnel
+    [soap]=soap_srv
+    [mm]=mm_srv
+    [oneapi]=oneapi_srv
+    [email]=email2sms
+    [kelly]=kelly
+    [just]=just
+    [smppsink]=smppsink
+    [ui]=poweralleyui
+)
+
+declare -A hosts
+hosts=(
+    [artem]=artem
+    [dev]=backend-dev
+    [demo]=demo
+    [stg]=staging
+)
+
+if [[ $# < 2 ]]; then
+    echo "Usage: deploy <SERVICE> <HOST>"
+    echo "Where:"
+    echo "  SERVICE: ${!services[@]}"
+    echo "  HOST: ${!hosts[@]}"
+    exit 1
+fi
+
+service_alias=$1
+host_alias=$2
+
+service_name=${services[$service_alias]}
+if [[ -z ${service_name} ]]; then
+    echo "Unknown service:" $service_alias
+    exit 1
+fi
+
+host_name=${hosts[$host_alias]}
+if [[ -z ${host_name} ]]; then
+    echo "Unknown host:" $host_alias
+    exit 1
+fi
+
+ansible all -i inventories/${host_name} -m ping || exit 1
+ansible-playbook deploy.yml -i inventories/${host_name} --tags ${service_alias} || exit 1
+
+if [[ $service_alias != "ui" ]]; then
+    ansible all -i inventories/${host_name} -s -U bms \
+-m shell -a "/opt/${service_name}/bin/${service_name} stop; /opt/${service_name}/bin/${service_name} start"
+fi
