@@ -8,7 +8,7 @@ just_version: 2.7.0
 
 smppsim_version: 2.6.8
 
-smppsink_version: 1.3.0
+smppsink_version: 1.4.0
 smppsink_smpp_port: 8002
 
 mongodb_version: 2.6.10
