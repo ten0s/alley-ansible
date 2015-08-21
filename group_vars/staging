@@ -7,7 +7,7 @@ email_version: 2.10.2
 kelly_version: 2.10.0-beta
 just_version: 2.7.0
 
-poweralleyui_version: 0.0.0.108
+poweralleyui_version: 0.0.0.111
 poweralleyui_nic: ansible_eth0
 
 smppsim_version: 2.6.8
