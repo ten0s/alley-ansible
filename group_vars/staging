@@ -3,7 +3,7 @@ funnel_version: 2.8.2
 soap_version: 2.9.0
 mm_version: 2.10.3
 oneapi_version: 2.10.0
-email_version: 2.10.2
+email_version: 2.10.3
 kelly_version: 2.10.0-beta
 just_version: 2.7.0
 
