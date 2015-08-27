@@ -22,7 +22,9 @@
     {kelly_events_handler,        fun_events_handler},
     {country_code, <<"961">>},
     {strip_leading_zero, false},
-    {bulk_threshold, 100}
+    {bulk_threshold, 100},
+    {kelly_api_rpc_timeout, {{rpc_timeout}}},
+    {kelly_auth_rpc_timeout, {{rpc_timeout}}}
 ]},
 
 {rmql, [
@@ -35,6 +37,7 @@
         {qos, 100}
     ]},
     {survive, true},
+    %% deprecated since 2.10.0
     {rpc_timeout, {{rpc_timeout}}}
 ]},
 
