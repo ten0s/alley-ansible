@@ -1,11 +1,17 @@
 [pmm-bankaudi-rel]
-name=PMM release repository for BankAudi
+name=PMM rel repository for BankAudi
 enabled=1
 gpgcheck=0
 mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-rel.list
 
+[pmm-bankaudi-rc]
+name=PMM rc repository for BankAudi
+enabled=1
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-rc.list
+
 [pmm-bankaudi-dev]
-name=PMM release repository for BankAudi
+name=PMM dev repository for BankAudi
 enabled=1
 gpgcheck=0
 mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-dev.list
