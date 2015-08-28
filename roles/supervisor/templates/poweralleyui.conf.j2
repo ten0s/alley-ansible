@@ -11,3 +11,7 @@ stderr_logfile=/var/log/pmm/poweralleyui.err.log
 stderr_logfile_maxbytes=10MB
 stderr_logfile_backups=10
 stopasgroup=true
+
+[eventlistener:poweralleyui_monitor]
+command=httpok -p poweralleyui http://{{poweralleyui_http_ip}}/power/Diagnostics/Status
+events=TICK_60

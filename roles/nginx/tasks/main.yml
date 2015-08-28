@@ -8,8 +8,8 @@
            enabled=true
            state=started
 
-- name: Determine IP address
-  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
+- name: Determine fastcgi IP address
+  set_fact: poweralleyui_fastcgi_ip={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
 
 - name: Provision config (1/2)
   copy: src={{item.src}} dest={{item.dest}}

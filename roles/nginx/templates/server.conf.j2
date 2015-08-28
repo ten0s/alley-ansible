@@ -4,7 +4,7 @@ server {
     error_log   /var/log/nginx/poweralleyui.error.log;
 
     location /power/ {
-        fastcgi_pass {{poweralleyui_address}}:8877;
+        fastcgi_pass {{poweralleyui_fastcgi_ip}}:8877;
         include /etc/nginx/fastcgi_params;
     }
 }

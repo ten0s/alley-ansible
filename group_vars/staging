@@ -27,6 +27,7 @@ mysql_password: PASSWORD
 
 nginx_version: 1.0.15
 supervisor_version: 3.1.2
+superlance_version: 0.11
 
 base_data_dir: /mnt/data
 data_dir_suffix: data

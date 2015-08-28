@@ -4,8 +4,11 @@
   with_items:
   - python-setuptools
 
-- name: Install Supervisor
-  easy_install: name="supervisor=={{supervisor_version}}"
+- name: Install Supervisor & Plugin
+  easy_install: name={{item}}
+  with_items:
+  - "supervisor=={{supervisor_version}}"
+  - "superlance=={{superlance_version}}"
 
 - name: Create Supervisor's config dir
   file: path={{item.path}} state=directory
@@ -22,8 +25,16 @@
      group: bms}
   notify: Restart Supervisor
 
-- name: Determine IP address
-  set_fact: poweralleyui_address={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
+- name: Determine fastcgi IP address
+  set_fact: poweralleyui_fastcgi_ip={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
+
+- name: Determine http IP address (stg)
+  set_fact: poweralleyui_http_ip={{poweralleyui_fastcgi_ip}}
+  when: inventory_hostname != "node2" and poweralleyui_version is defined
+
+- name: Determine http IP address (prod)
+  set_fact: poweralleyui_http_ip={{hostvars["arbiter"][poweralleyui_nic]['ipv4']['address']}}
+  when: inventory_hostname == "node2" and poweralleyui_version is defined
 
 - name: Provision config (1/2)
   copy: src={{item.src}}
@@ -32,9 +43,6 @@
   with_items:
   - {src: etc/supervisord.conf,
      dest: /etc/supervisord.conf,
-     mode: 644}
-  - {src: etc/supervisor.d/poweralleyui.conf,
-     dest: /etc/supervisor.d/poweralleyui.conf,
      mode: 644}
   - {src: etc/init.d/supervisord,
      dest: /etc/init.d/supervisord,
@@ -46,6 +54,9 @@
             dest={{item.dest}}
             mode={{item.mode}}
   with_items:
+  - {src: poweralleyui.conf.j2,
+     dest: /etc/supervisor.d/poweralleyui.conf,
+     mode: 644}
   - {src: poweralleyui.sh.j2,
      dest: /opt/bin/poweralleyui.sh,
      mode: 755}
