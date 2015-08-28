@@ -1,13 +1,13 @@
 ---
-funnel_version: 2.10.0
+funnel_version: 2.10.1
 soap_version: 2.9.0
-mm_version: 2.10.3
+mm_version: 2.10.4
 oneapi_version: 2.10.0
-email_version: 2.10.3
-kelly_version: 2.10.0-beta.2
+email_version: 2.10.4
+kelly_version: 2.10.0-beta.3
 just_version: 2.7.0
 
-poweralleyui_version: 0.0.0.111
+poweralleyui_version: 0.0.0.127
 poweralleyui_nic: ansible_eth0
 
 smppsim_version: 2.6.8
