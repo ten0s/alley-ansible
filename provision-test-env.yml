@@ -18,9 +18,12 @@
 - {include: provision-frontend-env.yml}
 - {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui']}
 
-- debug: msg='Now run under root'
-- debug: msg='chown -R bms:bms rabbitmq_server-*/'
-- debug: msg='chown -R bms:bms /var/lib/rabbitmq/'
-- debug: msg='chown -R bms:bms /var/log/rabbitmq/'
-- debug: msg='reboot'
-- debug: msg='copy and run http_conf.sh'
+- name: Manual post-install steps
+  hosts: all
+  tasks:
+  - debug: msg='Now run under root'
+  - debug: msg='chown -R bms:bms rabbitmq_server-*/'
+  - debug: msg='chown -R bms:bms /var/lib/rabbitmq/'
+  - debug: msg='chown -R bms:bms /var/log/rabbitmq/'
+  - debug: msg='reboot'
+  - debug: msg='copy and run http_conf.sh'
