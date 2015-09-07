@@ -16,8 +16,9 @@ services=(
 declare -A hosts
 hosts=(
     [artem]=artem
-    [dev]=backend-dev
+    [ci]=ci
     [demo]=demo
+    [dev]=backend-dev
     [stg]=staging
 )
 

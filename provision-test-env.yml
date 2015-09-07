@@ -1,0 +1,26 @@
+---
+- name: Provision PowerAlley test env
+  hosts: all
+  sudo: true
+  tasks:
+  - name: Copy start dev env script
+    copy: src=files/start-dev-env
+          dest=/opt/bin/
+          mode=755
+
+  - name: Setup autostart
+    lineinfile: dest=/etc/rc.local
+                line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
+    tags: ["autostart"]
+
+- {include: provision-common-env.yml}
+- {include: provision-backend-env.yml}
+- {include: provision-frontend-env.yml}
+- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui']}
+
+- debug: msg='Now run under root'
+- debug: msg='chown -R bms:bms rabbitmq_server-*/'
+- debug: msg='chown -R bms:bms /var/lib/rabbitmq/'
+- debug: msg='chown -R bms:bms /var/log/rabbitmq/'
+- debug: msg='reboot'
+- debug: msg='copy and run http_conf.sh'

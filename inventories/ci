@@ -1,0 +1,2 @@
+[ci]
+ci ansible_ssh_host=10.10.0.51 ansible_ssh_user=root

@@ -35,3 +35,8 @@ $ ansible-playbook deploy.yml -i inventories/artem --tags kelly
 $ ansible all -i inventories/artem -s -U bms -m shell -a '/opt/kelly/bin/kelly stop; /opt/kelly/bin/kelly start'
 OR SIMPLY
 $ ./deploy kelly artem
+
+How to setup a test venue
+=========================
+
+$ ansible-playbook provision-test-env.yml -i inventory/HOST
