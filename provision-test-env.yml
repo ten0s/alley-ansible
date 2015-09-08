@@ -33,18 +33,27 @@
     - /var/log/rabbitmq
     tags: ['post']
 
+  - debug: msg='reboot'
+    tags: ['post']
+
+  - name: Download config
+    get_url: url=https://raw.githubusercontent.com/PowerMeMobile/kelly/develop/rel/files/http_conf.sh
+             dest=/opt/bin/http_conf.sh
+             mode=755
+    tags: ['post']
+
+  - debug: msg='Run /opt/bin/http_conf.sh if needed'
+    tags: ['post']
+
   - name: Install test deps
     yum: name={{item}}
          state=present
     with_items:
     - ansible
     - git
-    tags: ['post']
+    tags: ['tests']
 
   - name: Pull alley-ansible repo
     git: repo=https://github.com/ten0s/alley-ansible
          dest=/opt/ansible
-    tags: ['post']
-
-  - debug: msg='reboot'
-  - debug: msg='copy and run http_conf.sh'
+    tags: ['tests']
