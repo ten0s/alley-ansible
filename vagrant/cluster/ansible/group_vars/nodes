@@ -9,11 +9,11 @@ rabbitmq_port: 35672
 rabbitmq_username: alley
 rabbitmq_password: alley
 
-funnel_version: 2.8.1
+funnel_version: 2.10.1
 soap_version: 2.9.0
-mm_version: 2.9.0
+mm_version: 2.10.4
 
-kelly_version: 2.9.0-beta
+kelly_version: 2.10.0
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
 kelly_snmp_agents: '
 {"funnel", "funnel1", "private", [192,168,100,201], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.

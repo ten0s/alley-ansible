@@ -81,4 +81,9 @@ listen soap :8088
     server soap_node1 node1:8088 check
     server soap_node2 node2:8088 check
 
+# for MO tests
+listen smppsim :8071
+    server smppsim_node1 node1:8071 check
+    server smppsim_node2 node2:8071 check
+
 {% endif %}
