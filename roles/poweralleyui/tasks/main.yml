@@ -1,18 +1,12 @@
 ---
-- name: Install PMM-BankAudi repo
-  copy: src=pmm-bankaudi.repo
-        dest=/etc/yum.repos.d/pmm-bankaudi.repo
+- name: Install PowerAlleyUI repo
+  copy: src={{item}}
+        dest=/etc/yum.repos.d/{{item}}
         mode=644
-
-- name: Add PMM-BankAudi Rc repo list
-  copy: src=pmm-bankaudi-rc.list
-        dest=/etc/yum.repos.d/pmm-bankaudi-rc.list
-        mode=644
-
-- name: Add PMM-BankAudi Dev repo list
-  copy: src=pmm-bankaudi-dev.list
-        dest=/etc/yum.repos.d/pmm-bankaudi-dev.list
-        mode=644
+  with_items:
+  - pmm-bankaudi-dev.list
+  - pmm-bankaudi-rc.list
+  - pmm-bankaudi.repo
 
 - name: Install PowerAlleyUI
   yum: name=pmm-bms-poweralleyui-bankaudi-{{poweralleyui_version}}
