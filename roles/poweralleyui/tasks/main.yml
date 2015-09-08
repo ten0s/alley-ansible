@@ -4,11 +4,6 @@
         dest=/etc/yum.repos.d/pmm-bankaudi.repo
         mode=644
 
-- name: Add PMM-BankAudi Rel repo list
-  copy: src=pmm-bankaudi-rel.list
-        dest=/etc/yum.repos.d/pmm-bankaudi-rel.list
-        mode=644
-
 - name: Add PMM-BankAudi Rc repo list
   copy: src=pmm-bankaudi-rc.list
         dest=/etc/yum.repos.d/pmm-bankaudi-rc.list
@@ -24,7 +19,7 @@
        state=present
        update_cache=true
        disablerepo="*"
-       enablerepo="pmm-bankaudi-dev,pmm-bankaudi-rc,pmm-bankaudi-rel"
+       enablerepo="pmm-bankaudi-dev,pmm-bankaudi-rc"
   notify: Restart Supervisor
 
 - name: Provision config

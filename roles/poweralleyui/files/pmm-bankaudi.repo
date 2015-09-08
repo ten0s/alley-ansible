@@ -1,9 +1,3 @@
-[pmm-bankaudi-rel]
-name=PMM rel repository for BankAudi
-enabled=1
-gpgcheck=0
-mirrorlist=file:///etc/yum.repos.d/pmm-bankaudi-rel.list
-
 [pmm-bankaudi-rc]
 name=PMM rc repository for BankAudi
 enabled=1
