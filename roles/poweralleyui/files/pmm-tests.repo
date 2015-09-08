@@ -6,6 +6,6 @@ mirrorlist=file:///etc/yum.repos.d/pmm-tests-dev.list
 
 [pmm-tests-rc]
 name=PMM rc repository for Tests
-enabled=1
+enabled=0
 gpgcheck=0
 mirrorlist=file:///etc/yum.repos.d/pmm-tests-rc.list
