@@ -18,12 +18,33 @@
 - {include: provision-frontend-env.yml}
 - {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui']}
 
-- name: Manual post-install steps
+- name: Post-install steps
   hosts: all
+  sudo: true
   tasks:
-  - debug: msg='Now run under root'
-  - debug: msg='chown -R bms:bms rabbitmq_server-*/'
-  - debug: msg='chown -R bms:bms /var/lib/rabbitmq/'
-  - debug: msg='chown -R bms:bms /var/log/rabbitmq/'
+  - name: Correct RabbitMQ rights
+    file: path={{item}}
+          owner={{run_user}}
+          group={{run_user}}
+          recurse=true
+    with_items:
+    - /opt/rabbitmq_server-{{rabbitmq_version}}
+    - /var/lib/rabbitmq
+    - /var/log/rabbitmq
+    tags: ['post']
+
+  - name: Install test deps
+    yum: name={{item}}
+         state=present
+    with_items:
+    - ansible
+    - git
+    tags: ['post']
+
+  - name: Pull alley-ansible repo
+    git: repo=https://github.com/ten0s/alley-ansible
+         dest=/opt/ansible
+    tags: ['post']
+
   - debug: msg='reboot'
   - debug: msg='copy and run http_conf.sh'

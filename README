@@ -39,4 +39,4 @@ $ ./deploy artem kelly
 How to setup a test venue
 =========================
 
-$ ansible-playbook provision-test-env.yml -i inventory/HOST
+$ ansible-playbook provision-test-env.yml -i inventories/HOST

@@ -4,6 +4,7 @@ declare -A hosts
 hosts=(
     [artem]=artem
     [ci]=ci
+    [ci_localhost]=ci_localhost
     [demo]=demo
     [dev]=backend-dev
     [stg]=staging
