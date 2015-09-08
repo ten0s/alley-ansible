@@ -1,5 +1,5 @@
 ---
-- name: Install PowerAlleyUI repo
+- name: Install app repo
   copy: src={{item}}
         dest=/etc/yum.repos.d/{{item}}
         mode=644
@@ -8,7 +8,7 @@
   - pmm-bankaudi-rc.list
   - pmm-bankaudi.repo
 
-- name: Install PowerAlleyUI
+- name: Install app
   yum: name=pmm-bms-poweralleyui-bankaudi-{{poweralleyui_version}}
        state=present
        update_cache=true
@@ -28,3 +28,29 @@
         recurse=true
         follow=true
   notify: Restart Supervisor
+
+- name: Install tests repo
+  copy: src={{item}}
+        dest=/etc/yum.repos.d/{{item}}
+        mode=644
+  with_items:
+  - pmm-tests-dev.list
+  - pmm-tests-rc.list
+  - pmm-tests.repo
+  when: poweralleyui_tests is defined and poweralleyui_tests
+
+- name: Install tests
+  yum: name=pmm-bms-poweralleyui-tests-{{poweralleyui_version}}
+       state=present
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-tests-dev,pmm-tests-rc"
+  when: poweralleyui_tests is defined and poweralleyui_tests
+
+- name: Create tests result dir
+  file: path=/opt/poweralleyui-tests-results/{{poweralleyui_version}}
+        state=directory
+        owner={{run_user}}
+        group={{run_user}}
+        recurse=true
+  when: poweralleyui_tests is defined and poweralleyui_tests

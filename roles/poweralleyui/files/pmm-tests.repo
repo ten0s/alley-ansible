@@ -1,0 +1,11 @@
+[pmm-tests-dev]
+name=PMM dev repository for Tests
+enabled=1
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-tests-dev.list
+
+[pmm-tests-rc]
+name=PMM rc repository for Tests
+enabled=1
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-tests-rc.list
