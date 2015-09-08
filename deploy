@@ -1,5 +1,14 @@
 #!/bin/bash
 
+declare -A hosts
+hosts=(
+    [artem]=artem
+    [ci]=ci
+    [demo]=demo
+    [dev]=backend-dev
+    [stg]=staging
+)
+
 declare -A services
 services=(
     [funnel]=funnel
@@ -13,31 +22,18 @@ services=(
     [ui]=poweralleyui
 )
 
-declare -A hosts
-hosts=(
-    [artem]=artem
-    [ci]=ci
-    [demo]=demo
-    [dev]=backend-dev
-    [stg]=staging
-)
-
 if [[ $# < 2 ]]; then
-    echo "Usage: deploy <SERVICE> <HOST>"
+    echo "Usage: deploy <HOST> <SERVICE> [VERSION]"
     echo "Where:"
-    echo "  SERVICE: ${!services[@]}"
     echo "  HOST: ${!hosts[@]}"
+    echo "  SERVICE: ${!services[@]}"
+    echo "  VERSION: by default from config file"
     exit 1
 fi
 
-service_alias=$1
-host_alias=$2
-
-service_name=${services[$service_alias]}
-if [[ -z ${service_name} ]]; then
-    echo "Unknown service:" $service_alias
-    exit 1
-fi
+host_alias=$1
+service_alias=$2
+version=$3
 
 host_name=${hosts[$host_alias]}
 if [[ -z ${host_name} ]]; then
@@ -45,8 +41,19 @@ if [[ -z ${host_name} ]]; then
     exit 1
 fi
 
+service_name=${services[$service_alias]}
+if [[ -z ${service_name} ]]; then
+    echo "Unknown service:" $service_alias
+    exit 1
+fi
+
+service_version=''
+if [[ ! -z $version ]]; then
+    service_version="--extra-vars ${service_name}_version=${version}"
+fi
+
 ansible all -i inventories/${host_name} -m ping || exit 1
-ansible-playbook deploy.yml -i inventories/${host_name} --tags ${service_alias} || exit 1
+ansible-playbook deploy.yml -i inventories/${host_name} --tags ${service_alias} ${service_version} || exit 1
 
 if [[ $service_alias != "ui" ]]; then
     ansible all -i inventories/${host_name} -s -U bms \
