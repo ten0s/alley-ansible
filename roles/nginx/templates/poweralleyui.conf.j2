@@ -7,4 +7,11 @@ server {
         fastcgi_pass {{poweralleyui_fastcgi_ip}}:8877;
         include /etc/nginx/fastcgi_params;
     }
+
+{% if poweralleyui_tests %}
+    location /tests/power/ {
+        autoindex on;
+        alias /opt/poweralleyui-tests-results/;
+    }
+{% endif %}
 }

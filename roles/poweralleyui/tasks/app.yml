@@ -1,0 +1,30 @@
+---
+- name: Install app repo
+  copy: src={{item}}
+        dest=/etc/yum.repos.d/{{item}}
+        mode=644
+  with_items:
+  - pmm-bankaudi-dev.list
+  - pmm-bankaudi-rc.list
+  - pmm-bankaudi.repo
+
+- name: Install app
+  yum: name=pmm-bms-poweralleyui-bankaudi-{{poweralleyui_version}}
+       state=present
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-bankaudi-dev,pmm-bankaudi-rc"
+  notify: Restart Supervisor
+
+- name: Provision config
+  template: src=ConnectionStrings.config.j2
+            dest=/opt/poweralleyui/Configs/ConnectionStrings.config
+  notify: Restart Supervisor
+
+- name: Correct rights
+  file: path=/opt/poweralleyui
+        owner={{run_user}}
+        group={{run_user}}
+        recurse=true
+        follow=true
+  notify: Restart Supervisor

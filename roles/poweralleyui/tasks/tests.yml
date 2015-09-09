@@ -1,0 +1,30 @@
+---
+- name: Install tests repo
+  copy: src={{item}}
+        dest=/etc/yum.repos.d/{{item}}
+        mode=644
+  with_items:
+  - pmm-tests-dev.list
+  - pmm-tests-rc.list
+  - pmm-tests.repo
+
+- name: Install tests
+  yum: name=pmm-bms-poweralleyui-tests-{{poweralleyui_version}}
+       state=present
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-tests-dev"
+
+- name: Create tests result dir
+  file: path=/opt/poweralleyui-tests-results/{{poweralleyui_version}}
+        state=directory
+        owner={{run_user}}
+        group={{run_user}}
+        recurse=true
+
+- name: Provision configs
+  template: src={{item}}.appSettings.config.j2
+            dest=/opt/poweralleyui-tests/PowerAlleyUI.{{item}}/appSettings.config
+  with_items:
+  - KellyApiTests
+  - UITests

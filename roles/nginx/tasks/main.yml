@@ -11,18 +11,24 @@
 - name: Determine fastcgi IP address
   set_fact: poweralleyui_fastcgi_ip={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
 
-- name: Provision config (1/2)
-  copy: src={{item.src}} dest={{item.dest}}
+- name: Provision config (1/3)
+  copy: src={{item}} dest=/etc/nginx/{{item}}
   with_items:
-  - {src: nginx.conf,
-     dest: /etc/nginx/nginx.conf}
-  - {src: fastcgi_params,
-     dest: /etc/nginx/fastcgi_params}
+  - nginx.conf
+  - fastcgi_params
   notify: Restart Nginx
 
-- name: Provision config (2/2)
-  template: src={{item.src}} dest={{item.dest}}
+- name: Provision config (2/3)
+  file: path=/etc/nginx/conf.d/{{item}} state=absent
   with_items:
-  - {src: server.conf.j2,
-     dest: /etc/nginx/conf.d/server.conf}
+  - default.conf
+  - server.conf
+  - ssl.conf
+  - virtual.conf
+  notify: Restart Nginx
+
+- name: Provision config (3/3)
+  template: src={{item}}.j2 dest=/etc/nginx/conf.d/{{item}}
+  with_items:
+  - poweralleyui.conf
   notify: Restart Nginx
