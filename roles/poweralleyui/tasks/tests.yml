@@ -22,9 +22,18 @@
         group={{run_user}}
         recurse=true
 
-- name: Provision configs
+- name: Copy tests starter script
+  copy: src=starter_poweralleyui_tests.sh
+        dest=/opt/bin/starter_poweralleyui_tests.sh
+        mode=755
+
+- name: Provision configs (1/2)
   template: src={{item}}.appSettings.config.j2
             dest=/opt/poweralleyui-tests/PowerAlleyUI.{{item}}/appSettings.config
   with_items:
   - KellyApiTests
   - UITests
+
+- name: Provision configs (2/2)
+  template: src=ConnectionStrings.config.j2
+            dest=/opt/poweralleyui-tests/PowerAlleyUI.UITests/ConnectionStrings.config
