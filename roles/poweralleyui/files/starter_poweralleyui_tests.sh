@@ -9,11 +9,11 @@ LOG=/var/log/poweralley_starter_tests/${EXE_CMD##*/}_$TS.log
 DELAY=200
 
 if [ -z "$READY_TO_WORK" ]; then
-	PIDS=$(ps ax -o pid,cmd | awk "/${EXE_CMD##*/} [M]ARK_PAUI/{printf \"%s \", \$1}")
-	[ -n "$PIDS" ] && kill "$PIDS"
-	export READY_TO_WORK=1
-	nohup $EXE_CMD MARK_PAUI $@ >$LOG 2>1 &
-	exit 0
+    PIDS=$(ps ax -o pid,cmd | awk "/${EXE_CMD##*/} [M]ARK_PAUI/{printf \"%s \", \$1}")
+    [ -n "$PIDS" ] && kill "$PIDS"
+    export READY_TO_WORK=1
+    nohup $EXE_CMD MARK_PAUI $@ >$LOG 2>1 &
+    exit 0
 fi
 
 shift
@@ -28,13 +28,13 @@ sleep $DELAY
 echo "Run ansible for version $version..."
 version=$1
 if [ -d /opt/ansible ]; then
-	pushd /opt/ansible
-	./deploy ci_localhost ui ${version}
-	[ 0 -eq $? ] || exit 1
-#	sudo -u root -- sh -c "cd /opt/ansible && ./deploy ci_localhost ui ${version}"
-	popd
+    pushd /opt/ansible
+    git pull origin
+    ./deploy ci_localhost ui ${version}
+    [ 0 -eq $? ] || exit 1
+    popd
 else
-	exit 1
+    exit 1
 fi
 
 # run tests
