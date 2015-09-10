@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source /opt/mono-{{mono_version}}/env.rc
+fastcgi-mono-server4 /applications=/webmm:/srv/PMM/pmm/WebApps/webmm/ /socket=tcp:{{webmm_fastcgi_ip}}:8180 /verbose

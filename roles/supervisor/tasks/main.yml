@@ -25,28 +25,37 @@
      group: bms}
   notify: Restart Supervisor
 
-- name: Determine fastcgi IP address
+- name: Determine PowerAlleyUI fastcgi IP address
   set_fact: poweralleyui_fastcgi_ip={{hostvars[inventory_hostname][poweralleyui_nic]['ipv4']['address']}}
+  when: poweralleyui_version is defined
 
-- name: Determine http IP address (stg)
+- name: Determine WebMM fastcgi IP address
+  set_fact: webmm_fastcgi_ip={{hostvars[inventory_hostname][webmm_nic]['ipv4']['address']}}
+  when: webmm_version is defined
+
+- name: Determine PowerAlleyUI http IP address (stg)
   set_fact: poweralleyui_http_ip={{poweralleyui_fastcgi_ip}}
   when: inventory_hostname != "node2" and poweralleyui_version is defined
 
-- name: Determine http IP address (prod)
+- name: Determine PowerAlleyUI http IP address (prod)
   set_fact: poweralleyui_http_ip={{hostvars["arbiter"][poweralleyui_nic]['ipv4']['address']}}
   when: inventory_hostname == "node2" and poweralleyui_version is defined
+
+- name: Determine WebMM http IP address (stg)
+  set_fact: webmm_http_ip={{webmm_fastcgi_ip}}
+  when: inventory_hostname != "node2" and webmm_version is defined
+
+- name: Determine WebMM http IP address (prod)
+  set_fact: webmm_http_ip={{hostvars["arbiter"][webmm_nic]['ipv4']['address']}}
+  when: inventory_hostname == "node2" and webmm_version is defined
 
 - name: Provision config (1/2)
   copy: src={{item.src}}
         dest={{item.dest}}
         mode={{item.mode}}
   with_items:
-  - {src: etc/supervisord.conf,
-     dest: /etc/supervisord.conf,
-     mode: 644}
-  - {src: etc/init.d/supervisord,
-     dest: /etc/init.d/supervisord,
-     mode: 755}
+  - {src: etc/supervisord.conf, dest: /etc/supervisord.conf, mode: 644}
+  - {src: etc/init.d/supervisord, dest: /etc/init.d/supervisord, mode: 755}
   notify: Restart Supervisor
 
 - name: Provision config (2/2)
@@ -54,12 +63,10 @@
             dest={{item.dest}}
             mode={{item.mode}}
   with_items:
-  - {src: poweralleyui.conf.j2,
-     dest: /etc/supervisor.d/poweralleyui.conf,
-     mode: 644}
-  - {src: poweralleyui.sh.j2,
-     dest: /opt/bin/poweralleyui.sh,
-     mode: 755}
+  - {src: poweralleyui.conf.j2, dest: /etc/supervisor.d/poweralleyui.conf, mode: 644}
+  - {src: poweralleyui.sh.j2, dest: /opt/bin/poweralleyui.sh, mode: 755}
+  - {src: webmm.conf.j2, dest: /etc/supervisor.d/webmm.conf, mode: 644}
+  - {src: webmm.sh.j2, dest: /opt/bin/webmm.sh, mode: 755}
   notify: Restart Supervisor
 
 - name: Enable Supervisor service

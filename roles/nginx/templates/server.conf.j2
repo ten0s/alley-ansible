@@ -1,0 +1,27 @@
+server {
+    listen     80;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log main;
+
+{% if poweralleyui_version is defined %}
+    location /power/ {
+        fastcgi_pass {{poweralleyui_fastcgi_ip}}:8877;
+        include /etc/nginx/fastcgi_params;
+    }
+{% endif %}
+
+{% if poweralleyui_tests is defined and poweralleyui_tests %}
+    location /tests/power/ {
+        autoindex on;
+        alias /opt/poweralleyui-tests-results/;
+    }
+{% endif %}
+
+{% if webmm_version is defined %}
+    location /webmm/ {
+        fastcgi_index /default.aspx;
+        fastcgi_pass {{webmm_fastcgi_ip}}:8180;
+        include /etc/nginx/fastcgi_params;
+    }
+{% endif %}
+}

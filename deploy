@@ -21,6 +21,7 @@ services=(
     [just]=just
     [smppsink]=smppsink
     [ui]=poweralleyui
+    [webmm]=webmm
 )
 
 if [[ $# < 2 ]]; then
@@ -56,7 +57,7 @@ fi
 ansible all -i inventories/${host_name} -m ping || exit 1
 ansible-playbook deploy.yml -i inventories/${host_name} --tags ${service_alias} ${service_version} || exit 1
 
-if [[ $service_alias != "ui" ]]; then
+if [[ $service_alias != "ui" ]] && [[ $service_alias != "webmm" ]] ; then
     ansible all -i inventories/${host_name} -s -U bms \
 -m shell -a "/opt/${service_name}/bin/${service_name} stop; /opt/${service_name}/bin/${service_name} start"
 fi

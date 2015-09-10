@@ -1,0 +1,17 @@
+[program:webmm]
+directory=/srv/PMM/pmm/WebApps/webmm
+command=/opt/bin/webmm.sh
+autostart=true
+autorestart=true
+user=bms
+stdout_logfile=/var/log/pmm/webmm.out.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=10
+stderr_logfile=/var/log/pmm/webmm.err.log
+stderr_logfile_maxbytes=10MB
+stderr_logfile_backups=10
+stopasgroup=true
+
+#[eventlistener:webmm_monitor]
+#command=httpok -p webmm http://{{webmm_http_ip}}/webmm/Diagnostics/Status
+#events=TICK_60

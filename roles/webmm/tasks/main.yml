@@ -1,0 +1,50 @@
+---
+- name: Install repo
+  copy: src={{item}}
+        dest=/etc/yum.repos.d/{{item}}
+        mode=644
+  with_items:
+  - pmm-webmm-base.list
+  - pmm-webmm-dev.list
+  - pmm-webmm-rc.list
+  - pmm-webmm.repo
+
+- name: Install app
+  yum: name=pmm-bms-webmm-pmm-{{webmm_version}}
+       state=present
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-webmm-dev,pmm-webmm-rc"
+  notify: Restart Supervisor
+
+- name: Install migrators
+  yum: name=pmm-migrators-pmm
+       state=latest
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-webmm-base"
+  notify: Restart Supervisor
+
+- name: Provision config
+  template: src={{item}}.j2
+            dest=/srv/PMM/pmm/WebApps/webmm/{{item}}
+  with_items:
+  - PowerAlley.config
+  - Web.config
+  notify: Restart Supervisor
+
+- name: Correct rights
+  file: path=/srv/PMM/pmm/WebApps/webmm
+        owner={{run_user}}
+        group={{run_user}}
+        recurse=true
+        follow=true
+  notify: Restart Supervisor
+
+- name: Workaround CS1703
+  # CS1703:
+  # An assembly `System' with the same identity has already been imported.
+  # Consider removing one of the references
+  file: path=/srv/PMM/pmm/WebApps/webmm/bin/System.dll
+        state=absent
+  notify: Restart Supervisor

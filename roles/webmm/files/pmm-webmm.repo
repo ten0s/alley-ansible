@@ -1,0 +1,17 @@
+[pmm-webmm-base]
+name=PMM WebMM base repository
+enabled=0
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-webmm-base.list
+
+[pmm-webmm-rc]
+name=PMM WebMM rc repository
+enabled=0
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-webmm-rc.list
+
+[pmm-webmm-dev]
+name=PMM WebMM dev repository
+enabled=0
+gpgcheck=0
+mirrorlist=file:///etc/yum.repos.d/pmm-webmm-dev.list
