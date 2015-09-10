@@ -7,6 +7,7 @@ cd "$EXE_DIR"
 TS=$(date +%Y-%m-%d_%H-%M-%S)
 LOG=/var/log/poweralley_starter_tests/${EXE_CMD##*/}_$TS.log
 DELAY=200
+RETRIES=3
 
 if [ -z "$READY_TO_WORK" ]; then
     PIDS=$(ps ax -o pid,cmd | awk "/${EXE_CMD##*/} [M]ARK_PAUI/{printf \"%s \", \$1}")
@@ -17,16 +18,27 @@ if [ -z "$READY_TO_WORK" ]; then
 fi
 
 shift
+version=$1
 
 date
 
-# sleep for $DELAY seconds to wait for package
-echo "Sleep for $DELAY seconds..."
-sleep $DELAY
+# chech package availability
+echo "Checking for package 'pmm-bms-poweralleyui-tests' availability for version ${version}..."
+while [ 0 -lt $RETRIES ]; do
+	# sleep for $DELAY seconds to wait for package
+	echo "Sleep for $DELAY seconds..."
+	sleep $DELAY
+	echo "Cleaning yum cache..."
+	DIS=$(LANG=C yum -v -C repolist enabled | awk 'BEGIN {a=""}; /^Repo-id/{if (!match($3,"pmm-")){a=a","$3}}; END {b=substr(a,2); print b}')
+	yum --disablerepo=$DIS clean all
+	echo "Looking for package..."
+	yum list all pmm-bms-poweralleyui-tests-${version}-* && break || true
+	let RETRIES--
+	echo "$RETRIES frag(s) left..."
+done
 
 # run ansible to deploy
 echo "Run ansible for version $version..."
-version=$1
 if [ -d /opt/ansible ]; then
     pushd /opt/ansible
     git pull origin
