@@ -4,7 +4,7 @@
             state=present
 
 - name: Install app repo
-  copy: src={{item}}
+  template: src={{item}}.j2
         dest=/etc/yum.repos.d/{{item}}
         mode=644
   with_items:

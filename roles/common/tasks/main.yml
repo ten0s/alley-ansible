@@ -38,14 +38,13 @@
   lineinfile: dest=/etc/hosts
               line='178.124.154.132 sus.dev1team.net'
 
-- name: Install PMM-Base repo
-  copy: src=pmm-base.repo
-        dest=/etc/yum.repos.d/pmm-base.repo
+- name: Install PMM-Base
+  template: src={{item}}.j2
+        dest=/etc/yum.repos.d/{{item}}
         mode=644
-
-- name: Add PMM-Base repo list
-  copy: src=pmm-base.list
-        dest=/etc/yum.repos.d/pmm-base.list
+  with_items:
+  - pmm-base.list
+  - pmm-base.repo
 
 - name: Install utils
   yum: name={{item}} state=present
