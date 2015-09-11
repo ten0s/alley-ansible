@@ -17,15 +17,15 @@
        enablerepo="pmm-webmm-dev,pmm-webmm-rc"
   notify: Restart Supervisor
 
-- name: Install migrators
-  yum: name=pmm-migrators-pmm
-       state=latest
-       update_cache=true
-       disablerepo="*"
-       enablerepo="pmm-webmm-base"
+- name: Workaround CS1703
+  # CS1703:
+  # An assembly `System' with the same identity has already been imported.
+  # Consider removing one of the references
+  file: path=/srv/PMM/pmm/WebApps/webmm/bin/System.dll
+        state=absent
   notify: Restart Supervisor
 
-- name: Provision config
+- name: Provision app configs
   template: src={{item}}.j2
             dest=/srv/PMM/pmm/WebApps/webmm/{{item}}
   with_items:
@@ -41,10 +41,19 @@
         follow=true
   notify: Restart Supervisor
 
-- name: Workaround CS1703
-  # CS1703:
-  # An assembly `System' with the same identity has already been imported.
-  # Consider removing one of the references
-  file: path=/srv/PMM/pmm/WebApps/webmm/bin/System.dll
-        state=absent
+- name: Install migrators
+  yum: name=pmm-migrators-pmm
+       state=latest
+       update_cache=true
+       disablerepo="*"
+       enablerepo="pmm-webmm-base"
+  notify: Restart Supervisor
+
+- name: Provision migrators configs
+  template: src={{item}}.MigrationsInstaller.exe.config.j2
+            dest=/opt/migrators/{{item}}/MigrationsInstaller.exe.config
+  with_items:
+  - localization
+  - phonebook
+  - webmm
   notify: Restart Supervisor

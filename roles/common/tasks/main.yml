@@ -58,6 +58,7 @@
   - screen
   - sysstat
   - tar
+  - vim
   - wget
 
 - name: Setup limits
