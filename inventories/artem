@@ -1,3 +1,6 @@
 [frontend-dev]
 artem-dev ansible_ssh_host=10.10.0.88 ansible_ssh_port=3222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
 artem-api ansible_ssh_host=10.10.0.88 ansible_ssh_port=4222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
+
+[outdoors]
+# keep it empty for indoors
