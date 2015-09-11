@@ -18,22 +18,6 @@
            enabled=true
            state=started
 
-- name: Create DB (1/2)
-  mysql_db: name=poweralley
-            state=present
-  notify: Restart MySQL
-  when: poweralleyui_version is defined
-
-- name: Create DB (2/2)
-  mysql_db: name={{item}}
-            state=present
-  notify: Restart MySQL
-  with_items:
-  - webmm
-  - phonebook
-  - localization
-  when: webmm_version is defined
-
 - name: Setup DB priviledges
   mysql_user: name={{mysql_username}}
               host={{item}}

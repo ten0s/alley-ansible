@@ -1,4 +1,8 @@
 ---
+- name: Create DB
+  mysql_db: name=poweralley
+            state=present
+
 - name: Install app repo
   copy: src={{item}}
         dest=/etc/yum.repos.d/{{item}}

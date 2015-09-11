@@ -41,6 +41,14 @@
         follow=true
   notify: Restart Supervisor
 
+- name: Create DB
+  mysql_db: name={{item}}
+            state=present
+  with_items:
+  - webmm
+  - phonebook
+  - localization
+
 - name: Install migrators
   yum: name=pmm-migrators-pmm
        state=latest
