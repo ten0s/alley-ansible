@@ -19,6 +19,7 @@ fi
 
 shift
 version=$1
+commit=$2
 
 date
 
@@ -51,4 +52,4 @@ fi
 
 # run tests
 echo "Run tests for version $version..."
-sudo -u bms -- /opt/poweralleyui-tests/runners/run-tests.sh $version
+sudo -u bms -- /opt/poweralleyui-tests/runners/run-tests.sh $version $commit
