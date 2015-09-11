@@ -57,3 +57,21 @@
   - phonebook
   - webmm
   notify: Restart Supervisor
+
+- name: Download migrators
+  # Why these're NOT in the rpm? That's the question!
+  get_url: url=http://rawshaun.powermemobile.com/job/webmm1/{{webmm_version.split('.')[3]}}/artifact/build/{{item.dll}}
+           dest=/opt/migrators/{{item.dir}}/{{item.dll}}
+  with_items:
+  - {dir: localization, dll: PMM.Migrations.Localization.dll}
+  - {dir: phonebook, dll: PMM.Migrations.Phonebook.dll}
+  - {dir: webmm, dll: webmm.Migrations.dll}
+  notify: Restart Supervisor
+
+- name: Run migrators
+  command: /opt/mono-{{mono_version}}/bin/mono MigrationsInstaller.exe chdir=/opt/migrators/{{item}}
+  with_items:
+  - localization
+  - phonebook
+  - webmm
+  notify: Restart Supervisor
