@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <appSettings>
     <add key="MessagingSystemType" value="PowerAlley"/>
-<!-- FIXME -->    <add key="WebMmRootUrl" value="http://192.168.33.10/webmm"/>
+<!-- FIXME -->    <add key="WebMmRootUrl" value="http://localhost/webmm"/>
     <!-- MS for messaging system-->
-<!-- FIXME -->        <add key="SmsMsUrl" value="http://10.10.0.87:{{mm_http_port}}"/>
+    <add key="SmsMsUrl" value="http://{{webmm_backend_host}}:{{webmm_backend_port}}"/>
     <add key="BasicRequestPath" value="mm/BasicRequest.aspx"/>
     <!-- MUST contain local url to mmwl-->
     <add key="DbType" value="MySQL"/>
@@ -16,7 +16,7 @@
     <add key="BackendTimerInterval" value="3"/>
     <add key="AdZoneLocationsUpdateTimerInterval" value="1"/>
     <!--in minutes,  0-Disabled,  -->
-<!-- FIXME -->        <add key="MSPublicURL" value="http://192.168.33.10/power"></add>
+<!-- FIXME -->        <add key="MSPublicURL" value="http://localhost/power"></add>
     <!-- MUST contain external url of MMWL WITHOUT last slash-->
     <add key="MMSFTP" value="false"/>
     <add key="SFTPMode" value="false"/>

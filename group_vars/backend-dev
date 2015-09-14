@@ -13,6 +13,8 @@ poweralleyui_nic: ansible_eth1
 
 webmm_version: 2.0.1.648
 webmm_nic: ansible_eth1
+webmm_backend_host: 10.10.0.87
+webmm_backend_port: 8083
 
 mongodb_version: 2.6.10
 
