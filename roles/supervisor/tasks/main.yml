@@ -49,7 +49,7 @@
   set_fact: webmm_http_ip={{hostvars["arbiter"][webmm_nic]['ipv4']['address']}}
   when: inventory_hostname == "node2" and webmm_version is defined
 
-- name: Provision config (1/2)
+- name: Provision config (1/3)
   copy: src={{item.src}}
         dest={{item.dest}}
         mode={{item.mode}}
@@ -58,16 +58,25 @@
   - {src: etc/init.d/supervisord, dest: /etc/init.d/supervisord, mode: 755}
   notify: Restart Supervisor
 
-- name: Provision config (2/2)
+- name: Provision config (2/3)
   template: src={{item.src}}
             dest={{item.dest}}
             mode={{item.mode}}
   with_items:
   - {src: poweralleyui.conf.j2, dest: /etc/supervisor.d/poweralleyui.conf, mode: 644}
   - {src: poweralleyui.sh.j2, dest: /opt/bin/poweralleyui.sh, mode: 755}
+  notify: Restart Supervisor
+  when: poweralleyui_version is defined
+
+- name: Provision config (3/3)
+  template: src={{item.src}}
+            dest={{item.dest}}
+            mode={{item.mode}}
+  with_items:
   - {src: webmm.conf.j2, dest: /etc/supervisor.d/webmm.conf, mode: 644}
   - {src: webmm.sh.j2, dest: /opt/bin/webmm.sh, mode: 755}
   notify: Restart Supervisor
+  when: webmm_version is defined
 
 - name: Enable Supervisor service
   service: name=supervisord
