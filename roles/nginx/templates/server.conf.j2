@@ -13,6 +13,7 @@ server {
 {% if poweralleyui_tests is defined and poweralleyui_tests %}
     location /tests/power/ {
         autoindex on;
+        autoindex_localtime on;
         alias /opt/poweralleyui-tests-results/;
     }
 {% endif %}
