@@ -18,12 +18,12 @@
        update_cache=true
        disablerepo="*"
        enablerepo="pmm-bankaudi-dev,pmm-bankaudi-rc"
-  notify: Restart Supervisor
+  notify: Restart PowerAlleyUI
 
 - name: Provision config
   template: src=ConnectionStrings.config.j2
             dest=/opt/poweralleyui/Configs/ConnectionStrings.config
-  notify: Restart Supervisor
+  notify: Restart PowerAlleyUI
 
 - name: Correct rights
   file: path=/opt/poweralleyui
@@ -31,4 +31,4 @@
         group={{run_user}}
         recurse=true
         follow=true
-  notify: Restart Supervisor
+  notify: Restart PowerAlleyUI

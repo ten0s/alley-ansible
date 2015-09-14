@@ -15,7 +15,7 @@
        update_cache=true
        disablerepo="*"
        enablerepo="pmm-webmm-dev,pmm-webmm-rc"
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Workaround CS1703
   # CS1703:
@@ -23,7 +23,7 @@
   # Consider removing one of the references
   file: path=/srv/PMM/pmm/WebApps/webmm/bin/System.dll
         state=absent
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Provision app configs
   template: src={{item}}.j2
@@ -31,7 +31,7 @@
   with_items:
   - PowerAlley.config
   - Web.config
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Correct rights
   file: path=/srv/PMM/pmm/WebApps/webmm
@@ -39,7 +39,7 @@
         group={{run_user}}
         recurse=true
         follow=true
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Create DB
   mysql_db: name={{item}}
@@ -55,7 +55,7 @@
        update_cache=true
        disablerepo="*"
        enablerepo="pmm-webmm-base"
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Provision migrators configs
   template: src={{item}}.MigrationsInstaller.exe.config.j2
@@ -64,7 +64,7 @@
   - localization
   - phonebook
   - webmm
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Download migrators
   # Why these're NOT in the rpm? That's the question!
@@ -74,7 +74,7 @@
   - {dir: localization, dll: PMM.Migrations.Localization.dll}
   - {dir: phonebook, dll: PMM.Migrations.Phonebook.dll}
   - {dir: webmm, dll: webmm.Migrations.dll}
-  notify: Restart Supervisor
+  notify: Restart WebMM
 
 - name: Run migrators
   command: /opt/mono-{{mono_version}}/bin/mono MigrationsInstaller.exe chdir=/opt/migrators/{{item}}
@@ -82,4 +82,4 @@
   - localization
   - phonebook
   - webmm
-  notify: Restart Supervisor
+  notify: Restart WebMM
