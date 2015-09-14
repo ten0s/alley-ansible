@@ -12,6 +12,6 @@ stderr_logfile_maxbytes=10MB
 stderr_logfile_backups=10
 stopasgroup=true
 
-#[eventlistener:webmm_monitor]
-#command=httpok -p webmm http://{{webmm_http_ip}}/webmm/Diagnostics/Status
-#events=TICK_60
+[eventlistener:webmm-monitor]
+command=httpok -p webmm http://{{webmm_http_ip}}/webmm/Login.aspx
+events=TICK_60
