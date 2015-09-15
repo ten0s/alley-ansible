@@ -7,7 +7,7 @@ hosts=(
     [ci_localhost]=ci_localhost
     [demo]=demo
     [dev]=backend-dev
-    [stg]=staging
+    [stg]=stg
 )
 
 declare -A services
