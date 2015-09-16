@@ -1,8 +1,14 @@
 [
 {mm_srv, [
+    %% deprecated since 2.10.6
     {root_url, "{{mm_root_url}}"},
+
+    {global_root_url, "{{mm_global_root_url}}"},
+    {local_root_url, "{{mm_local_root_url}}"},
     {http_addr, {{mm_http_addr}}},
     {http_port, {{mm_http_port}}},
+    {http_global_nic, "{{mm_http_global_nic}}"},
+    {http_local_nic, "{{mm_http_local_nic}}"},
     {http_acceptors_num, 1}
 ]},
 {alley_services, [
@@ -34,9 +40,7 @@
         {vhost, <<"/">>},
         {qos, 100}
     ]},
-    {survive, true},
-    %% deprecated since 2.10.0
-    {rpc_timeout, {{rpc_timeout}}}
+    {survive, true}
 ]},
 {lager, [
     {handlers, [

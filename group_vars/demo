@@ -1,9 +1,11 @@
 ---
 funnel_version: 2.10.1
 soap_version: 2.10.1
-mm_version: 2.10.5
 oneapi_version: 2.10.0
 email_version: 2.10.4
+
+mm_version: 2.10.6
+mm_http_local_nic: lo
 
 kelly_version: 2.10.0
 kelly_receipts_qos: 1000
