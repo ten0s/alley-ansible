@@ -7,9 +7,9 @@
     <add key="BasicRequestPath" value="mm/BasicRequest.aspx"/>
     <!-- MUST contain local url to mmwl-->
     <add key="DbType" value="MySQL"/>
-    <add key="WEBMMDb" value="Server={{mysql_server}};Database=webmm;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
-    <add key="PhoneBookDb" value="Server={{mysql_server}};Database=phonebook;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
-    <add key="LocalizationDb" value="Server={{mysql_server}};Database=localization;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
+    <add key="WEBMMDb" value="Server={{mysql_host}};Port={{mysql_port}};Database=webmm;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
+    <add key="PhoneBookDb" value="Server={{mysql_host}};Port={{mysql_port}};Database=phonebook;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
+    <add key="LocalizationDb" value="Server={{mysql_host}};Port={{mysql_port}};Database=localization;Uid={{mysql_username}};Pwd={{mysql_password}};Old Guids=true;charset=utf8;Treat Tiny As Boolean=true;Keepalive=600"/>
     <!-- end of MSSQL configuration section -->
     <add key="MmsCleanerTimerInterval" value="20"/>
     <add key="OldRecipientsCleanerTimerInterval" value="1440"/>

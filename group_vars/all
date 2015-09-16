@@ -7,9 +7,13 @@ rabbitmq_port: 5672
 rabbitmq_username: guest
 rabbitmq_password: guest
 
-mysql_server: 127.0.0.1
+mysql_host: 127.0.0.1
+mysql_port: 3306
 mysql_username: pmm
 mysql_password: PASSWORD
+
+memcached_host: 127.0.0.1
+memcached_port: 11211
 
 rpc_timeout: 5000
 

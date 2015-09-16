@@ -97,7 +97,7 @@
 	<enyim.com>
 		<memcached>
 			<servers>
-				<add address="127.0.0.1" port="11211"/>
+				<add address="{{memcached_host}}" port="{{memcached_port}}"/>
 				<!--IP address and port where Memcached is run-->
 			</servers>
 			<socketPool minPoolSize="10" maxPoolSize="100" connectionTimeout="00:00:10" deadTimeout="00:00:10"/>

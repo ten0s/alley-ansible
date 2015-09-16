@@ -24,11 +24,6 @@
               password={{mysql_password}}
               priv=*.*:ALL,GRANT
               state=present
-  mysql_user: name={{mysql_username}}
-              host={{item}}
-              password={{mysql_password}}
-              priv=*.*:ALL,GRANT
-              state=present
   with_items:
   - localhost
   - '%'
