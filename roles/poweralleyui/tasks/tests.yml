@@ -1,6 +1,6 @@
 ---
 - name: Install tests repo
-  copy: src={{item}}
+  template: src={{item}}
         dest=/etc/yum.repos.d/{{item}}
         mode=644
   with_items:
