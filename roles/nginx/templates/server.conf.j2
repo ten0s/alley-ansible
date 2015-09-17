@@ -8,6 +8,11 @@ server {
         fastcgi_pass {{poweralleyui_fastcgi_ip}}:8877;
         include /etc/nginx/fastcgi_params;
     }
+{% elif ansible_hostname in groups['arbiters'] %}
+    location /power/ {
+        fastcgi_pass 127.0.0.1:8877;
+        include /etc/nginx/fastcgi_params;
+    }
 {% endif %}
 
 {% if poweralleyui_tests is defined and poweralleyui_tests %}
@@ -22,6 +27,12 @@ server {
     location /webmm/ {
         fastcgi_index /default.aspx;
         fastcgi_pass {{webmm_fastcgi_ip}}:8180;
+        include /etc/nginx/fastcgi_params;
+    }
+{% elif ansible_hostname in groups['arbiters'] %}
+    location /webmm/ {
+        fastcgi_index /default.aspx;
+        fastcgi_pass 127.0.0.1:8180;
         include /etc/nginx/fastcgi_params;
     }
 {% endif %}

@@ -1,0 +1,39 @@
+Setup WebMM
+===========
+
+cd ~/projects/ansible/vagrant/cluster
+vagrant up
+
+cd ~/projects/ansible/environments/cluster
+ansible all -i hosts -m ping
+
+ansible-playbook ../../deploy.yml -i hosts --tags mm
+# on any node under root
+crm resource status svc-mm_srv
+crm resource stop svc-mm_srv
+crm resource start svc-mm_srv
+
+ansible-playbook ../../rename_poweralley_tables.yml -i hosts --limit node2
+# check ui works on http://192.168.100.202/power
+
+# keep it before installing ui, setup mysql routing
+ansible-playbook ../../provision-backend-env.yml -i hosts --tags haproxy
+
+ansible-playbook ../../deploy.yml -i hosts --tags webmm --limit ui
+
+ansible-playbook ../../provision-frontend-env.yml -i hosts --tags memcached,nginx,supervisor
+
+# on node2 under root
+yum remove -y nginx
+rm -rf /etc/nginx
+
+# add 10005:webmm:qwe123 user
+
+ansible-playbook ../../deploy.yml -i hosts --tags ui
+
+TODO:
+- remove drbd for kelly, mm, soap
+- setup clustered mysql
+- move memcached under corosync
+- move ui and webmm under corosync
+- setup email and move under corosync

@@ -55,6 +55,14 @@ listen rabbitmq :35672
     server rabbitmq_node1 node1:5672 check
     server rabbitmq_node2 node2:5672 check
 
+listen mysql :33306
+    server mysql_node1 node1:3306 check
+    server mysql_node2 node2:3306 check
+
+listen memcached :31211
+    server memcached_node1 node1:11211 check
+    server memcached_node2 node2:11211 check
+
 listen smppsim :18001
     server smppsim_node1 node1:8001 check
     server smppsim_node2 node2:8001 check
@@ -62,6 +70,10 @@ listen smppsim :18001
 listen kelly :18080
     server kelly_node1 node1:8080 check
     server kelly_node2 node2:8080 check
+
+listen mm_srv :18083
+    server mm_srv_node1 node1:8083 check
+    server mm_srv_node2 node2:8083 check
 
 {% elif ansible_hostname in groups['arbiters'] %}
 
@@ -85,5 +97,13 @@ listen soap :8088
 listen smppsim :8071
     server smppsim_node1 node1:8071 check
     server smppsim_node2 node2:8071 check
+
+listen poweralleyui :8877
+    server poweralleyui_node1 node1:8877 check
+    server poweralleyui_node2 node2:8877 check
+
+listen webmm :8180
+    server webmm_node1 node1:8180 check
+    server webmm_node2 node2:8180 check
 
 {% endif %}

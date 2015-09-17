@@ -27,4 +27,6 @@
   with_items:
   - localhost
   - '%'
+  - node1
+  - node2
   notify: Restart MySQL

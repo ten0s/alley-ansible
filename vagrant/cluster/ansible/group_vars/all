@@ -1,7 +1,0 @@
----
-haproxy_version: 1.5.2
-
-# for some reason below two aren't used
-# use --extra-vars 'base_data_dir=/mnt/data data_dir_suffix=data'
-base_data_dir: /mnt/data
-data_dir_suffix: data
