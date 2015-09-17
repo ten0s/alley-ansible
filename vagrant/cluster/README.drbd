@@ -2,7 +2,7 @@ DRBD Setup
 ==========
 http://drbd.linbit.com/users-guide-8.4/
 
-ansible-playbook ../../provision-cluster.yml -i ansible/hosts --tags drbd
+ansible-playbook ../../provision-cluster.yml -i hosts --tags drbd
 
 [ALL]
 vagrant ssh node{1,2}

@@ -9,7 +9,7 @@
   with_items:
   - ccs-0.16.2
   - cman-3.0.12.1
-  - pcs-0.9.123
+  - pcs-0.9.139
 
 - name: Install packages (2/2)
   yum: name={{item}} state=present enablerepo=ha-clustering
