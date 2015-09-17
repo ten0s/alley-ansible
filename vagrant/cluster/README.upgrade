@@ -13,9 +13,6 @@ crm resource status svc-mm_srv
 crm resource stop svc-mm_srv
 crm resource start svc-mm_srv
 
-ansible-playbook ../../rename_poweralley_tables.yml -i hosts --limit node2
-# check ui works on http://192.168.100.202/power
-
 # keep it before installing ui, setup mysql routing
 ansible-playbook ../../provision-backend-env.yml -i hosts --tags haproxy
 

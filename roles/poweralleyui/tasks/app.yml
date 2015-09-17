@@ -1,23 +1,4 @@
 ---
-#
-# Remove after all venues updated
-#
-- name: Remove old repo
-  file: path=/etc/yum.repos.d/{{item}}
-        state=absent
-  with_items:
-  - pmm-bankaudi-dev.list
-  - pmm-bankaudi-rc.list
-  - pmm-bankaudi-rel.list
-  - pmm-bankaudi.repo
-
-#
-# Remove after all venues updated
-#
-- name: Uninstall old app
-  yum: name=pmm-bms-poweralleyui-bankaudi
-       state=absent
-
 - name: Create DB
   mysql_db: name=poweralley
             state=present
