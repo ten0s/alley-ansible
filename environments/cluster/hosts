@@ -7,9 +7,6 @@ arbiter2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2306 ansible_ssh_user=vagra
 [outdoors]
 # keep it empty for indoors
 
-[ui]
-node2
-
 [nodes]
 node1
 node2
@@ -25,4 +22,7 @@ arbiter
 
 [drbd]
 node1
+node2
+
+[ui]
 node2

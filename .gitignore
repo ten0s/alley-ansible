@@ -1,2 +1,3 @@
 .vagrant
 inventories/production
+environments/production/hosts

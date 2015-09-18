@@ -13,9 +13,7 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
-- {include: provision-common-env.yml}
-- {include: provision-backend-env.yml}
-- {include: provision-frontend-env.yml}
+- {include: provision-env.yml}
 - {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui']}
 
 - name: Post-install steps

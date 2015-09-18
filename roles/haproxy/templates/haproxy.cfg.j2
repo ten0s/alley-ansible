@@ -77,6 +77,10 @@ listen mm_srv :18083
 
 {% elif ansible_hostname in groups['arbiters'] %}
 
+listen rabbitmq :5672
+    server rabbitmq_node1 node1:5672 check
+    server rabbitmq_node2 node2:5672 check
+
 listen funnel :2775
     server funnel_node1 node1:2775 check
     server funnel_node2 node2:2775 check
@@ -93,10 +97,9 @@ listen soap :8088
     server soap_node1 node1:8088 check
     server soap_node2 node2:8088 check
 
-# for MO tests
-listen smppsim :8071
-    server smppsim_node1 node1:8071 check
-    server smppsim_node2 node2:8071 check
+listen email :25
+    server email_node1 node1:2525 check
+    server email_node2 node2:2525 check
 
 listen poweralleyui :8877
     server poweralleyui_node1 node1:8877 check

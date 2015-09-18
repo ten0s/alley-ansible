@@ -3,12 +3,12 @@
   yum: name=haproxy-{{haproxy_version}}
        state=present
 
+- name: Disable service
+  service: name=haproxy
+           enabled=false
+
 - name: Provision config
   template: src=haproxy.cfg.j2
             dest=/etc/haproxy/haproxy.cfg
-  notify: Restart HAProxy
-
-- name: Disable and don't start HAProxy service
-  service: name=haproxy
-           enabled=false
-           state=stopped
+            backup=true
+  notify: Reload HAProxy

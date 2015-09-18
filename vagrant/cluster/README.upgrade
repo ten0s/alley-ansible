@@ -14,11 +14,11 @@ crm resource stop svc-mm_srv
 crm resource start svc-mm_srv
 
 # keep it before installing ui, setup mysql routing
-ansible-playbook ../../provision-backend-env.yml -i hosts --tags haproxy
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy
 
 ansible-playbook ../../deploy.yml -i hosts --tags webmm --limit ui
 
-ansible-playbook ../../provision-frontend-env.yml -i hosts --tags memcached,nginx,supervisor
+ansible-playbook ../../provision-env.yml -i hosts --tags memcached,nginx,supervisor
 
 # on node2 under root
 yum remove -y nginx
@@ -28,8 +28,45 @@ rm -rf /etc/nginx
 
 ansible-playbook ../../deploy.yml -i hosts --tags ui
 
-TODO:
+Setup Email-2-SMS
+=================
+cd ~/projects/ansible/vagrant/cluster
+vagrant up
+
+cd ~/projects/ansible/environments/cluster
+ansible all -i hosts -m ping
+
+# it might be sendmail
+ansible all -i hosts -s -m yum -a 'name=postfix state=absent'
+
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy
+ansible-playbook ../../deploy.yml -i hosts --tags email
+
+crm
+options editor emacs
+configure
+refresh
+edit
+
+primitive svc-email2sms ocf:pmm:rebarred \
+	params workingDir="/opt/email2sms" ctl="/opt/email2sms/bin/email2sms" uname=bms \
+	op start timeout=60 interval=0 \
+	op stop timeout=60 interval=0 \
+	op monitor interval=30 \
+	meta target-role=Started is-managed=true
+
+location svc-email2sms-on-arbiter svc-email2sms -inf: arbiter
+location svc-email2sms-on-arbiter2 svc-email2sms -inf: arbiter2
+location svc-email2sms-on-node1 svc-email2sms 1000: node1
+location svc-email2sms-on-node2 svc-email2sms 1000: node2
+
+order ord-svc-email2sms-after-svc-rabbitmq inf: svc-rabbitmq:start svc-email2sms:start
+
+verify
+commit
+
+TODO
+====
 - setup clustered mysql
 - move memcached under corosync
 - move ui and webmm under corosync
-- setup email and move under corosync
