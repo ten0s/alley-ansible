@@ -29,7 +29,6 @@ rm -rf /etc/nginx
 ansible-playbook ../../deploy.yml -i hosts --tags ui
 
 TODO:
-- remove drbd for kelly, mm, soap
 - setup clustered mysql
 - move memcached under corosync
 - move ui and webmm under corosync

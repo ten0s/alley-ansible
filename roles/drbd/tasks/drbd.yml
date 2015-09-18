@@ -44,37 +44,19 @@
   - {src: "funnel.res.j2",   dest: "/etc/drbd.d/funnel.res"}
   - {src: "just.res.j2",     dest: "/etc/drbd.d/just.res"}
   - {src: "rabbit.res.j2",   dest: "/etc/drbd.d/rabbit.res"}
-  - {src: "kelly.res.j2",    dest: "/etc/drbd.d/kelly.res"}
-  - {src: "mm_srv.res.j2",   dest: "/etc/drbd.d/mm_srv.res"}
-  - {src: "soap_srv.res.j2", dest: "/etc/drbd.d/soap_srv.res"}
   tags: ['configs']
 
-- name: Setup auto start script (1/6)
+- name: Setup auto start script (1/3)
   lineinfile: dest=/etc/rc.local
               line="losetup /dev/loop0 /mnt/funnel.img"
   tags: ['configs']
 
-- name: Setup auto start script (2/6)
+- name: Setup auto start script (2/3)
   lineinfile: dest=/etc/rc.local
               line="losetup /dev/loop1 /mnt/just.img"
   tags: ['configs']
 
-- name: Setup auto start script (3/6)
+- name: Setup auto start script (3/3)
   lineinfile: dest=/etc/rc.local
               line="losetup /dev/loop2 /mnt/rabbitmq.img"
-  tags: ['configs']
-
-- name: Setup auto start script (4/6)
-  lineinfile: dest=/etc/rc.local
-              line="losetup /dev/loop3 /mnt/kelly.img"
-  tags: ['configs']
-
-- name: Setup auto start script (5/6)
-  lineinfile: dest=/etc/rc.local
-              line="losetup /dev/loop4 /mnt/mm_srv.img"
-  tags: ['configs']
-
-- name: Setup auto start script (6/6)
-  lineinfile: dest=/etc/rc.local
-              line="losetup /dev/loop5 /mnt/soap_srv.img"
   tags: ['configs']

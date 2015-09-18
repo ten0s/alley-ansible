@@ -14,20 +14,8 @@ primitive drbd-just ocf:linbit:drbd \
 	params drbd_resource=just \
 	op start interval=0 timeout=240 \
 	op stop interval=0 timeout=100
-primitive drbd-kelly ocf:linbit:drbd \
-	params drbd_resource=kelly \
-	op start interval=0 timeout=240 \
-	op stop interval=0 timeout=100
-primitive drbd-mm_srv ocf:linbit:drbd \
-	params drbd_resource=mm_srv \
-	op start interval=0 timeout=240 \
-	op stop interval=0 timeout=100
 primitive drbd-rabbitmq ocf:linbit:drbd \
 	params drbd_resource=rabbit \
-	op start interval=0 timeout=240 \
-	op stop interval=0 timeout=100
-primitive drbd-soap_srv ocf:linbit:drbd \
-	params drbd_resource=soap_srv \
 	op start interval=0 timeout=240 \
 	op stop interval=0 timeout=100
 primitive fs-funnel Filesystem \
@@ -41,23 +29,8 @@ primitive fs-just Filesystem \
 	op monitor interval=15 timeout=40 \
 	op stop interval=0 timeout=60 \
 	op start interval=0 timeout=60
-primitive fs-kelly Filesystem \
-	params device="/dev/drbd3" directory="/mnt/data/kelly" fstype=ext4 fast_stop=no \
-	op monitor interval=15 timeout=40 \
-	op stop interval=0 timeout=60 \
-	op start interval=0 timeout=60
-primitive fs-mm_srv Filesystem \
-	params device="/dev/drbd4" directory="/mnt/data/mm_srv" fstype=ext4 fast_stop=no \
-	op monitor interval=15 timeout=40 \
-	op stop interval=0 timeout=60 \
-	op start interval=0 timeout=60
 primitive fs-rabbitmq Filesystem \
 	params device="/dev/drbd2" directory="/mnt/data/rabbitmq" fstype=ext4 fast_stop=no \
-	op monitor interval=15 timeout=40 \
-	op stop interval=0 timeout=60 \
-	op start interval=0 timeout=60
-primitive fs-soap_srv Filesystem \
-	params device="/dev/drbd5" directory="/mnt/data/soap_srv" fstype=ext4 fast_stop=no \
 	op monitor interval=15 timeout=40 \
 	op stop interval=0 timeout=60 \
 	op start interval=0 timeout=60
@@ -107,40 +80,23 @@ ms ms-funnel drbd-funnel \
 	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
 ms ms-just drbd-just \
 	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
-ms ms-kelly drbd-kelly \
-	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
-ms ms-mm_srv drbd-mm_srv \
-	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
 ms ms-rabbitmq drbd-rabbitmq \
-	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
-ms ms-soap_srv drbd-soap_srv \
 	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
 clone proxy-cl proxy \
 	meta clone-node-max=1 clone-max=4 target-role=Started
+location cli-prefer-svc-just svc-just role=Started inf: node2
 location fs-funnel-on-node1 fs-funnel 1000: node1
 location fs-funnel-on-node2 fs-funnel 1000: node2
 location fs-just-on-node1 fs-just 1000: node1
 location fs-just-on-node2 fs-just 1000: node2
-location fs-kelly-on-node1 fs-kelly 1000: node1
-location fs-kelly-on-node2 fs-kelly 1000: node2
-location fs-mm_srv-on-node1 fs-mm_srv 1000: node1
-location fs-mm_srv-on-node2 fs-mm_srv 1000: node2
 location fs-rabbitmq-on-node1 fs-rabbitmq 1000: node1
 location fs-rabbitmq-on-node2 fs-rabbitmq 1000: node2
-location fs-soap_srv-on-node1 fs-soap_srv 1000: node1
-location fs-soap_srv-on-node2 fs-soap_srv 1000: node2
 location ms-funnel-on-node1 ms-funnel 1000: node1
 location ms-funnel-on-node2 ms-funnel 1000: node2
 location ms-just-on-node1 ms-just 1000: node1
 location ms-just-on-node2 ms-just 1000: node2
-location ms-kelly-on-node1 ms-kelly 1000: node1
-location ms-kelly-on-node2 ms-kelly 1000: node2
-location ms-mm_srv-on-node1 ms-mm_srv 1000: node1
-location ms-mm_srv-on-node2 ms-mm_srv 1000: node2
 location ms-rabbitmq-on-node1 ms-rabbitmq 1000: node1
 location ms-rabbitmq-on-node2 ms-rabbitmq 1000: node2
-location ms-soap_srv-on-node1 ms-soap_srv 1000: node1
-location ms-soap_srv-on-node2 ms-soap_srv 1000: node2
 location proxy-cl-on-arbiter proxy-cl 1000: arbiter
 location proxy-cl-on-arbiter2 proxy-cl 1000: arbiter2
 location proxy-cl-on-node1 proxy-cl 1000: node1
@@ -161,31 +117,19 @@ location svc-soap_srv-on-node1 svc-soap_srv 1000: node1
 location svc-soap_srv-on-node2 svc-soap_srv 1000: node2
 colocation col-fs-funnel-by-drbd inf: fs-funnel ms-funnel:Master
 colocation col-fs-just-by-drbd inf: fs-just ms-just:Master
-colocation col-fs-kelly-by-drbd inf: fs-kelly ms-kelly:Master
-colocation col-fs-mm_srv-by-drbd inf: fs-mm_srv ms-mm_srv:Master
 colocation col-fs-rabbitmq-by-drbd inf: fs-rabbitmq ms-rabbitmq:Master
-colocation col-fs-soap_srv-by-drbd inf: fs-soap_srv ms-soap_srv:Master
 colocation col-svc-funnel-by-fs-funnel inf: svc-funnel fs-funnel
 colocation col-svc-just-by-fs-just inf: svc-just fs-just
-colocation col-svc-kelly-by-fs-kelly inf: svc-kelly fs-kelly
-colocation col-svc-mm_srv-by-fs-mm_srv inf: svc-mm_srv fs-mm_srv
 colocation col-svc-rabbitmq-by-fs-rabbitmq inf: svc-rabbitmq fs-rabbitmq
-colocation col-svc-soap_srv-by-fs-soap_srv inf: svc-soap_srv fs-soap_srv
 order ord-fs-funnel-after-drbd inf: ms-funnel:promote fs-funnel:start
 order ord-fs-just-after-drbd inf: ms-just:promote fs-just:start
-order ord-fs-kelly-after-drbd inf: ms-kelly:promote fs-kelly:start
-order ord-fs-mm_srv-after-drbd inf: ms-mm_srv:promote fs-mm_srv:start
 order ord-fs-rabbitmq-after-drbd inf: ms-rabbitmq:promote fs-rabbitmq:start
-order ord-fs-soap_srv-after-drbd inf: ms-soap_srv:promote fs-soap_srv:start
 order ord-srv-mm_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-mm_srv:start
 order ord-svc-funnel-after-fs-funnel inf: fs-funnel:start svc-funnel:start
 order ord-svc-funnel-after-svc-rabbitmq inf: svc-rabbitmq:start svc-funnel:start
 order ord-svc-just-after-fs-just inf: fs-just:start svc-just:start
-order ord-svc-kelly-after-fs-kelly inf: fs-kelly:start svc-kelly:start
 order ord-svc-kelly-after-svc-rabbitmq inf: svc-rabbitmq:start svc-kelly:start
-order ord-svc-mm_srv-after-fs-mm_srv inf: fs-mm_srv:start svc-mm_srv:start
 order ord-svc-rabbitmq-after-fs-rabbitmq inf: fs-rabbitmq:start svc-rabbitmq:start
-order ord-svc-soap_srv-after-fs-soap_srv inf: fs-soap_srv:start svc-soap_srv:start
 order ord-svc-soap_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-soap_srv:start
 property cib-bootstrap-options: \
 	dc-version=1.1.10-14.el6_5.3-368c726 \

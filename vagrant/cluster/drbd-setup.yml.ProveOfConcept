@@ -10,9 +10,6 @@
     - funnel
     - just
     - rabbitmq
-    - kelly
-    - soap_srv
-    - mm_srv
 
   - name: Create fs image files
     command: dd if=/dev/zero of=/mnt/{{item}}.img bs=1M count=3K
@@ -22,9 +19,6 @@
     - funnel
     - just
     - rabbitmq
-    - kelly
-    - mm_srv
-    - soap_srv
 
   - name: Create loopback devices
     command: losetup /dev/{{item.dev}} /mnt/{{item.name}}.img
@@ -35,9 +29,6 @@
     - {dev: loop0, name: funnel}
     - {dev: loop1, name: just}
     - {dev: loop2, name: rabbitmq}
-    - {dev: loop3, name: kelly}
-    - {dev: loop4, name: mm_srv}
-    - {dev: loop5, name: soap_srv}
     tags: ['loop']
 
   - name: Create drbd metadata
@@ -46,9 +37,6 @@
     - funnel
     - just
     - rabbit
-    - kelly
-    - mm_srv
-    - soap_srv
     tags: ['meta']
 
   - name: Up drbd
@@ -60,9 +48,6 @@
     - funnel
     - just
     - rabbit
-    - kelly
-    - mm_srv
-    - soap_srv
     tags: ['up']
 
   - name: Force primary
@@ -72,9 +57,6 @@
     - funnel
     - just
     - rabbit
-    - kelly
-    - mm_srv
-    - soap_srv
 
   - name: Format (PRIMARY)
     command: mkfs -t ext4 /dev/{{item}}
@@ -83,9 +65,6 @@
     - drbd0
     - drbd1
     - drbd2
-    - drbd3
-    - drbd4
-    - drbd5
 
   - name: Mount (PRIMARY)
     command: mount -t ext4 /dev/{{item.dev}} /mnt/data/{{item.name}}
@@ -94,6 +73,3 @@
     - {dev: drbd0, name: funnel}
     - {dev: drbd1, name: just}
     - {dev: drbd2, name: rabbitmq}
-    - {dev: drbd3, name: kelly}
-    - {dev: drbd4, name: mm_srv}
-    - {dev: drbd5, name: soap_srv}

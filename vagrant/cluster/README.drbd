@@ -11,87 +11,57 @@ vagrant ssh node{1,2}
 sudo su -
 
 [ALL]
-mkdir -p /mnt/data/{funnel,just,rabbitmq,kelly,soap_srv,mm_srv}
+mkdir -p /mnt/data/{funnel,just,rabbitmq}
 
 [ALL] Create fs image files
 dd if=/dev/zero of=/mnt/funnel.img bs=1M count=3K
 dd if=/dev/zero of=/mnt/just.img bs=1M count=3K
 dd if=/dev/zero of=/mnt/rabbitmq.img bs=1M count=3K
-dd if=/dev/zero of=/mnt/kelly.img bs=1M count=3K
-dd if=/dev/zero of=/mnt/mm_srv.img bs=1M count=3K
-dd if=/dev/zero of=/mnt/soap_srv.img bs=1M count=3K
 
 [ALL] Setup loopback devices
 losetup /dev/loop0 /mnt/funnel.img
 losetup /dev/loop1 /mnt/just.img
 losetup /dev/loop2 /mnt/rabbitmq.img
-losetup /dev/loop3 /mnt/kelly.img
-losetup /dev/loop4 /mnt/mm_srv.img
-losetup /dev/loop5 /mnt/soap_srv.img
 
 [ALL] Initial devices creation
 drbdadm create-md funnel
 drbdadm create-md just
 drbdadm create-md rabbit
-drbdadm create-md kelly
-drbdadm create-md mm_srv
-drbdadm create-md soap_srv
 
 [ALL] Up devices
 drbdadm up funnel
 drbdadm up just
 drbdadm up rabbit
-drbdadm up kelly
-drbdadm up mm_srv
-drbdadm up soap_srv
 
 [ONE] Inconsistent/Inconsistent disk state is expected at this point
 drbd-overview
   0:funnel/0    Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
   1:just/0      Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
   2:rabbit/0    Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
-  3:kelly/0     Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
-  4:mm_srv/0    Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
-  5:soap_srv/0  Connected Secondary/Secondary Inconsistent/Inconsistent C r-----
 
 [ONE]
 drbdadm primary --force funnel
 drbdadm primary --force just
 drbdadm primary --force rabbit
-drbdadm primary --force kelly
-drbdadm primary --force mm_srv
-drbdadm primary --force soap_srv
 
 [ONE] Wait for PRIMARY and SYNC...
 watch drbd-overview
   0:funnel/0    Connected Primary/Secondary UpToDate/UpToDate C r-----
   1:just/0      Connected Primary/Secondary UpToDate/UpToDate C r-----
   2:rabbit/0    Connected Primary/Secondary UpToDate/UpToDate C r-----
-  3:kelly/0     Connected Primary/Secondary UpToDate/UpToDate C r-----
-  4:mm_srv/0    Connected Primary/Secondary UpToDate/UpToDate C r-----
-  5:soap_srv/0  Connected Primary/Secondary UpToDate/UpToDate C r-----
 
 [PRIMARY]
 mkfs -t ext4 /dev/drbd0
 mkfs -t ext4 /dev/drbd1
 mkfs -t ext4 /dev/drbd2
-mkfs -t ext4 /dev/drbd3
-mkfs -t ext4 /dev/drbd4
-mkfs -t ext4 /dev/drbd5
 
 [PRIMARY]
 mount -t ext4 /dev/drbd0 /mnt/data/funnel
 mount -t ext4 /dev/drbd1 /mnt/data/just
 mount -t ext4 /dev/drbd2 /mnt/data/rabbitmq
-mount -t ext4 /dev/drbd3 /mnt/data/kelly
-mount -t ext4 /dev/drbd4 /mnt/data/mm_srv
-mount -t ext4 /dev/drbd5 /mnt/data/soap_srv
 
 [ONE]
 drbd-overview
   0:funnel/0    Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/funnel   ext4 2.9G 4.5M 2.8G 1%
   1:just/0      Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/just     ext4 2.9G 4.5M 2.8G 1%
   2:rabbit/0    Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/rabbitmq ext4 2.9G 4.5M 2.8G 1%
-  3:kelly/0     Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/kelly    ext4 2.9G 4.5M 2.8G 1%
-  4:mm_srv/0    Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/mm_srv   ext4 2.9G 4.5M 2.8G 1%
-  5:soap_srv/0  Connected Primary/Secondary UpToDate/UpToDate C r----- /mnt/data/soap_srv ext4 2.9G 4.5M 2.8G 1%
