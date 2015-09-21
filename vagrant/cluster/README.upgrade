@@ -39,7 +39,11 @@ ansible all -i hosts -m ping
 # it might be sendmail
 ansible all -i hosts -s -m yum -a 'name=postfix state=absent'
 
-ansible-playbook ../../provision-env.yml -i hosts --tags haproxy
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy --limit arbiter2
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy --limit arbiter
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy --limit node1
+ansible-playbook ../../provision-env.yml -i hosts --tags haproxy --limit node2
+
 ansible-playbook ../../deploy.yml -i hosts --tags email
 
 crm
@@ -64,6 +68,8 @@ order ord-svc-email2sms-after-svc-rabbitmq inf: svc-rabbitmq:start svc-email2sms
 
 verify
 commit
+
+export CIB file
 
 TODO
 ====

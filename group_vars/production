@@ -1,6 +1,6 @@
 ---
 funnel_version: 2.10.1
-soap_version: 2.10.0
+soap_version: 2.10.1
 mm_version: 2.10.5
 kelly_version: 2.10.0
 just_version: 2.7.0

@@ -51,43 +51,35 @@ defaults
 
 {% if ansible_hostname in groups['nodes'] %}
 
-listen rabbitmq :35672
+listen rabbitmq 127.0.0.1:35672
     server rabbitmq_node1 node1:5672 check
     server rabbitmq_node2 node2:5672 check
 
-listen mysql :33306
+listen mysql 127.0.0.1:33306
     server mysql_node1 node1:3306 check
     server mysql_node2 node2:3306 check
 
-listen memcached :31211
+listen memcached 127.0.0.1:31211
     server memcached_node1 node1:11211 check
     server memcached_node2 node2:11211 check
 
-listen smppsim :18001
+listen smppsim 127.0.0.1:18001
     server smppsim_node1 node1:8001 check
     server smppsim_node2 node2:8001 check
 
-listen kelly :18080
+listen kelly 127.0.0.1:18080
     server kelly_node1 node1:8080 check
     server kelly_node2 node2:8080 check
 
-listen mm_srv :18083
-    server mm_srv_node1 node1:8083 check
-    server mm_srv_node2 node2:8083 check
+listen mm 127.0.0.1:18083
+    server mm_node1 node1:8083 check
+    server mm_node2 node2:8083 check
 
 {% elif ansible_hostname in groups['arbiters'] %}
-
-listen rabbitmq :5672
-    server rabbitmq_node1 node1:5672 check
-    server rabbitmq_node2 node2:5672 check
 
 listen funnel :2775
     server funnel_node1 node1:2775 check
     server funnel_node2 node2:2775 check
-
-listen kelly :8080
-    server kelly_node1 node1:8080 check
-    server kelly_node2 node2:8080 check
 
 listen mm :8083
     server mm_node1 node1:8083 check
@@ -101,11 +93,11 @@ listen email :25
     server email_node1 node1:2525 check
     server email_node2 node2:2525 check
 
-listen poweralleyui :8877
+listen poweralleyui 127.0.0.1:8877
     server poweralleyui_node1 node1:8877 check
     server poweralleyui_node2 node2:8877 check
 
-listen webmm :8180
+listen webmm 127.0.0.1:8180
     server webmm_node1 node1:8180 check
     server webmm_node2 node2:8180 check
 

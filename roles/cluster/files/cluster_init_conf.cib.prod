@@ -40,6 +40,12 @@ primitive smppsim anything \
 	params binfile="/usr/bin/java" cmdline_options="-Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=conf/logging.properties -jar smppsim.jar conf/smppsim.props" logfile="/var/log/smppsim.log" workdir="/opt/SMPPSim/" \
 	op monitor interval=15 \
 	meta target-role=Started is-managed=true
+primitive svc-email2sms ocf:pmm:rebarred \
+	params workingDir="/opt/email2sms" ctl="/opt/email2sms/bin/email2sms" uname=bms \
+	op start timeout=60 interval=0 \
+	op stop timeout=60 interval=0 \
+	op monitor interval=30 \
+	meta target-role=Started is-managed=true
 primitive svc-funnel ocf:pmm:rebarred \
 	params workingDir="/opt/funnel" ctl="/opt/funnel/bin/funnel" uname=bms \
 	meta target-role=Started \
@@ -103,6 +109,10 @@ location proxy-cl-on-node1 proxy-cl 1000: node1
 location proxy-cl-on-node2 proxy-cl 1000: node2
 location smppsim-on-node1 smppsim 1000: node1
 location smppsim-on-node2 smppsim 1000: node2
+location svc-email2sms-on-arbiter svc-email2sms -inf: arbiter
+location svc-email2sms-on-arbiter2 svc-email2sms -inf: arbiter2
+location svc-email2sms-on-node1 svc-email2sms 1000: node1
+location svc-email2sms-on-node2 svc-email2sms 1000: node2
 location svc-funnel-on-node1 svc-funnel 1000: node1
 location svc-funnel-on-node2 svc-funnel 1000: node2
 location svc-just-on-node1 svc-just 1000: node1
@@ -125,6 +135,7 @@ order ord-fs-funnel-after-drbd inf: ms-funnel:promote fs-funnel:start
 order ord-fs-just-after-drbd inf: ms-just:promote fs-just:start
 order ord-fs-rabbitmq-after-drbd inf: ms-rabbitmq:promote fs-rabbitmq:start
 order ord-srv-mm_srv-after-svc-rabbitmq inf: svc-rabbitmq:start svc-mm_srv:start
+order ord-svc-email2sms-after-svc-rabbitmq inf: svc-rabbitmq:start svc-email2sms:start
 order ord-svc-funnel-after-fs-funnel inf: fs-funnel:start svc-funnel:start
 order ord-svc-funnel-after-svc-rabbitmq inf: svc-rabbitmq:start svc-funnel:start
 order ord-svc-just-after-fs-just inf: fs-just:start svc-just:start
