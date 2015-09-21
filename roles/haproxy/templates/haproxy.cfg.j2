@@ -89,9 +89,18 @@ listen soap :8088
     server soap_node1 node1:8088 check
     server soap_node2 node2:8088 check
 
+{% if email_nic is defined %}
+listen email {{hostvars[inventory_hostname][email_nic]['ipv4']['address']}}:25
+{% else %}
 listen email :25
+{% endif %}
     server email_node1 node1:2525 check
     server email_node2 node2:2525 check
+
+# for monitoring
+listen kelly 127.0.0.1:8080
+    server kelly_node1 node1:8080 check
+    server kelly_node2 node2:8080 check
 
 listen poweralleyui 127.0.0.1:8877
     server poweralleyui_node1 node1:8877 check
