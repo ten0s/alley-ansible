@@ -2,6 +2,9 @@
 - name: Provision PowerAlley test env
   hosts: all
   sudo: true
+  vars_files:
+  - vars/secrets.yml
+
   tasks:
   - name: Copy start dev env script
     copy: src=files/start-dev-env

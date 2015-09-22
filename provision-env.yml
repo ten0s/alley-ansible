@@ -2,6 +2,8 @@
 - name: Provision PowerAlley env
   hosts: all
   sudo: true
+  vars_files:
+  - vars/secrets.yml
   roles:
   - {role: common,     tags: ["common"]}
   - {role: erlang,     tags: ["erlang"],   when: erlang_version is defined}

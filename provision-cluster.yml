@@ -2,6 +2,8 @@
 - name: Provision Cluster
   hosts: all
   sudo: true
+  vars_files:
+  - vars/secrets.yml
   roles:
   - {role: drbd,    tags: ["drbd"],    when: "{{'drbd' in group_names}}"}
   - {role: cluster, tags: ["cluster"], when: "{{'cluster' in group_names}}"}

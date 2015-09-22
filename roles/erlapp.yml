@@ -7,8 +7,8 @@
 - name: Download archive
   get_url: url=http://sus.dev1team.net/sus/poweralley/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
            dest={{download_dir}}/{{name}}{{name_suffix}}-{{version}}-centos6.x86_64.tar.gz
-           url_username='USERNAME'
-           url_password='PASSWORD'
+           url_username={{download_username}}
+           url_password={{download_password}}
   environment:
     http_proxy: "{{http_proxy}}"
   when: not curr_ver_reg.stat.exists

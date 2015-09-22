@@ -2,6 +2,8 @@
 - name: Deploy PowerAlley services
   hosts: all
   sudo: true
+  vars_files:
+  - vars/secrets.yml
   roles:
   - {role: funnel,       tags: ["funnel"],   when: funnel_version is defined}
   - {role: soap_srv,     tags: ["soap"],     when: soap_version is defined}

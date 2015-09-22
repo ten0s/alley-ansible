@@ -2,6 +2,9 @@
 - name: Provision PowerAlley frontend dev env
   hosts: all
   sudo: true
+  vars_files:
+  - vars/secrets.yml
+
   tasks:
   - name: Set hostname
     hostname: name=frontend-dev
