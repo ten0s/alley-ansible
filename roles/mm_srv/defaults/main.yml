@@ -1,5 +1,4 @@
 ---
-mm_root_url: ''
 mm_global_root_url: ''
 mm_local_root_url: ''
 mm_http_addr: '{0,0,0,0}'

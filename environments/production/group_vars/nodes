@@ -1,7 +1,7 @@
 ---
 funnel_version: 2.10.1
 soap_version: 2.10.1
-mm_version: 2.10.5
+mm_version: 2.10.6
 email_version: 2.10.6
 kelly_version: 2.10.0
 just_version: 2.7.0
@@ -18,7 +18,8 @@ data_dir_suffix: data
 
 rpc_timeout: 300000
 
-mm_root_url: alley.powermemobile.com:8083
+mm_global_root_url: alley.powermemobile.com:8083
+mm_local_root_url: 127.0.0.1:18083
 
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
 kelly_receipts_qos: 5000
