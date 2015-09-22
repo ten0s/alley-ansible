@@ -23,8 +23,8 @@ mm_root_url: alley.powermemobile.com:8083
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
 kelly_receipts_qos: 5000
 kelly_snmp_agents: '
-{"funnel", "funnel1", "private", [162,243,90,82], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"funnel", "funnel2", "private", [107,170,35,72], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"just", "just1", "private", [162,243,90,82], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"just", "just2", "private", [107,170,35,72], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"funnel", "funnel1", "private", [10,128,144,100], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"funnel", "funnel2", "private", [10,128,144,99], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just1", "private", [10,128,144,100], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just2", "private", [10,128,144,99], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 '
