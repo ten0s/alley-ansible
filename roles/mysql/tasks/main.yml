@@ -9,8 +9,9 @@
        state=present
 
 - name: Provision config
-  copy: src=my.cnf
-        dest=/etc/my.cnf
+  template: src=my.cnf.j2
+            dest=/etc/my.cnf
+            backup=true
   notify: Restart MySQL
 
 - name: Enable MySQL service
