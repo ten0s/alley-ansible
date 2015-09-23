@@ -25,13 +25,13 @@ server {
 
 {% if webmm_version is defined %}
     location /webmm/ {
-        fastcgi_index /default.aspx;
+        fastcgi_index default.aspx;
         fastcgi_pass {{webmm_fastcgi_ip}}:8180;
         include /etc/nginx/fastcgi_params;
     }
 {% elif ansible_hostname in groups['arbiters'] %}
     location /webmm/ {
-        fastcgi_index /default.aspx;
+        fastcgi_index default.aspx;
         fastcgi_pass 127.0.0.1:8180;
         include /etc/nginx/fastcgi_params;
     }
