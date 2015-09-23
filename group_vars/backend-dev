@@ -11,7 +11,7 @@ mono_version: 3.12.1
 poweralleyui_version: 1.5.0.226
 poweralleyui_nic: ansible_eth1
 
-webmm_version: 2.0.1.648
+webmm_version: 2.0.1.674
 webmm_nic: ansible_eth1
 webmm_backend_host: 10.10.0.87
 webmm_backend_port: 8083
