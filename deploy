@@ -8,6 +8,7 @@ hosts=(
     [ci_localhost]=ci_localhost
     [demo]=demo
     [stg]=stg
+    [test]=test
 )
 
 declare -A services
