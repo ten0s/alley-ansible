@@ -2,11 +2,11 @@
 
 declare -A hosts
 hosts=(
-    [artem]=artem
+    [bdev]=bdev
+    [fdev]=fdev
     [ci]=ci
     [ci_localhost]=ci_localhost
     [demo]=demo
-    [dev]=backend-dev
     [stg]=stg
 )
 

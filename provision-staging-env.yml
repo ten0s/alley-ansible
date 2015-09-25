@@ -1,5 +1,5 @@
 ---
-- name: Provision PowerAlley test env
+- name: Provision PowerAlley staging env
   hosts: all
   sudo: true
   vars_files:
@@ -17,7 +17,7 @@
     tags: ["autostart"]
 
 - {include: provision-env.yml}
-- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui']}
+- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui', 'webmm']}
 
 - name: Post-install steps
   hosts: all
