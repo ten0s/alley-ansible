@@ -1,0 +1,16 @@
+---
+- name: Copy backup script
+  copy: src=backup_dbs.sh dest=/root/backup_dbs.sh mode=0755
+
+- name: Backup Databases
+  shell: /root/backup_dbs.sh
+
+- name: Stop MySQL
+  service: name=mysqld state=stopped
+
+- name: Remove MySQL
+  yum: name={{ item }} state=absent
+  with_items:
+  - mysql-server
+  - mysql
+  - mysql-libs
