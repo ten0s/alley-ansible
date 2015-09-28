@@ -29,7 +29,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "../../provision-backend-dev-env.yml"
-    ansible.inventory_path = "../../inventories/backend-dev"
+    ansible.inventory_path = "../../inventories/bdev"
     ansible.limit = "all"
   end
 end
