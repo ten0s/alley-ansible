@@ -1,6 +1,6 @@
 ---
-- name: Provision PowerAlley staging env
-  hosts: all
+#- name: Provision PowerAlley staging env
+- hosts: all
   sudo: true
   vars_files:
   - vars/secrets.yml

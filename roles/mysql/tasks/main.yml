@@ -24,26 +24,26 @@
 #            backup=true
 #  notify: Restart MySQL
 
-- name: Provision config
-  template: src=my.cnf-percona.j2
-            dest=/etc/my.cnf
-            backup=true
-  notify: Restart Percona
+#- name: Provision config
+#  template: src=my.cnf-percona.j2
+#            dest=/etc/my.cnf
+#            backup=true
+#  notify: Restart Percona
 
-- name: Enable MySQL service
-  service: name=mysqld
-           enabled=true
-           state=started
+#- name: Enable MySQL service
+#  service: name=mysqld
+#           enabled=true
+#           state=started
 
-- name: Setup DB priviledges
-  mysql_user: name={{mysql_username}}
-              host={{item}}
-              password={{mysql_password}}
-              priv=*.*:ALL,GRANT
-              state=present
-  with_items:
-  - localhost
-  - '%'
-  - node1
-  - node2
-  notify: Restart MySQL
+#- name: Setup DB priviledges
+#  mysql_user: name={{mysql_username}}
+#              host={{item}}
+#              password={{mysql_password}}
+#              priv=*.*:ALL,GRANT
+#              state=present
+#  with_items:
+#  - localhost
+#  - '%'
+#  - node1
+#  - node2
+#  notify: Restart MySQL
