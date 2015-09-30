@@ -14,3 +14,6 @@
   - mysql-server
   - mysql
   - mysql-libs
+
+- name: Backup MySQL dir
+  shell: rsync -aH /var/lib/mysql /var/lib/mysql-$(date +%T).sql
