@@ -19,7 +19,7 @@ mm_version: 2.10.6
 mm_http_global_nic: eth1
 mm_local_root_url: 127.0.0.1:18083
 
-email_version: 2.10.6
+email_version: 2.10.7
 
 kelly_version: 2.10.0
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
