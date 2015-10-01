@@ -29,3 +29,6 @@ kelly_snmp_agents: '
 {"just", "just1", "private", [10,128,144,100], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 {"just", "just2", "private", [10,128,144,99], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 '
+
+email_local_domains: '<<"alley.powermemobile.com">>'
+email_max_recipient_count: 1
