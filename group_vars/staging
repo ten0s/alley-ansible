@@ -1,7 +1,7 @@
 ---
 funnel_version: 2.10.1
 soap_version: 2.10.1
-oneapi_version: 2.10.0
+oneapi_version: 2.11.0-dev
 email_version: 2.10.7
 kelly_version: 2.11.0-dev
 just_version: 2.11.0-dev
