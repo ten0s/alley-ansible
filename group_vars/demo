@@ -12,7 +12,7 @@ kelly_receipts_qos: 1000
 
 just_version: 2.7.1
 
-poweralleyui_version: 1.5.0.226
+poweralleyui_version: 1.5.1.245
 poweralleyui_nic: ansible_eth1
 
 webmm_version: 2.0.1.674
