@@ -76,6 +76,12 @@ primitive svc-rabbitmq ocf:rabbitmq:rabbitmq-server \
 	op stop timeout=180 interval=0 \
 	op monitor interval=30 \
 	meta target-role=Started is-managed=true
+primitive svc-smppsink ocf:pmm:rebarred \
+	params workingDir="/opt/smppsink" ctl="/opt/smppsink/bin/smppsink" uname=bms \
+	op start timeout=60 interval=0 \
+	op stop timeout=60 interval=0 \
+	op monitor interval=30 \
+	meta target-role=Started is-managed=true
 primitive svc-soap_srv ocf:pmm:rebarred \
 	params workingDir="/opt/soap_srv" ctl="/opt/soap_srv/bin/soap_srv" uname=bms \
 	op start timeout=60 interval=0 \
@@ -90,11 +96,6 @@ ms ms-rabbitmq drbd-rabbitmq \
 	meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started
 clone proxy-cl proxy \
 	meta clone-node-max=1 clone-max=4 target-role=Started
-location cli-prefer-svc-just svc-just role=Started inf: node1
-location cli-prefer-svc-kelly svc-kelly role=Started inf: node2
-location cli-prefer-svc-mm_srv svc-mm_srv role=Started inf: node2
-location cli-prefer-svc-rabbitmq svc-rabbitmq role=Started inf: node2
-location cli-prefer-svc-soap_srv svc-soap_srv role=Started inf: node1
 location fs-funnel-on-node1 fs-funnel 1000: node1
 location fs-funnel-on-node2 fs-funnel 1000: node2
 location fs-just-on-node1 fs-just 1000: node1
@@ -139,6 +140,10 @@ location svc-rabbitmq-on-arbiter svc-rabbitmq -inf: arbiter
 location svc-rabbitmq-on-arbiter2 svc-rabbitmq -inf: arbiter2
 location svc-rabbitmq-on-node1 svc-rabbitmq 1000: node1
 location svc-rabbitmq-on-node2 svc-rabbitmq 1000: node2
+location svc-smppsink-on-arbiter svc-smppsink -inf: arbiter
+location svc-smppsink-on-arbiter2 svc-smppsink -inf: arbiter2
+location svc-smppsink-on-node1 svc-smppsink 1000: node1
+location svc-smppsink-on-node2 svc-smppsink 1000: node2
 location svc-soap_srv-on-arbiter svc-soap_srv -inf: arbiter
 location svc-soap_srv-on-arbiter2 svc-soap_srv -inf: arbiter2
 location svc-soap_srv-on-node1 svc-soap_srv 1000: node1
