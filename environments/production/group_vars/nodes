@@ -6,6 +6,9 @@ email_version: 2.10.7
 kelly_version: 2.10.0
 just_version: 2.7.1
 
+smppsink_version: 1.4.0
+smppsink_smpp_port: 8002
+
 rabbitmq_host: 127.0.0.1
 rabbitmq_port: 35672
 rabbitmq_username: alley
