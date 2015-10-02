@@ -1,15 +1,15 @@
 ---
 funnel_version: 2.10.1
 soap_version: 2.10.1
-oneapi_version: 2.10.0
-email_version: 2.10.6
-kelly_version: 2.10.0
-just_version: 2.7.1
+oneapi_version: 2.11.0-dev
+email_version: 2.10.7
+kelly_version: 2.11.0-dev
+just_version: 2.11.0-dev
 
 mm_version: 2.10.6
 mm_http_local_nic: lo
 
-poweralleyui_version: 1.5.0.226
+poweralleyui_version: 1.5.1.245
 poweralleyui_nic: ansible_eth0
 
 webmm_version: 2.0.1.674

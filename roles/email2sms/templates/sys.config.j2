@@ -4,10 +4,10 @@
     {smtp_port, {{email_smtp_port}}},
     {smtp_protocol, tcp},
     {smtp_greeting, <<"Email-2-SMS Gateway">>},
-    {smtp_local_domains, [<<"alley.powermemobile.com">>]},
+    {smtp_local_domains, [{{email_local_domains}}]},
     {smtp_max_session_count, 50},
     {smtp_max_msg_size, 1048576}, %% bytes | undefined
-    {smtp_max_recipient_count, 1},
+    {smtp_max_recipient_count, {{email_max_recipient_count}}},
     {smtp_recipient_fields, [<<"to">>, <<"cc">>, <<"bcc">>]},
 
     {auth_schemes, [from_address, subject, to_address]},

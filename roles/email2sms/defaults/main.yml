@@ -1,3 +1,5 @@
 ---
 email_smtp_addr: '{0,0,0,0}'
 email_smtp_port: 2525
+email_local_domains: '<<"sms.provider.com">>, <<"mail.com">>'
+email_max_recipient_count: 3

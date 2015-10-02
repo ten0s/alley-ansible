@@ -2,9 +2,12 @@
 funnel_version: 2.10.1
 soap_version: 2.10.1
 mm_version: 2.10.6
-email_version: 2.10.6
+email_version: 2.10.7
 kelly_version: 2.10.0
 just_version: 2.7.1
+
+smppsink_version: 1.4.0
+smppsink_smpp_port: 8002
 
 rabbitmq_host: 127.0.0.1
 rabbitmq_port: 35672
@@ -29,3 +32,6 @@ kelly_snmp_agents: '
 {"just", "just1", "private", [10,128,144,100], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 {"just", "just2", "private", [10,128,144,99], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 '
+
+email_local_domains: '<<"alley.powermemobile.com">>'
+email_max_recipient_count: 1
