@@ -8,6 +8,8 @@ just_version: 2.11.0-dev
 
 smppsim_version: 2.6.8
 
+smppload_version: 2.3.0
+
 smppsink_version: 1.4.0
 smppsink_smpp_port: 8002
 

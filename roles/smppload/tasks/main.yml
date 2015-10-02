@@ -1,0 +1,15 @@
+---
+- include: ../../erlapp.yml
+  vars:
+      name: smppload
+      version: "{{smppload_version}}"
+      global_data_dir: false
+      global_log_dir: false
+
+- name: Create log dir
+  file: path=/opt/smppload/log
+        state=directory
+
+- name: Add to /etc/profile
+  lineinfile: dest=/etc/profile
+              line="export PATH=/opt/smppload:$PATH"

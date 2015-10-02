@@ -6,14 +6,15 @@
   - vars/secrets.yml
   roles:
   - {role: common,     tags: ["common"]}
-  - {role: erlang,     tags: ["erlang"],   when: erlang_version is defined}
-  - {role: haproxy,    tags: ["haproxy"],  when: haproxy_version is defined}
+  - {role: erlang,     tags: ["erlang"],     when: erlang_version is defined}
+  - {role: haproxy,    tags: ["haproxy"],    when: haproxy_version is defined}
   - {role: memcached,  tags: ["memcached"],  when: memcached_version is defined}
-  - {role: mongodb,    tags: ["mongodb"],  when: mongodb_version is defined}
+  - {role: mongodb,    tags: ["mongodb"],    when: mongodb_version is defined}
   - {role: mono,       tags: ["mono"],       when: mono_version is defined}
   - {role: mysql,      tags: ["mysql"],      when: mysql_version is defined}
   - {role: nginx,      tags: ["nginx"],      when: nginx_version is defined}
-  - {role: rabbitmq,   tags: ["rabbitmq"], when: rabbitmq_version is defined}
-  - {role: smppsim,    tags: ["smppsim"],  when: smppsim_version is defined}
-  - {role: smppsink,   tags: ["smppsink"], when: smppsink_version is defined}
+  - {role: rabbitmq,   tags: ["rabbitmq"],   when: rabbitmq_version is defined}
+  - {role: smppload,   tags: ["smppload"],   when: smppload_version is defined}
+  - {role: smppsim,    tags: ["smppsim"],    when: smppsim_version is defined}
+  - {role: smppsink,   tags: ["smppsink"],   when: smppsink_version is defined}
   - {role: supervisor, tags: ["supervisor"], when: supervisor_version is defined}

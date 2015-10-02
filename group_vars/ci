@@ -13,6 +13,8 @@ poweralleyui_tests: true
 
 smppsim_version: 2.6.8
 
+smppload_version: 2.3.0
+
 smppsink_version: 1.4.0
 smppsink_smpp_port: 8002
 

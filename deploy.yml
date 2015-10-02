@@ -12,6 +12,7 @@
   - {role: email2sms,    tags: ["email"],    when: email_version is defined}
   - {role: kelly,        tags: ["kelly"],    when: kelly_version is defined}
   - {role: just,         tags: ["just"],     when: just_version is defined}
+  - {role: smppload,     tags: ["smppload"], when: smppload_version is defined}
   - {role: smppsink,     tags: ["smppsink"], when: smppsink_version is defined}
   - {role: poweralleyui, tags: ["ui"],       when: poweralleyui_version is defined}
   - {role: webmm,        tags: ["webmm"],    when: webmm_version is defined}
