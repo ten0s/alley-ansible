@@ -1,16 +1,8 @@
 ---
 
-#- hosts: staging
-#  sudo: true
-#  vars_files:
-#  - vars/secrets.yml
-#  roles:
-#  - {role: mysql_remove, tags: ["mysql_remove"]}
-
-- hosts: staging
+- hosts: all
   sudo: true
   vars_files:
   - vars/secrets.yml
   roles:
-  - {role: mysql, tags: ["mysql"]}
- 
+  - {role: mysql_remove, tags: ["mysql_remove"]}
