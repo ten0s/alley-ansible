@@ -4,8 +4,16 @@
   with_items:
   - MySQL-python
 
+- name: Import Percona PGP key
+  rpm_key: key=https://www.percona.com/downloads/RPM-GPG-KEY-percona
+      state=present
+
+- name: Install Percona yum repository
+  yum: name=http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+       state=present
+
 - name: Install MySQL
-  yum: name=mysql-server-{{mysql_version}}
+  yum: name=Percona-XtraDB-Cluster-55
        state=present
 
 - name: Provision config
@@ -15,7 +23,7 @@
   notify: Restart MySQL
 
 - name: Enable MySQL service
-  service: name=mysqld
+  service: name=mysql
            enabled=true
            state=started
 
