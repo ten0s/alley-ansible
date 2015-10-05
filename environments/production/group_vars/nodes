@@ -25,7 +25,7 @@ mm_global_root_url: alley.powermemobile.com:8083
 mm_local_root_url: 127.0.0.1:18083
 
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
-kelly_receipts_qos: 5000
+kelly_receipts_qos: 10000
 kelly_snmp_agents: '
 {"funnel", "funnel1", "private", [10,128,144,100], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 {"funnel", "funnel2", "private", [10,128,144,99], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
