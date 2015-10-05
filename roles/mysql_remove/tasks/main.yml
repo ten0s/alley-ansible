@@ -17,3 +17,6 @@
 
 - name: Backup MySQL dir
   shell: rsync -aH /var/lib/mysql /var/lib/mysql-$(date +%T).sql
+
+- name: Remove MySQL dir
+  shell: rm -rf /var/lib/mysql
