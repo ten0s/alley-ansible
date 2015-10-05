@@ -54,6 +54,7 @@
   - htop
   - jq
   - nc
+  - rsync
   - screen
   - sysstat
   - tar

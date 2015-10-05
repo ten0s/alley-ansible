@@ -4,5 +4,7 @@
   sudo: true
   vars_files:
   - vars/secrets.yml
+  pre_tasks:
+  - yum: name=rsync state=present
   roles:
   - {role: mysql_remove, tags: ["mysql_remove"]}
