@@ -5,6 +5,7 @@
     {amqp_username,         <<"{{rabbitmq_username}}">>},
     {amqp_password,         <<"{{rabbitmq_password}}">>},
     {amqp_virtual_host,     <<"/">>},
+    %% deprecated since 2.11.0
     {queue_backend_auth,    <<"pmm.alley.kelly.auth">>},
     {queue_backend_config,  <<"pmm.alley.funnel.config">>},
     {queue_backend_events,  <<"pmm.alley.funnel.events">>},
@@ -17,6 +18,7 @@
 
 {alley_services, [
     {kelly_api_queue,             <<"pmm.alley.kelly.api">>},
+    {kelly_auth_queue,            <<"pmm.alley.kelly.auth">>},
     {kelly_events_exchange,       <<"pmm.alley.kelly.events">>},
     {kelly_events_listener_queue, <<"pmm.alley.kelly.events.listener.funnel">>},
     {kelly_events_handler,        fun_events_handler},
@@ -36,9 +38,7 @@
         {vhost, <<"/">>},
         {qos, 100}
     ]},
-    {survive, true},
-    %% deprecated since 2.10.0
-    {rpc_timeout, {{rpc_timeout}}}
+    {survive, true}
 ]},
 
 {lager, [
