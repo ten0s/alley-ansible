@@ -13,13 +13,13 @@ ansible all -i hosts -s -m shell -a 'reboot'
 
 Wait for all hosts...
 
-ansible-playbook ../../provision-common-env.yml -i hosts
+ansible-playbook ../../provision-env.yml -i hosts --tags common
 
 include README.drbd
 
-ansible-playbook ../../provision-backend-env.yml -i hosts --tags erlang,rabbitmq,mongodb,haproxy,smppsim
+ansible-playbook ../../provision-backend-env.yml -i hosts
 
-ansible-playbook ../../deploy.yml -i hosts --tags funnel,soap,mm,kelly,just
+ansible-playbook ../../deploy.yml -i hosts --tags funnel,soap,mm,email,kelly,just
 
 ansible-playbook ../../provision-cluster.yml -i hosts --tags cluster
 ansible all -i hosts -s -m service -a 'name=haproxy state=stopped'
