@@ -1,4 +1,0 @@
----
-mongodb_version: 2.6.10
-mongodb_replset: alley
-mongodb_dbpath: /mnt/db/data
