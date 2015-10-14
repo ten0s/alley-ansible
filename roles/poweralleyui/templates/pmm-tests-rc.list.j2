@@ -1,4 +1,4 @@
 {% if ansible_hostname in groups['outdoors'] %}
-http://mirrorpkg1.dev1team.net/rawshaun-sus/tests/rc/
+http://{{ repo_username }}:{{ repo_password }}@mirrorpkg1.dev1team.net/rawshaun-sus/tests/rc/
 {% endif %}
-http://sus.dev1team.net/rawshaun-sus/tests/rc/
+http://{{ repo_username }}:{{ repo_password }}@sus.dev1team.net/rawshaun-sus/tests/rc/
