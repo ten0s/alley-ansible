@@ -3,7 +3,7 @@ run_user: bms
 
 download_dir: /tmp
 # see vars/secrets.yml for
-# download_username and download_password
+# sus_username and sus_password
 
 rabbitmq_host: 127.0.0.1
 rabbitmq_port: 5672
