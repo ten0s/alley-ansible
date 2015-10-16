@@ -3,7 +3,7 @@ funnel_version: 2.10.1
 soap_version: 2.10.1
 mm_version: 2.10.6
 oneapi_version: 2.10.0
-kelly_version: 2.11.0-dev
+kelly_version: 2.12.1-dev
 just_version: 2.11.1
 
 smppsim_version: 2.6.8
