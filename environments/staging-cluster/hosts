@@ -1,11 +1,10 @@
 [__cluster__]
-node1    ansible_ssh_host=node1.n.ba30072.stage
+node1    ansible_ssh_host=node1.n.ba30072.stage ansible_ssh_user=root
+node2    ansible_ssh_host=node2.n.ba30072.stage ansible_ssh_user=root
 ;   ansible_ssh_port=6437 ansible_ssh_user=lunohod20
-node2    ansible_ssh_host=node2.n.ba30072.stage
-;   ansible_ssh_port=6437 ansible_ssh_user=lunohod20
-arbiter  ansible_ssh_host=arbiter.a.ba30072.stage
+arbiter  ansible_ssh_host=arbiter.a.ba30072.stage ansible_ssh_user=root
 ; ansible_ssh_port=6437 ansible_ssh_user=lunohod20
-arbiter2 ansible_ssh_host=arbiter2.a.ba30072.stage
+arbiter2 ansible_ssh_host=arbiter2.a.ba30072.stage ansible_ssh_user=root
 ;  ansible_ssh_port=6437 ansible_ssh_user=lunohod20
 
 [outdoors]
