@@ -1,2 +1,2 @@
 ---
-email_nic: ansible_eth0
+nginx_version: 1.0.15
