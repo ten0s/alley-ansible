@@ -17,7 +17,7 @@ ansible-playbook ../../provision-env.yml -i hosts --tags common
 
 include README.drbd
 
-ansible-playbook ../../provision-backend-env.yml -i hosts
+ansible-playbook ../../provision-env.yml -i hosts
 
 ansible-playbook ../../deploy.yml -i hosts --tags funnel,soap,mm,email,kelly,just
 
@@ -48,7 +48,6 @@ INFO:     Errors:           0
 INFO:     Avg Rps:          0 mps
 INFO:  Unbound
 
-ansible-playbook ../../provision-frontend-env.yml -i hosts
 ansible-playbook ../../deploy.yml -i hosts --tags ui
 
 UI on node2 should be UP and RUNNING and available via both arbiters:
