@@ -36,6 +36,9 @@ then run one of:
 $ ansible-playbook provision-backend-dev-env.yml -i inventories/test
 $ ansible-playbook provision-front-dev-env.yml -i inventories/test
 $ ansible-playbook provision-staging-env.yml -i inventories/test
+then
+$ ansible test -i inventories/test -s -m shell -a 'chown -R bms:bms /var/lib/rabbitmq /var/log/rabbitmq /opt/rabbitmq*'
+$ ansible test -i inventories/test -s -m command -a reboot
 
 Deploy
 ======
