@@ -1,3 +1,8 @@
+Setup Ansible Vault Password file
+=================================
+$ cat ~/.alley-ansible-vault-password.txt
+THIS IS SECRET
+
 Provision backend-dev environment
 =================================
 $ cd vagrant/backend-dev/
