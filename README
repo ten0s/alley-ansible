@@ -1,3 +1,57 @@
+Provision backend-dev environment
+=================================
+$ cd vagrant/backend-dev/
+$ vagrant up
+$ cd ../..
+$ ansible-playbook provision-backend-dev-env.yml -i inventories/bdev
+$ ansible all -i inventories/bdev -s -m shell -a 'chown -R bms:bms /var/lib/rabbitmq /var/log/rabbitmq /opt/rabbitmq*'
+$ ansible all -i inventories/bdev -s -m command -a reboot
+
+Change RabbitMQ and MongoDB hosts to 192.168.33.10 in project/rel/files/sys.config for Funnel, Kelly, Just (F,K,J).
+Build and run F,K,J.
+$ make && make console
+
+Download and provision default settings
+$ wget https://raw.githubusercontent.com/PowerMeMobile/kelly/develop/rel/files/http_conf.sh
+$ chmod +x http_conf.sh
+$ ./http_conf.sh
+
+Go to http://192.168.33.10/power/
+Username: admin
+Password: qwe123
+
+Go to CONFIGURATIONS -> API connections -> Kelly connection -> RootUrl and
+set Kelly's address like 10.10.0.87:8080
+
+Go to ENGINE -> Gateways
+For each gateway connections replace 127.0.0.1 or localhost with 192.168.33.10
+
+Check F,K,J pipeline
+$ smppload -t10001 -iuser -ppassword -s375296660001 -d375296543210 -D
+INFO:  Connected to 127.0.0.1:2775 (tcp)
+INFO:  Bound to Funnel
+INFO:  Stats:
+INFO:     Send success:     1
+INFO:     Send fail:        0
+INFO:     Delivery success: 1
+INFO:     Delivery fail:    0
+INFO:     Incomings:        0
+INFO:     Errors:           0
+INFO:     Avg Rps:          0 mps
+INFO:  Unbound
+
+Switch off
+$ cd vagrant/backend-dev/
+$ vagrant halt
+
+Now whenever you need this environment
+$ cd vagrant/backend-dev/
+$ vagrant up
+
+
+Provision frontend-dev environment
+==================================
+
 $ cd vagrant/test
 
 $ vagrant up
