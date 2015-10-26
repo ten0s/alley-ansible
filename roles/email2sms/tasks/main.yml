@@ -3,6 +3,7 @@
   vars:
       name: email2sms
       version: "{{email_version}}"
+      global_data_dir: false
 
 - name: Provision config
   template: src=sys.config.j2
