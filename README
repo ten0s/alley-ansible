@@ -1,7 +1,90 @@
-$ cd vagrant/test
+Setup Ansible Vault Password file
+=================================
+$ cat ~/.alley-ansible-vault-password.txt
+THIS IS SECRET
 
+Provision backend-dev environment
+=================================
+$ cd vagrant/backend-dev/
+$ vagrant up
+$ cd ../..
+$ ansible-playbook provision-backend-dev-env.yml -i inventories/bdev
+$ ansible all -i inventories/bdev -s -m command -a reboot
+
+Change RabbitMQ and MongoDB hosts to 192.168.33.10 in project/rel/files/sys.config for Funnel, SOAP, MM, Email, OneAPI, Kelly, Just (F,S,M,E,O,K,J).
+
+Build and run F,S,M,E,O,K,J.
+$ make && make console
+
+Provision default settings
+$ cd kelly/rel/files/
+$ chmod +x http_conf.sh
+$ ./http_conf.sh
+
+Go to http://192.168.33.10/power/
+Username: admin
+Password: qwe123
+
+Go to CONFIGURATIONS -> API connections -> Kelly connection -> RootUrl and
+set Kelly's address like 10.10.0.87:8080
+
+Go to ENGINE -> Gateways
+For each gateway connections replace 127.0.0.1 or localhost with 192.168.33.10
+
+Go to CUSTOMERS -> Customers ->
+Choose Customer Id 10005
+Enable Web MM interface
+Press the 'Save' button
+Open the 'Users' tab
+Press the 'Create New' button
+Enter:
+User Id: webmm
+Password: qwe123
+Enable Web MM interface
+Press the 'Save' button
+
+Check F,K,J pipeline
+$ smppload -t10001 -iuser -ppassword -s375296660001 -d375296543210 -D
+INFO:  Connected to 127.0.0.1:2775 (tcp)
+INFO:  Bound to Funnel
+INFO:  Stats:
+INFO:     Send success:     1
+INFO:     Send fail:        0
+INFO:     Delivery success: 1
+INFO:     Delivery fail:    0
+INFO:     Incomings:        0
+INFO:     Errors:           0
+INFO:     Avg Rps:          0 mps
+INFO:  Unbound
+
+Go to http://192.168.33.10/webmm/
+CustomerID: 10005
+Username: webmm
+Password: qwe123
+
+Go to the 'Messaging' tab
+Send To: 375296543210
+Enter some text
+Press the 'Send' button
+The message 'You message was successfully sent' should appear
+
+Go to the 'Sent' tab
+Select just sent message
+Press the 'Inquire Delivery Status' button
+The status 'delivered:1' should appear
+
+Switch off the box
+$ cd vagrant/backend-dev/
+$ vagrant halt
+
+Now whenever you need this environment
+$ cd vagrant/backend-dev/
 $ vagrant up
 
+Provision environment
+=====================
+$ cd vagrant/test
+$ vagrant up
 $ vagrant ssh-config
 Host test
   HostName 127.0.0.1
@@ -15,27 +98,22 @@ Host test
   LogLevel FATAL
 
 $ cd ../..
-
-$ cat inventories/test
-[__group__]
-test ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
-
-$ cat ~/.alley-ansible-vault-password.txt
-xyz
-
 $ ansible all -i inventories/test -m ping
 test | success >> {
     "changed": false,
     "ping": "pong"
 }
 
-Provision environment
-=====================
-In inventories/tests replace __group__ with backend-dev, frontend-dev or staging,
-then run one of:
+$ cat inventories/test
+[__group__]
+test ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
+
+Replace __group__ with backend-dev, frontend-dev or staging, then run one of:
 $ ansible-playbook provision-backend-dev-env.yml -i inventories/test
-$ ansible-playbook provision-front-dev-env.yml -i inventories/test
+$ ansible-playbook provision-frontend-dev-env.yml -i inventories/test
 $ ansible-playbook provision-staging-env.yml -i inventories/test
+then
+$ ansible test -i inventories/test -s -m command -a reboot
 
 Deploy
 ======

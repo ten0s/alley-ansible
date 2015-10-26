@@ -2,13 +2,17 @@
 - name: Provision PowerAlley backend dev env
   hosts: all
   sudo: true
-  vars_files:
-  - vars/secrets.yml
-
   tasks:
   - name: Set hostname
     hostname: name=backend-dev
 
+- {include: provision-env.yml}
+- {include: deploy.yml, tags: ['ui', 'webmm']}
+
+- name: Post-install steps
+  hosts: all
+  sudo: true
+  tasks:
   - name: Copy start dev env script
     copy: src=files/start-dev-env
           dest=/opt/bin/
@@ -19,5 +23,16 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
-- {include: provision-env.yml}
-- {include: deploy.yml, tags: ['ui']}
+  - name: Correct RabbitMQ rights
+    file: path={{item}}
+          owner={{run_user}}
+          group={{run_user}}
+          recurse=true
+    with_items:
+    - /opt/rabbitmq_server-{{rabbitmq_version}}
+    - /var/lib/rabbitmq
+    - /var/log/rabbitmq
+    tags: ['post']
+
+  - debug: msg='Now reboot the machine'
+    tags: ['post']

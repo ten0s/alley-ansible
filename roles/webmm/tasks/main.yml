@@ -49,6 +49,10 @@
   - phonebook
   - localization
 
+- name: Remove old migrators
+  yum: name=pmm-migrators
+       state=absent
+
 - name: Install migrators
   yum: name=pmm-migrators-pmm
        state=latest

@@ -1,10 +1,14 @@
 ---
-- name: Provision PowerAlley staging env
+- name: Provision PowerAlley one node staging env
   hosts: all
   sudo: true
-  vars_files:
-  - vars/secrets.yml
 
+- {include: provision-env.yml}
+- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui', 'webmm']}
+
+- name: Post-install steps
+  hosts: all
+  sudo: true
   tasks:
   - name: Copy start dev env script
     copy: src=files/start-dev-env
@@ -16,13 +20,6 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
-- {include: provision-env.yml}
-- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just','ui', 'webmm']}
-
-- name: Post-install steps
-  hosts: all
-  sudo: true
-  tasks:
   - name: Correct RabbitMQ rights
     file: path={{item}}
           owner={{run_user}}
@@ -34,7 +31,7 @@
     - /var/log/rabbitmq
     tags: ['post']
 
-  - debug: msg='reboot'
+  - debug: msg='Now reboot the machine'
     tags: ['post']
 
   - name: Download config

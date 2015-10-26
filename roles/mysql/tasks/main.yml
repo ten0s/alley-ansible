@@ -1,5 +1,5 @@
 ---
-- name: Install MySQL playbook's deps
+- name: Install deps
   yum: name={{item}} state=latest
   with_items:
   - MySQL-python
