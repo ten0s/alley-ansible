@@ -9,15 +9,15 @@ $ cd vagrant/backend-dev/
 $ vagrant up
 $ cd ../..
 $ ansible-playbook provision-backend-dev-env.yml -i inventories/bdev
-$ ansible all -i inventories/bdev -s -m shell -a 'chown -R bms:bms /var/lib/rabbitmq /var/log/rabbitmq /opt/rabbitmq*'
 $ ansible all -i inventories/bdev -s -m command -a reboot
 
-Change RabbitMQ and MongoDB hosts to 192.168.33.10 in project/rel/files/sys.config for Funnel, Kelly, Just (F,K,J).
-Build and run F,K,J.
+Change RabbitMQ and MongoDB hosts to 192.168.33.10 in project/rel/files/sys.config for Funnel, SOAP, MM, Email, OneAPI, Kelly, Just (F,S,M,E,O,K,J).
+
+Build and run F,S,M,E,O,K,J.
 $ make && make console
 
-Download and provision default settings
-$ wget https://raw.githubusercontent.com/PowerMeMobile/kelly/develop/rel/files/http_conf.sh
+Provision default settings
+$ cd kelly/rel/files/
 $ chmod +x http_conf.sh
 $ ./http_conf.sh
 
@@ -30,6 +30,18 @@ set Kelly's address like 10.10.0.87:8080
 
 Go to ENGINE -> Gateways
 For each gateway connections replace 127.0.0.1 or localhost with 192.168.33.10
+
+Go to CUSTOMERS -> Customers ->
+Choose Customer Id 10005
+Enable Web MM interface
+Press the 'Save' button
+Open the 'Users' tab
+Press the 'Create New' button
+Enter:
+User Id: webmm
+Password: qwe123
+Enable Web MM interface
+Press the 'Save' button
 
 Check F,K,J pipeline
 $ smppload -t10001 -iuser -ppassword -s375296660001 -d375296543210 -D
@@ -45,7 +57,23 @@ INFO:     Errors:           0
 INFO:     Avg Rps:          0 mps
 INFO:  Unbound
 
-Switch off
+Go to http://192.168.33.10/webmm/
+CustomerID: 10005
+Username: webmm
+Password: qwe123
+
+Go to the 'Messaging' tab
+Send To: 375296543210
+Enter some text
+Press the 'Send' button
+The message 'You message was successfully sent' should appear
+
+Go to the 'Sent' tab
+Select just sent message
+Press the 'Inquire Delivery Status' button
+The status 'delivered:1' should appear
+
+Switch off the box
 $ cd vagrant/backend-dev/
 $ vagrant halt
 

@@ -2,13 +2,17 @@
 - name: Provision PowerAlley frontend dev env
   hosts: all
   sudo: true
-  vars_files:
-  - vars/secrets.yml
-
   tasks:
   - name: Set hostname
     hostname: name=frontend-dev
 
+- {include: provision-env.yml}
+- {include: deploy.yml, tags: ['funnel','soap','mm','kelly','just']}
+
+- name: Post-install steps
+  hosts: all
+  sudo: true
+  tasks:
   - name: Copy start dev env script
     copy: src=files/start-dev-env
           dest=/opt/bin/
@@ -19,5 +23,5 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
-- {include: provision-env.yml}
-- {include: deploy.yml, tags: ['funnel','soap','mm','kelly','just']}
+  - debug: msg='Now reboot the machine'
+    tags: ['post']
