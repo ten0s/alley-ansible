@@ -81,14 +81,10 @@ Now whenever you need this environment
 $ cd vagrant/backend-dev/
 $ vagrant up
 
-
-Provision frontend-dev environment
-==================================
-
+Provision environment
+=====================
 $ cd vagrant/test
-
 $ vagrant up
-
 $ vagrant ssh-config
 Host test
   HostName 127.0.0.1
@@ -102,29 +98,21 @@ Host test
   LogLevel FATAL
 
 $ cd ../..
-
-$ cat inventories/test
-[__group__]
-test ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
-
-$ cat ~/.alley-ansible-vault-password.txt
-xyz
-
 $ ansible all -i inventories/test -m ping
 test | success >> {
     "changed": false,
     "ping": "pong"
 }
 
-Provision environment
-=====================
-In inventories/tests replace __group__ with backend-dev, frontend-dev or staging,
-then run one of:
+$ cat inventories/test
+[__group__]
+test ansible_ssh_host=127.0.0.1 ansible_ssh_port=2301 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/boxes/ten0s-VAGRANTSLASH-centos6.5_x86_64/0/virtualbox/vagrant_private_key
+
+Replace __group__ with backend-dev, frontend-dev or staging, then run one of:
 $ ansible-playbook provision-backend-dev-env.yml -i inventories/test
-$ ansible-playbook provision-front-dev-env.yml -i inventories/test
+$ ansible-playbook provision-frontend-dev-env.yml -i inventories/test
 $ ansible-playbook provision-staging-env.yml -i inventories/test
 then
-$ ansible test -i inventories/test -s -m shell -a 'chown -R bms:bms /var/lib/rabbitmq /var/log/rabbitmq /opt/rabbitmq*'
 $ ansible test -i inventories/test -s -m command -a reboot
 
 Deploy

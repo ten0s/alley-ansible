@@ -7,7 +7,7 @@
     hostname: name=frontend-dev
 
 - {include: provision-env.yml}
-- {include: deploy.yml, tags: ['funnel','soap','mm','kelly','just']}
+- {include: deploy.yml, tags: ['funnel','soap','mm','email','oneapi','kelly','just']}
 
 - name: Post-install steps
   hosts: all
