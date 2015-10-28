@@ -24,10 +24,10 @@ email_version: 2.10.7
 kelly_version: 2.10.0
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
 kelly_snmp_agents: '
-{"funnel", "funnel1", "private", [192,168,100,201], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"funnel", "funnel2", "private", [192,168,100,202], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"just", "just1", "private", [192,168,100,201], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
-{"just", "just2", "private", [192,168,100,202], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"funnel", "funnel1", "private", [192,168,1,11], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"funnel", "funnel2", "private", [192,168,1,12], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just1", "private", [192,168,1,11], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
+{"just", "just2", "private", [192,168,1,12], 5000, "Just", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
 '
 
 just_version: 2.7.1

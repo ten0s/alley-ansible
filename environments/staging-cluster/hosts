@@ -1,17 +1,11 @@
-[__cluster__]
-node1    ansible_ssh_host=node1.n.ba30072.stage ansible_ssh_user=root
-node2    ansible_ssh_host=node2.n.ba30072.stage ansible_ssh_user=root
-;   ansible_ssh_port=6437 ansible_ssh_user=lunohod20
-arbiter  ansible_ssh_host=arbiter.a.ba30072.stage ansible_ssh_user=root
-; ansible_ssh_port=6437 ansible_ssh_user=lunohod20
-arbiter2 ansible_ssh_host=arbiter2.a.ba30072.stage ansible_ssh_user=root
-;  ansible_ssh_port=6437 ansible_ssh_user=lunohod20
+[cluster]
+node1    ansible_ssh_host=node1.bankaudi.stg.pmmnet ansible_ssh_user=root
+node2    ansible_ssh_host=node2.bankaudi.stg.pmmnet ansible_ssh_user=root
+arbiter  ansible_ssh_host=arbiter.bankaudi.stg.pmmnet ansible_ssh_user=root
+arbiter2 ansible_ssh_host=arbiter2.bankaudi.stg.pmmnet ansible_ssh_user=root
 
 [outdoors]
-;node1
-;node2
-;arbiter
-;arbiter2
+# keep it empty for indoors
 
 [nodes]
 node1
@@ -32,6 +26,3 @@ node2
 
 [ui]
 node2
-
-
-; vi: ft=ini
