@@ -31,18 +31,6 @@ set Kelly's address like 10.10.0.87:8080
 Go to ENGINE -> Gateways
 For each gateway connections replace 127.0.0.1 or localhost with 192.168.33.10
 
-Go to CUSTOMERS -> Customers ->
-Choose Customer Id 10005
-Enable Web MM interface
-Press the 'Save' button
-Open the 'Users' tab
-Press the 'Create New' button
-Enter:
-User Id: webmm
-Password: qwe123
-Enable Web MM interface
-Press the 'Save' button
-
 Check F,K,J pipeline
 $ smppload -t10001 -iuser -ppassword -s375296660001 -d375296543210 -D
 INFO:  Connected to 127.0.0.1:2775 (tcp)

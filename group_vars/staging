@@ -1,18 +1,18 @@
 ---
-funnel_version: 2.11.0
-soap_version: 2.10.1
-oneapi_version: 2.11.0-dev
-email_version: 2.10.7
-kelly_version: 2.11.0-dev
-just_version: 2.11.1
+funnel_version: 2.12.0
+soap_version: 2.12.0
+oneapi_version: 2.12.0
+email_version: 2.12.0
+kelly_version: 2.12.0
+just_version: 2.12.0
 
-mm_version: 2.10.6
+mm_version: 2.12.0
 mm_http_local_nic: lo
 
-poweralleyui_version: 1.5.1.245
+poweralleyui_version: 0.0.0.281
 poweralleyui_nic: ansible_eth0
 
-webmm_version: 2.0.1.674
+webmm_version: 2.0.1.703
 webmm_nic: ansible_eth0
 webmm_backend_host: 127.0.0.1
 webmm_backend_port: 8083

@@ -23,5 +23,16 @@
                 line="su {{run_user}} -l -c 'bash -c \"/opt/bin/start-dev-env &>> /home/{{run_user}}/start-dev-env.log\"'"
     tags: ["autostart"]
 
+  - name: Correct RabbitMQ rights
+    file: path={{item}}
+          owner={{run_user}}
+          group={{run_user}}
+          recurse=true
+    with_items:
+    - /opt/rabbitmq_server-{{rabbitmq_version}}
+    - /var/lib/rabbitmq
+    - /var/log/rabbitmq
+    tags: ['post']
+
   - debug: msg='Now reboot the machine'
     tags: ['post']
