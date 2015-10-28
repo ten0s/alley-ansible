@@ -1,0 +1,21 @@
+---
+poweralleyui_version: 0.0.0.281
+poweralleyui_nic: ansible_eth1
+
+webmm_version: 2.0.1.703
+webmm_nic: ansible_eth1
+webmm_backend_host: 127.0.0.1
+webmm_backend_port: 18083
+
+mysql_version: 5.1.73
+mysql_nic: ansible_eth1
+mysql_port: 33306
+mysql_password: PASSWORD
+
+supervisor_version: 3.1.2
+superlance_version: 0.11
+
+memcached_version: 1.4.4
+memcached_port: 31211
+
+mono_version: 3.12.1
