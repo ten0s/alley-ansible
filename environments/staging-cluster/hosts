@@ -1,8 +1,8 @@
 [cluster]
-node1    ansible_ssh_host=node1.bankaudi.stg.pmmnet ansible_ssh_user=root
-node2    ansible_ssh_host=node2.bankaudi.stg.pmmnet ansible_ssh_user=root
-arbiter  ansible_ssh_host=arbiter.bankaudi.stg.pmmnet ansible_ssh_user=root
-arbiter2 ansible_ssh_host=arbiter2.bankaudi.stg.pmmnet ansible_ssh_user=root
+node1    ansible_ssh_host=10.10.0.129 ansible_ssh_user=root
+node2    ansible_ssh_host=10.10.0.232 ansible_ssh_user=root
+arbiter  ansible_ssh_host=10.10.0.62 ansible_ssh_user=root
+arbiter2 ansible_ssh_host=10.10.0.63 ansible_ssh_user=root
 
 [outdoors]
 # keep it empty for indoors
