@@ -1,3 +1,4 @@
 ---
+timezone: 'Europe/Minsk'
 haproxy_version: 1.5.4
 smppload_version: 2.3.0

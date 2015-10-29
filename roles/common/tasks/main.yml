@@ -20,6 +20,13 @@
   yum: name=http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
        state=present
 
+- name: Setup timezone
+  file: src=/usr/share/zoneinfo/{{timezone}}
+        dest=/etc/localtime
+        state=link
+        force=true
+  when: timezone is defined
+
 - name: Install NTP
   yum: name={{item}} state=present
   with_items:

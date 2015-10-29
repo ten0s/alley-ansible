@@ -101,8 +101,13 @@ listen email :25
     server email_node1 node1:2525 check
     server email_node2 node2:2525 check
 
+{% if 'tests' in groups and ansible_hostname in groups['tests'] %}
+# for tests
+listen kelly :8080
+{% else %}
 # for monitoring
 listen kelly 127.0.0.1:8080
+{% endif %}
     server kelly_node1 node1:8080 check
     server kelly_node2 node2:8080 check
 
@@ -113,5 +118,11 @@ listen poweralleyui 127.0.0.1:8877
 listen webmm 127.0.0.1:8180
     server webmm_node1 node1:8180 check
     server webmm_node2 node2:8180 check
+
+{% if 'tests' in groups and ansible_hostname in groups['tests'] %}
+listen smppsim :8071
+    server smppsim_node1 node1:8071 check
+    server smppsim_node2 node2:8071 check
+{% endif %}
 
 {% endif %}

@@ -35,3 +35,5 @@ base_data_dir: /mnt/data
 data_dir_suffix: data
 
 rpc_timeout: 30000
+
+timezone: 'Europe/Minsk'
