@@ -16,7 +16,7 @@ funnel_version: 2.12.0
 soap_version: 2.12.0
 
 mm_version: 2.12.0
-mm_http_global_nic: eth1
+mm_global_root_url: alley.bankaudi.stg.pmmnet:8083
 mm_local_root_url: 127.0.0.1:18083
 
 email_version: 2.12.0
