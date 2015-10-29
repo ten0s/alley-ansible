@@ -9,7 +9,8 @@ hosts=(
     [demo]=demo
     [stg]=stg
     [test]=test
-    [cluster]=test-cluster
+    [test-cluster]=test-cluster
+    [staging-cluster]=staging-cluster
 )
 
 declare -A services
@@ -57,7 +58,7 @@ if [[ ! -z $version ]]; then
     service_version="--extra-vars ${service_name}_version=${version}"
 fi
 
-if [[ $host_alias = "cluster" ]]; then
+if [[ ${host_alias##*-} = "cluster" ]]; then
     ansible all -i environments/${host_name}/hosts -m ping || exit 1
     ansible-playbook deploy.yml -i environments/${host_name}/hosts --tags ${service_alias} ${service_version} || exit 1
 else
@@ -66,7 +67,7 @@ else
 fi
 
 if [[ $service_alias != "ui" ]] && [[ $service_alias != "webmm" ]] && [[ $service_alias != "smppload" ]]; then
-    if [[ $host_alias = "cluster" ]]; then
+    if [[ ${host_alias##*-} = "cluster" ]]; then
         ansible arbiter -i environments/${host_name}/hosts -s -m shell -a "crm resource restart svc-${service_name}"
     else
         ansible all -i inventories/${host_name} -s -U bms \
