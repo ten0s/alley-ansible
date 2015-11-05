@@ -52,4 +52,4 @@ fi
 
 # run tests
 echo "Run tests for version $version..."
-sudo -u bms -- /opt/poweralleyui-tests/runners/run-tests.sh $version $commit
+sudo -u bms -- sh /opt/poweralleyui-tests/runners/run-tests.sh $version $commit
