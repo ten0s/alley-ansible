@@ -11,6 +11,23 @@
     {smtp_recipient_fields, [<<"to">>, <<"cc">>, <<"bcc">>]},
 
     {auth_schemes, [from_address, subject, to_address]},
+    {from_address_stop_reasons, [
+        wrong_interface,
+        blocked_customer,
+        blocked_user,
+        deactivated_customer,
+        deactivated_user,
+        credit_limit_exceeded
+    ]},
+    {subject_stop_reasons, [
+        wrong_password,
+        wrong_interface,
+        blocked_customer,
+        blocked_user,
+        deactivated_customer,
+        deactivated_user,
+        credit_limit_exceeded
+    ]},
     {invalid_recipient_policy, reject_message},
     {max_msg_parts, 10},
     {inbound_rps_per_user, 0.1} %% 1 msg in 10 secs
