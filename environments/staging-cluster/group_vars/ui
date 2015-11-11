@@ -2,7 +2,7 @@
 poweralleyui_version: 0.0.0.318
 poweralleyui_nic: ansible_eth1
 
-webmm_version: 2.0.1.703
+webmm_version: 2.0.1.711
 webmm_nic: ansible_eth1
 webmm_backend_host: 127.0.0.1
 webmm_backend_port: 18083
