@@ -12,8 +12,8 @@ rabbitmq_port: 35672
 rabbitmq_username: alley
 rabbitmq_password: alley
 
-funnel_version: 2.12.1
-soap_version: 2.12.3
+funnel_version: 2.12.2
+soap_version: 2.12.4
 
 rpc_timeout: 30000
 
