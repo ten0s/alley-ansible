@@ -12,8 +12,8 @@ rabbitmq_port: 35672
 rabbitmq_username: alley
 rabbitmq_password: alley
 
-funnel_version: 2.12.1
-soap_version: 2.12.3
+funnel_version: 2.12.2
+soap_version: 2.12.4
 
 rpc_timeout: 30000
 
@@ -24,7 +24,7 @@ mm_local_root_url: 127.0.0.1:18083
 email_version: 2.12.1
 email_max_recipient_count: 1
 
-kelly_version: 2.12.3
+kelly_version: 2.12.4
 kelly_mongodb: '{replica_set, {<<"alley">>, [{"node1", 27017}, {"node2", 27017}, {"arbiter", 27017}]}}'
 kelly_snmp_agents: '
 {"funnel", "funnel1", "private", [192,168,1,11], 6000, "Funnel", infinity, 484, v2, v2c, "private", noAuthNoPriv}.
