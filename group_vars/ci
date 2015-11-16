@@ -9,6 +9,7 @@ just_version: 2.12.2
 poweralleyui_version: 0.0.0.246
 poweralleyui_nic: ansible_eth0
 poweralleyui_tests: true
+poweralleyui_root_url: http://10.10.0.51/power/
 
 smppsim_version: 2.6.8
 

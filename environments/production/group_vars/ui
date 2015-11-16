@@ -3,6 +3,7 @@ mono_version: 3.12.1
 
 poweralleyui_version: 1.5.1.245
 poweralleyui_nic: ansible_eth1
+poweralleyui_root_url: http://alley.powermemobile.com/power/
 
 webmm_version: 2.0.1.674
 webmm_nic: ansible_eth1
