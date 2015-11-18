@@ -1,6 +1,6 @@
 [cluster]
-node1    ansible_ssh_host=10.10.0.129 ansible_ssh_user=root
-node2    ansible_ssh_host=10.10.0.232 ansible_ssh_user=root
+node1    ansible_ssh_host=10.10.0.32 ansible_ssh_user=root
+node2    ansible_ssh_host=10.10.0.33 ansible_ssh_user=root
 arbiter  ansible_ssh_host=10.10.0.62 ansible_ssh_user=root
 arbiter2 ansible_ssh_host=10.10.0.63 ansible_ssh_user=root
 
