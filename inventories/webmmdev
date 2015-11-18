@@ -1,0 +1,5 @@
+[frontend-dev]
+webmm-dev ansible_ssh_host=10.10.0.97 ansible_ssh_port=2223 ansible_ssh_user=vagrant
+
+[outdoors]
+# keep it empty for indoors
