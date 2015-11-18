@@ -52,6 +52,7 @@
   with_items:
   - pmm-base.list
   - pmm-base.repo
+  - pmm-base-dev.list
 
 - name: Install utils
   yum: name={{item}} state=present
