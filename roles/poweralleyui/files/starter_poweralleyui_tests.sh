@@ -6,8 +6,8 @@ cd "$EXE_DIR"
 
 TS=$(date +%Y-%m-%d_%H-%M-%S)
 LOG=/var/log/poweralley_starter_tests/${EXE_CMD##*/}_$TS.log
-DELAY=200
-RETRIES=3
+DELAY=30
+RETRIES=6
 
 if [ -z "$READY_TO_WORK" ]; then
     PIDS=$(ps ax -o pid,cmd | awk "/${EXE_CMD##*/} [M]ARK_PAUI/{printf \"%s \", \$1}")
