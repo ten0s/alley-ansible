@@ -1,2 +1,5 @@
+To setup whole cluster LIKE prod (except MongoDB) see README.cluster
+
 To setup MongoDB replica LIKE prod see README.replset
-To setup whole cluster like prod see README.cluster
+Migration to MongoDB from official repo and upgrade procedure
+described here.
