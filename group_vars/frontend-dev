@@ -1,13 +1,13 @@
 ---
-funnel_version: 2.12.1
-soap_version: 2.12.3
-mm_version: 2.12.1
-kelly_version: 2.12.3
+funnel_version: 2.12.2
+soap_version: 2.12.4
+mm_version: 2.12.2
+kelly_version: 2.12.5
 just_version: 2.12.2
 
 smppsim_version: 2.6.8
 
-smppload_version: 2.3.0
+smppload_version: 2.4.0
 
 smppsink_version: 1.4.0
 smppsink_smpp_port: 8002
