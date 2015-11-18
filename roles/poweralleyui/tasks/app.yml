@@ -12,12 +12,19 @@
   - pmm-poweralleyui-rc.list
   - pmm-poweralleyui.repo
 
+- name: Remove old monolit poweralleyui
+  yum: name=pmm-bms-poweralleyui-pmm
+       state=absent
+
 - name: Install app
-  yum: name=pmm-bms-poweralleyui-pmm-{{poweralleyui_version}}
+  yum: name={{item}}-{{poweralleyui_version}}
        state=present
        update_cache=true
        disablerepo="*"
        enablerepo="pmm-poweralleyui-dev,pmm-poweralleyui-rc"
+  with_items:
+  - pmm-poweralleyui-base
+  - pmm-poweralleyui-pmm
   notify: Restart PowerAlleyUI
 
 - name: Provision config (1/2)
