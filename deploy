@@ -4,6 +4,7 @@ declare -A hosts
 hosts=(
     [bdev]=bdev
     [fdev]=fdev
+    [webmmdev]=webmmdev
     [ci]=ci
     [ci_localhost]=ci_localhost
     [demo]=demo
